@@ -649,7 +649,7 @@ Further improvements were swirling in my head:
 Ideas kept coming one after another, but a problem appeared—it seems I got tired of developing this project again. Currently, it
 couldn't be applied in any way; no apartment purchases were foreseen. Nevertheless, it looks
 interesting and I want someone to be able to use the knowledge accumulated in it. I posted the source code on
-GitHub, in case anyone wants to familiarize themselves with the
+[GitHub](https://github.com/win7user10/Laraue.Apps.RealEstate), in case anyone wants to familiarize themselves with the
 implementation of all the functionality in more detail. The Frontend is missing from the repository; it will need to be written independently if necessary.
 
 Well, if you just want to see the obtained result, it's available [here](/crawled-apartments).
