@@ -2,14 +2,20 @@ using Laraue.Apps.Blog.ApiHost;
 using Laraue.Apps.Blog.ApiHost.docTypes;
 using Laraue.CmsBackend;
 using Laraue.CmsBackend.Extensions;
-using Laraue.CmsBackend.MarkdownTransformation;
 using Laraue.Core.Exceptions;
+using Laraue.Interpreter.Markdown;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<ExceptionHandleMiddleware>();
 
-var cmsBackend = new CmsBackendBuilder(new MarkdownParser(new MarkdownToHtmlTransformer(), new ArticleInnerLinksGenerator()), new MarkdownProcessor())
+var cmsBackend = new CmsBackendBuilder(
+        new CmsBackendOptions { DefaultLanguageCode = "en" },
+        new MarkdownParser(
+            new MarkdownTranspiler(
+                new WriteOptions { GenerateHeaderLinks = true },
+                new MarkdownInnerLinksGenerator())),
+        new MarkdownProcessor())
     .AddContentType<Project>()
     .AddContentType<Article>()
     .AddContentType<Documentation>()

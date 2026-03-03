@@ -7,7 +7,7 @@ updatedAt: 2025-08-01
 ---
 Binary Expression is the operation between two operands.
 
-#### BinaryExpression syntax
+#### Syntax
 ```antlr
 BinaryExpression 
   : Expression operand Expression

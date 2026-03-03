@@ -2,7 +2,7 @@
 title: The history of the crawler project
 type: article
 projects: [crawler]
-description: The project highlights a journey of iterative design and problem-solving in the realm of web scraping.
+description: The history of creating and improving the web scraping library.
 createdAt: 2025-10-07
 updatedAt: 2025-12-05
 ---
