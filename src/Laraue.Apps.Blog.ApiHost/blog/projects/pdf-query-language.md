@@ -73,13 +73,7 @@ When considering the syntax, the first thought was to make something SQL-like. H
 with relational objects. Documents are rarely joined, and the main action is usually to extract content in a preferred
 format, applying filters. This sounds similar to MongoDB stages.
 
-The PdfQL language prototype for `selecting first cells from the document tables that have cell 4 with a text 'Name'`:
-```pdfql
-select(tables)
-    ->filter((item) => item.GetCell(4).Text() == 'Name')
-    ->selectMany(tableRows)
-    ->map((item) => item.GetCell(1))
-```
+The PdfQL language will be something like `select first cells from the document tables that have cell 4 with a text 'Name'`:
 
 ## Features
 Actual list of the planned and released features
