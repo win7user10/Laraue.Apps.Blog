@@ -1,8 +1,8 @@
 ﻿---
-title: Telegram.NET
+title: Библиотека Telegram.NET
 type: project
 tags: [Telegram,.NET,C#]
-description: Библиотека позволяет писать ASP NET подобные контроллера telegram, а также middleware и аутентификацию для них.
+description: Библиотека позволяет писать ASP NET подобные контроллеры telegram, а также middleware и аутентификацию для них.
 createdAt: 2025-03-04
 updatedAt: 2025-03-04
 ---
