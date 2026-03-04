@@ -8,16 +8,16 @@ createdAt: 2025-11-01
 updatedAt: 2025-12-08
 ---
 ## Key Features
-|              |                                                                                  |
-|--------------|----------------------------------------------------------------------------------|
-| Language     | C#                                                                               |
-| Framework    | .NET Standard 2.1 / .NET 6 / .NET 8 / .NET 9                                     |
-| Project type | Library                                                                          |
-| Status       | Completed                                                                        |
-| License      | MIT                                                                              |
-| Nuget        | ![latest version](https://img.shields.io/nuget/v/Laraue.EfCoreTriggers.Common)   |
-| Downloads    | ![latest version](https://img.shields.io/nuget/dt/Laraue.EfCoreTriggers.Common)  |
-| Github       | [Laraue.EfCoreTriggers](https://github.com/win7user10/Laraue.EfCoreTriggers)     |
+|              |                                                                                 |
+|--------------|---------------------------------------------------------------------------------|
+| Language     | C#                                                                              |
+| Framework    | .NET Standard 2.1 / .NET 6 / .NET 8 / .NET 9 / .NET 10                          |
+| Project type | Library                                                                         |
+| Status       | Completed                                                                       |
+| License      | MIT                                                                             |
+| Nuget        | ![latest version](https://img.shields.io/nuget/v/Laraue.EfCoreTriggers.Common)  |
+| Downloads    | ![latest version](https://img.shields.io/nuget/dt/Laraue.EfCoreTriggers.Common) |
+| Github       | [Laraue.EfCoreTriggers](https://github.com/win7user10/Laraue.EfCoreTriggers)    |
 
 ## What Are Database Triggers?
 Database triggers are special stored procedures that automatically execute in response to specific database events,
