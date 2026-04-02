@@ -157,6 +157,8 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "format(updatedAt, \"dd MMM yyyy\") as updatedAt",
                     "length(content)",
                     "innerLinks",
+                    "tags",
+                    "projects",
                 ]
             });
 
@@ -281,6 +283,8 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required string CreatedAt { get; init; }
         public required string UpdatedAt { get; init; }
         public required long Length { get; init; }
+        public required string?[] Tags { get; init; }
+        public required string?[] Projects { get; init; }
         public required MarkdownInnerLink[] InnerLinks { get; init; }
         public NeighborCard? Previous { get; set; }
         public NeighborCard? Next { get; set; }
