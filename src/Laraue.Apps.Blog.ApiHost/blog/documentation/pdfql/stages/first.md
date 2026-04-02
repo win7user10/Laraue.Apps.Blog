@@ -1,6 +1,6 @@
 ---
 type: documentation
-title: First stage
+title: First
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
@@ -8,7 +8,7 @@ updatedAt: 2025-08-01
 First is the operation that returns first object from the sequence or throws an exception if the sequence
 does not contain elements.
 
-#### FirstStage syntax
+#### Syntax
 ```antlr
 First
   : 'first' '(' LambdaExpression? ')'  

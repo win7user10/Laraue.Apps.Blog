@@ -1,13 +1,13 @@
 ---
 type: documentation
-title: Skip stage
+title: Skip
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
 ---
 Skip is the operation that skips passed number of elements in a sequence.
 
-#### Take syntax
+#### Syntax
 ```antlr
 Skip
   : 'skip' '(' ConstantExpression ')'  

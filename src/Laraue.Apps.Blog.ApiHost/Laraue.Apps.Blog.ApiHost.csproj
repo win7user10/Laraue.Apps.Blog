@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Laraue.CmsBackend" Version="1.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
     </ItemGroup>
 
@@ -15,6 +14,10 @@
         <Content Include="blog\**\*.md">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\libraries\Laraue.CmsBackend\src\Laraue.CmsBackend\Laraue.CmsBackend.csproj" />
     </ItemGroup>
 
 </Project>

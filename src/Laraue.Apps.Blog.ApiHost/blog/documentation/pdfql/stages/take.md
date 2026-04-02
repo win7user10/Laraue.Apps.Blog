@@ -1,13 +1,13 @@
 ---
 type: documentation
-title: Take stage
+title: Take
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
 ---
 Take is the operation that limits a sequence to the passed number of elements. 
 
-#### Take syntax
+#### Syntax
 ```antlr
 Take
   : 'take' '(' ConstantExpression ')'  

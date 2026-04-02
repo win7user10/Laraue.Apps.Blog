@@ -7,7 +7,7 @@ updatedAt: 2025-08-01
 ---
 New expression allows to create new instance. In PdfQL is used to create anonymous types. 
 
-#### NewExpression syntax
+#### Syntax
 ```antlr
 NewExpression 
   : 'new {' (MemberAssign)?+ '}'

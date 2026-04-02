@@ -7,7 +7,7 @@ updatedAt: 2025-08-01
 ---
 Allows calling methods on an instance. In PdfQL is used to call methods on PDF objects.
 
-#### InstanceMethodCall syntax
+#### Syntax
 ```antlr
 InstanceMethodCallExpression
   : MemberExpression '.' '(' (parameters)?+ ')'

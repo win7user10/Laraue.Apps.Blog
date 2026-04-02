@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.Apps.Blog.ApiHost", "src\Laraue.Apps.Blog.ApiHost\Laraue.Apps.Blog.ApiHost.csproj", "{4B87CF63-4A79-41B7-85DD-2659E95C1EC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laraue.CmsBackend", "..\..\libraries\Laraue.CmsBackend\src\Laraue.CmsBackend\Laraue.CmsBackend.csproj", "{B47621F8-FA38-49F8-8788-F15BEC8D2DDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{4B87CF63-4A79-41B7-85DD-2659E95C1EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B87CF63-4A79-41B7-85DD-2659E95C1EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B87CF63-4A79-41B7-85DD-2659E95C1EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B47621F8-FA38-49F8-8788-F15BEC8D2DDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B47621F8-FA38-49F8-8788-F15BEC8D2DDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B47621F8-FA38-49F8-8788-F15BEC8D2DDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B47621F8-FA38-49F8-8788-F15BEC8D2DDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
