@@ -1,6 +1,6 @@
 ---
 type: documentation
-title: Json
+title: JSON
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01

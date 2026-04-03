@@ -7,7 +7,7 @@ updatedAt: 2025-08-01
 ---
 Constant is the expression that returns a constant value.
 
-#### ConstantExpression syntax
+#### Syntax
 ```antlr
 ConstantExpression 
   : String

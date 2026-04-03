@@ -1,14 +1,14 @@
 ---
 type: documentation
-title: PdfQL language
+title: Stages
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
 ---
 PdfQL is the language that describes how to get objects from PDF document. 
-Each instruction is the stage that transform data from current input to described output.
+Each instruction is the stage that transforms data from current input to described output.
 
-#### PdfQL syntax
+#### Syntax
 ```antlr
 Stages
   : Stage ('->' Stage)*

@@ -1,6 +1,7 @@
 ﻿using Laraue.CmsBackend;
 using Laraue.CmsBackend.Contracts;
 using Laraue.Core.DataAccess.Contracts;
+using Laraue.Interpreter.Markdown;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Laraue.Apps.Blog.ApiHost.Controllers;
@@ -9,27 +10,250 @@ namespace Laraue.Apps.Blog.ApiHost.Controllers;
 [Route("api/blog")]
 public class BlogController(ICmsBackend cmsBackend) : ControllerBase
 {
-    [HttpPost("single")]
-    public Dictionary<string, object> Get([FromBody] GetEntityRequest request)
-    {
-        return cmsBackend.GetEntity(request);
-    }
-    
     [HttpPost("list")]
-    public IShortPaginatedResult<Dictionary<string, object>> Get([FromBody] GetEntitiesRequest request)
+    public IShortPaginatedResult<CardItem> Get([FromBody] GetCardsRequest request)
     {
-        return cmsBackend.GetEntities(request);
+        var filters = new List<FilterRow>();
+        if (request.ContentTypes.Length > 0)
+        {
+            filters.Add(new FilterRow
+            {
+                Property = "contentType",
+                Operator = FilterOperator.ValueInList,
+                Value = request.ContentTypes,
+            });
+        }
+
+        if (!string.IsNullOrEmpty(request.Tag))
+        {
+            filters.Add(new FilterRow
+            {
+                Property = "tags",
+                Operator = FilterOperator.ValueListContain,
+                Value = request.Tag,
+            });
+        }
+        
+        return cmsBackend.GetEntities<CardItem>(new GetEntitiesRequest
+        {
+            FromPath = request.Path,
+            LanguageCode = request.LanguageCode,
+            Properties = ["fileName", "title", "description", "contentType", "path", "length(content)", "tags", "projects"],
+            Pagination = request.Pagination,
+            Filters = filters.ToArray()
+        });
     }
     
-    [HttpPost("property-values-count")]
-    public List<CountPropertyRow> CountValues([FromBody] CountPropertyValuesRequest request)
+    [HttpGet("categories")]
+    public List<ManuItem> GetCategories([FromQuery] string languageCode)
     {
-        return cmsBackend.CountPropertyValues(request);
+        var rows = cmsBackend
+            .GetSections(new GetSectionsRequest
+            {
+                LanguageCode = languageCode,
+                Depth = 2,
+                FromPath = ["blog"],
+            })
+            .Where(x => x.FileName != "documentation")
+            .Where(x => x.FileName != "undefined")
+            .ToList();
+        
+        var mainSection = cmsBackend
+            .GetSections(new GetSectionsRequest
+            {
+                LanguageCode = languageCode,
+                Depth = 1,
+            })
+            .First();
+
+        mainSection.Children = rows.ToArray();
+        
+        rows.Insert(0, mainSection);
+        
+        var all = rows
+            .Select(Map)
+            .ToList();
+        
+        return all;
     }
     
-    [HttpPost("sections")]
-    public List<SectionItem> GetSections([FromBody] GetSectionsRequest request)
+    [HttpGet("docs")]
+    public List<ManuItem> GetDocs([FromQuery] string languageCode)
     {
-        return cmsBackend.GetSections(request);
+        var rows = cmsBackend
+            .GetSections(new GetSectionsRequest
+            {
+                LanguageCode = languageCode,
+                Depth = int.MaxValue,
+                FromPath = ["blog", "documentation"],
+            });
+        
+        var all = rows
+            .Select(Map)
+            .ToList();
+        
+        return all;
+    }
+    
+    [HttpGet("docs-hierarchy")]
+    public DocsMenuSection[] GetDocs([FromQuery] string languageCode, [FromQuery] string[] fromPath)
+    {
+        var rows = cmsBackend
+            .GetSections(new GetSectionsRequest
+            {
+                LanguageCode = languageCode,
+                Depth = 2,
+                FromPath = fromPath,
+            });
+
+        var result = new List<DocsMenuSection>();
+        foreach (var row in rows)
+        {
+            var childrenResult = new List<DocsMenuItem>();
+            foreach (var child in row.Children)
+            {
+                childrenResult.Add(new DocsMenuItem
+                {
+                    Title = child.Title,
+                    Path = child.FullPath,
+                });
+            }
+            
+            result.Add(new DocsMenuSection
+            {
+                Children = childrenResult.ToArray(),
+                Title = row.Title,
+                Path = row.FullPath,
+            });
+        }
+        
+        return result.ToArray();
+    }
+    
+    [HttpPost("details")]
+    public CardDetail GetDoc([FromBody] GetCardRequest request)
+    {
+        return cmsBackend
+            .GetEntity<CardDetail>(new GetEntityRequest
+            {
+                Path = request.Path,
+                LanguageCode = request.LanguageCode,
+                Properties = [
+                    "title",
+                    "content",
+                    "format(createdAt, \"dd MMM yyyy\") as createdAt",
+                    "format(updatedAt, \"dd MMM yyyy\") as updatedAt",
+                    "length(content)",
+                    "innerLinks",
+                    "tags",
+                    "projects",
+                    "next",
+                    "previous",
+                    "contentType"
+                ]
+            });
+    }
+    
+    [HttpGet("tags")]
+    public Tag[] GetTags([FromQuery] string languageCode, [FromQuery] string[] path)
+    {
+        var values = cmsBackend
+            .CountPropertyValues(new CountPropertyValuesRequest
+            {
+                Property = "tags",
+                FromPath = path,
+                LanguageCode = languageCode,
+            });
+
+        return values
+            .Select(x => new Tag { Key = x.Key })
+            .ToArray();
+    }
+
+    public ManuItem Map(SectionItem x)
+    {
+        return new ManuItem
+        {
+            Key = x.FileName,
+            Path = x.FullPath,
+            Count = x.GetAllChildren().Count(y => y.HasContent),
+            Title = x.Title,
+            Icon = x.MdFile?.GetValueOrDefault("icon") as string,
+        };
+    }
+
+    public class Tag
+    {
+        public required string Key { get; init; }
+    }
+
+    public class GetCardsRequest
+    {
+        public required string[] Path { get; init; }
+        public required string LanguageCode { get; init; }
+        public required PaginationData Pagination { get; init; }
+        public required string[] ContentTypes { get; init; }
+        public string? Tag { get; init; }
+    }
+
+    public class ManuItem
+    {
+        public required string Title { get; init; }
+        public required string Key { get; init; }
+        public required string[] Path { get; init; }
+        public required string? Icon { get; init; }
+        public required int Count { get; init; }
+    }
+    
+    public class DocsMenuSection
+    {
+        public required string Title { get; init; }
+        public required string[] Path { get; init; }
+        public required DocsMenuItem[] Children { get; init; }
+    }
+    
+    public class DocsMenuItem
+    {
+        public required string? Title { get; init; }
+        public required string[] Path { get; init; }
+    }
+
+    public class CardItem
+    {
+        public required string FileName { get; init; }
+        public required string Title { get; init; }
+        public required string Description { get; init; }
+        public required string ContentType { get; init; }
+        public required string[] Path { get; init; }
+        public required int Length { get; init; }
+        public required string?[] Tags { get; init; }
+        public required string?[] Projects { get; init; }
+    }
+
+    public class GetCardRequest
+    {
+        public required string LanguageCode { get; init; }
+        public required string[] Path { get; init; }
+    }
+    
+    public class CardDetail
+    {
+        public required string Title { get; init; }
+        public required string Content { get; init; }
+        public required string CreatedAt { get; init; }
+        public required string UpdatedAt { get; init; }
+        public required string ContentType { get; init; }
+        public required long Length { get; init; }
+        public required string?[] Tags { get; init; }
+        public required string?[] Projects { get; init; }
+        public required MarkdownInnerLink[] InnerLinks { get; init; }
+        public NeighborCard? Previous { get; set; }
+        public NeighborCard? Next { get; set; }
+    }
+
+    public class NeighborCard
+    {
+        public required string Title { get; init; }
+        public required string[] Path { get; init; }
     }
 }

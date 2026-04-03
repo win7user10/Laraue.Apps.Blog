@@ -1,6 +1,6 @@
 ---
 type: documentation
-title: SelectMany stage
+title: SelectMany
 project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
@@ -8,7 +8,7 @@ updatedAt: 2025-08-01
 Single is the operation that returns single object from the sequence or throws an exception if the sequence contains more 
 or less elements.
 
-#### SingleStage syntax
+#### Syntax
 ```antlr
 First
   : 'single' '(' LambdaExpression? ')'  
