@@ -133,19 +133,7 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
     [HttpPost("details")]
     public CardDetail GetDoc([FromBody] GetCardRequest request)
     {
-        var all = cmsBackend.GetEntities<NeighborCard>(new GetEntitiesRequest
-        {
-            LanguageCode = request.LanguageCode,
-            Pagination = new PaginationData
-            {
-                Page = 0,
-                PerPage = 10000,
-            },
-            Properties = ["path", "title"],
-            FromPath = ["blog"]
-        });
-        
-        var result = cmsBackend
+        return cmsBackend
             .GetEntity<CardDetail>(new GetEntityRequest
             {
                 Path = request.Path,
@@ -159,39 +147,11 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "innerLinks",
                     "tags",
                     "projects",
+                    "next",
+                    "previous",
+                    "contentType"
                 ]
             });
-
-        var elementIndex = all.Data
-            .Index()
-            .Where(x => x.Item.Path.SequenceEqual(request.Path))
-            .Select(x => x.Index)
-            .FirstOrDefault();
-
-        if (elementIndex != 0)
-        {
-            // TODO - search only real items
-            var previous = all.Data.ElementAt(elementIndex - 1);
-
-            result.Previous = new NeighborCard
-            {
-                Path = previous.Path,
-                Title = previous.Title,
-            };
-        }
-        
-        if (elementIndex < all.Data.Count - 2)
-        {
-            var next = all.Data.ElementAt(elementIndex + 1);
-
-            result.Next = new NeighborCard
-            {
-                Path = next.Path,
-                Title = next.Title,
-            };
-        }
-
-        return result;
     }
     
     [HttpGet("tags")]
@@ -282,6 +242,7 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required string Content { get; init; }
         public required string CreatedAt { get; init; }
         public required string UpdatedAt { get; init; }
+        public required string ContentType { get; init; }
         public required long Length { get; init; }
         public required string?[] Tags { get; init; }
         public required string?[] Projects { get; init; }
