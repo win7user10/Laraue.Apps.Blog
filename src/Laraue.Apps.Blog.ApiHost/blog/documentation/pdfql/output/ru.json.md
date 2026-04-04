@@ -5,11 +5,11 @@ project: PdfQL
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
 ---
-The data from the pipeline returns as is.
+Дата из текущей выборки возвращаяется, как есть, сериализуясь в JSON.
 
-All examples work with the next PDF structure
+Все примеры ниже работают с такой структурой PDF.
 
-#### --- PDF start ---
+--- Начало PDF ---
 
 |                   |                   |
 |-------------------|-------------------|
@@ -21,15 +21,15 @@ All examples work with the next PDF structure
 | Table2 Row1 Cell1 | Table2 Row1 Cell2 |
 | Table2 Row2 Cell1 | Table2 Row2 Cell2 |
 
-#### --- PDF end ---
+--- Конец PDF ---
 
-
-### Examples
-#### Return all tables from document
+### Примеры
+#### Вернуть все таблицы из документа
 ```csharp
 select(tables) // PdfTable[]
 ```
-Will produce the next output  
+
+Такой запрос на выходе вернет следующий JSON. 
 
 ```json
 [
