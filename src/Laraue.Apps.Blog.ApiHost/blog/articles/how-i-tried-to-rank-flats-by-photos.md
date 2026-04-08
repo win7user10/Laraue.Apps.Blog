@@ -2,7 +2,7 @@
 title: How I tried to rank apartments based on their photos
 type: article
 projects: [real-estate, crawler, telegram-net]
-description: A story about how a system for finding the perfect apartment was created
+description: A story about development of the system that help finding the best apartments
 createdAt: 2025-12-25
 updatedAt: 2025-12-25
 ---
@@ -111,7 +111,7 @@ a minimal set of images, train a model, and then display the prediction result i
 This approach would allow seeing on which images the model makes the most mistakes, and the labeling process could become a bit funner.
 For now, this placeholder displayed a static text.
 
-Writing the Models
+## Writing the Models
 After collecting a dataset of a hundred photos, it was time to start training the models. I needed to understand if this whole
 system even works. I took a closer look at the models planned for implementation.
 The first two were supposed to return a boolean answer—which resembled a binary classification task.
@@ -644,7 +644,7 @@ Further improvements were swirling in my head:
 3. Merge duplicates by parameters, cleaning up selections.
 4. Search for apartments not only for purchase but also for rent.
 5. Do so-called model distillation. This is when a small model is trained on the results of a large one. Then
-6. GpuHost would be on the server and wouldn't have to be run on the local computer.
+GpuHost would be on the server and wouldn't have to be run on the local computer.
 
 Ideas kept coming one after another, but a problem appeared—it seems I got tired of developing this project again. Currently, it
 couldn't be applied in any way; no apartment purchases were foreseen. Nevertheless, it looks
