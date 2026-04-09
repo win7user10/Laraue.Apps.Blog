@@ -1,5 +1,5 @@
 ﻿---
-title: How I use Ollama in .NET projects
+title: How we use Ollama in .NET projects
 type: article
 projects: [real-estate, learn-language]
 description: The clean way to use local hosted models available in Ollama with .NET
