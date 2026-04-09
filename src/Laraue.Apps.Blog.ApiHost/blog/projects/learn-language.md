@@ -18,12 +18,10 @@ updatedAt: 2025-11-05
 | Application link | [Learn Language Bot](https://t.me/learn_lang_bot)                               |
 
 ## About Language Learning
-There are up to 7000 languages in the world. Language learning is the process of acquiring the ability
-to understand and use a language other than your native one. It involves learning vocabulary, grammar,
-pronunciation, and cultural nuances to communicate effectively.
+Learning a new language is a long process in which we try to learn a huge amount of grammar, rules, and words.
 
-Visiting a new country sometimes requires at least basic local language knowledge, especially when the country's
-citizens don't have a habit of learning English.
+But often, you don't necessarily need to learn an entire language to start using it. 80% of everyday speech consists of just 300–500 words.
+So before a trip, you can spend a month learning that many words to feel much more comfortable in a new country.
 
 ## The Low Vocabulary Problem
 To start understanding a language, you need three things:
