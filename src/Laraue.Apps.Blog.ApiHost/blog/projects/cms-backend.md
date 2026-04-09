@@ -18,10 +18,15 @@ updatedAt: 2025-12-08
 | Downloads    | ![latest version](https://img.shields.io/nuget/dt/Laraue.CmsBackend) |
 | Github       | [Laraue.CmsBackend](https://github.com/win7user10/Laraue.CmsBackend) |
 
+## How the project was born
+We wanted to store all articles in Markdown format. Preferably separately from the frontend part. With the ability to search,
+filter by attributes, and anything else that comes to mind.
+The existing options are either storing Markdown in the frontend part, or full-fledged CMSs that store content in databases.
+We wanted to have our own solution that combines all of this.
+
 ## What Is Classic CMS
-CMS, or Content Management System, is a software application that allows users to create, manage, and modify website
-content without needing specialized technical knowledge. Popular examples include WordPress, Drupal, and Joomla,
-empowering individuals and organizations to easily build and update their online presence.
+CMS, or Content Management System, is a software that allows users to create, manage, and modify website
+content without needing specialized technical knowledge. Popular examples include WordPress, Drupal, and Joomla.
 
 ### Why A CMS Isn't Always The Best Approach
 Using a CMS can save users a great deal of effort.
