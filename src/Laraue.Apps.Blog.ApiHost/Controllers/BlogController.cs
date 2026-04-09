@@ -149,7 +149,8 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "projects",
                     "next",
                     "previous",
-                    "contentType"
+                    "contentType",
+                    "description"
                 ]
             });
     }
@@ -239,6 +240,7 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
     public class CardDetail
     {
         public required string Title { get; init; }
+        public required string Description { get; init; }
         public required string Content { get; init; }
         public required string CreatedAt { get; init; }
         public required string UpdatedAt { get; init; }
