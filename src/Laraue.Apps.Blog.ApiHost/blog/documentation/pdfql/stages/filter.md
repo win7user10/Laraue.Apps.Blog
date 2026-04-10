@@ -18,8 +18,8 @@ Related tokens
 _[LambdaExpression](../expression/lambda)_
 
 #### Usage examples
-1. For each table cell returns only those where text is equal to 'Title'.
-    ```csharp
-    select(tableCells) // PdfTableCell[]
-        ->filter((item) => item.Text() == 'Title') // PdfTableCell[]
-    ```
+For each table cell returns only those where text is equal to 'Title'.
+```csharp
+select(tableCells) // PdfTableCell[]
+    ->filter((item) => item.Text() == 'Title') // PdfTableCell[]
+```

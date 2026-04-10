@@ -19,9 +19,9 @@ First
 Related tokens  
 _[LambdaExpression](../expression/lambda)_
 
-Single examples
-1. Find a table cell with the text 'Alex'. Throws when not found or more than one record returns.
-    ```csharp
-    select(tableCells) // PdfTableCell[]
-        ->single((item) => item.Text() == 'Alex') // PdfTableCell
-    ```
+#### Single examples
+Find a table cell with the text 'Alex'. Throws when not found or more than one record returns.
+```csharp
+select(tableCells) // PdfTableCell[]
+    ->single((item) => item.Text() == 'Alex') // PdfTableCell
+```

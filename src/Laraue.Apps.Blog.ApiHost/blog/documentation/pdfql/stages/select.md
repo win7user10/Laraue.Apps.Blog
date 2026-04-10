@@ -24,11 +24,11 @@ select(tables) // PdfTable[]
 ```
 
 ##### Select table rows
- ```csharp
- select(tableRows) // PdfTableRow[]
- ```
+```csharp
+select(tableRows) // PdfTableRow[]
+```
 
 ##### Select table cells
- ```csharp
- select(tableCells) // PdfTableCell[]
- ```
+```csharp
+select(tableCells) // PdfTableCell[]
+```

@@ -17,9 +17,9 @@ Take
 Related tokens  
 _[ConstantExpression](../expression/constant)_
 
-Take examples
-1. Returns only 3 cells from the sequence.
-    ```csharp
-    select(tableCells) // PdfTableCell[]
-        ->take(3) // PdfTableCell[]
-    ```
+#### Take examples
+Returns only 3 cells from the sequence.
+```csharp
+select(tableCells) // PdfTableCell[]
+    ->take(3) // PdfTableCell[]
+```

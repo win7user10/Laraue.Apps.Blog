@@ -17,11 +17,11 @@ Related tokens
 _[Selector](../keyword/selector)_
 
 #### Usage examples
-1. Select table rows
-    ```csharp
-    select(tables)->selectMany(tableRows) // PdfTableRow[]
-    ```
-2. Select table cells
-    ```csharp
-    select(tables)->selectMany(tableCells) // PdfTableCell[]
-    ```
+Select table rows
+```csharp
+select(tables)->selectMany(tableRows) // PdfTableRow[]
+```
+Select table cells
+```csharp
+select(tables)->selectMany(tableCells) // PdfTableCell[]
+```

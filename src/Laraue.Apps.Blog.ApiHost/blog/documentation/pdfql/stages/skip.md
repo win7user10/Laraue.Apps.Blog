@@ -17,15 +17,15 @@ Skip
 Related tokens  
 _[ConstantExpression](../expression/constant)_
 
-Skip examples
-1. Skip first cell of the sequence.
-    ```csharp
-    select(tableCells) // PdfTableCell[]
-        ->skip(1) // PdfTableCell[]
-    ```
-2. Take only the second and the third rows.
-    ```csharp
-    select(tableCells) // PdfTableCell[]
-        ->skip(1) // PdfTableCell[]
-        ->take(2) // PdfTableCell[]
-    ```
+#### Skip examples
+Skip first cell of the sequence.
+```csharp
+select(tableCells) // PdfTableCell[]
+    ->skip(1) // PdfTableCell[]
+```
+Take only the second and the third rows.
+```csharp
+select(tableCells) // PdfTableCell[]
+   ->skip(1) // PdfTableCell[]
+   ->take(2) // PdfTableCell[]
+```

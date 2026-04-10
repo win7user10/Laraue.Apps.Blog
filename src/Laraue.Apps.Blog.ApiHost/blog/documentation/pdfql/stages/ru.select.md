@@ -20,16 +20,16 @@ _[Selector](../keyword/selector)_
 #### Примеры использования
 
 ##### Выборка таблиц
- ```csharp
- select(tables) // PdfTable[]
- ```
+```csharp
+select(tables) // PdfTable[]
+```
 
 ##### Выбора строк таблиц
- ```csharp
- select(tableRows) // PdfTableRow[]
- ```
+```csharp
+select(tableRows) // PdfTableRow[]
+```
 
 ##### Выборка ячеек таблиц
- ```csharp
- select(tableCells) // PdfTableCell[]
- ```
+```csharp
+select(tableCells) // PdfTableCell[]
+```

@@ -17,14 +17,14 @@ MapStage
 Related tokens  
 _[LambdaExpression](../expression/lambda)_
 
-Map examples
-1. For each table in a PDF take the text content
-    ```csharp
-    select(tables) // PdfTable[]
-        ->map((item) => item.Text()) // string[]
-    ```
-2. For each table row get first cell text as 'Name' and second cell as 'Description.'
-    ```csharp
-    select(tableRows) // PdfTable[]
-        ->map((row) => new { Title = row.GetCell(1).Text(), Description = row.GetCell(2).Text() }) // object[]
-    ```
+#### Map examples
+For each table in a PDF take the text content
+```csharp
+select(tables) // PdfTable[]
+    ->map((item) => item.Text()) // string[]
+```
+For each table row get first cell text as 'Name' and second cell as 'Description.'
+```csharp
+select(tableRows) // PdfTable[]
+    ->map((row) => new { Title = row.GetCell(1).Text(), Description = row.GetCell(2).Text() }) // object[]
+```
