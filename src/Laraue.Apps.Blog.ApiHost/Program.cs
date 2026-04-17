@@ -23,6 +23,7 @@ var cmsBackend = new CmsBackendBuilder(
     .AddContentFolder("blog")
     .Build();
 
+builder.Services.AddHealthChecks();
 builder.Services.AddSingleton(cmsBackend);
 builder.Services.AddSingleton<ISitemapGenerator, SitemapGenerator>();
 
@@ -44,4 +45,5 @@ app.UseCors(corsPolicyBuilder =>
 
 app.UseMiddleware<ExceptionHandleMiddleware>();
 app.MapControllers();
+app.MapHealthChecks("/_health");
 app.Run();
