@@ -7,7 +7,7 @@ applicationLink: https://laraue.com/crawled-apartments
 tags: [Crawler,AI,Ollama]
 description: A free tool that crawls Saint Petersburg real estate listings and ranks them by renovation quality using AI photo analysis. Stop scrolling bad listings — see the best offers first.
 createdAt: 2025-11-01
-updatedAt: 2026-04-16
+updatedAt: 2026-04-19
 ---
 Scrolling through hundreds of apartment listings is exhausting. Half the photos are dark, blurry, or staged to hide problems. Prices vary wildly for seemingly similar flats. And unless you have years of market experience, it's hard to tell a great deal from a terrible one.
 

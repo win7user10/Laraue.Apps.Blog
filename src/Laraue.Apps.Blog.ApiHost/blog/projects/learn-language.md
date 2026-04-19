@@ -4,7 +4,7 @@ description: Practice vocabulary and build language skills with an interactive q
 tags: [language learning, vocabulary, Telegram bot, learn English, language quiz, CEFR, free language app]
 type: project
 createdAt: 2025-11-01
-updatedAt: 2025-04-17
+updatedAt: 2025-04-19
 ---
 Struggling to find time or motivation to learn a new language? **Vocabulary Bot** is a free Telegram bot that helps you build real vocabulary in minutes a day — no app to install, no account to create, no credit card required.
 
