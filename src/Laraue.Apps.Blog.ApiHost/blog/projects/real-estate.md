@@ -1,5 +1,5 @@
 ﻿---
-title: Searching for an Apartment in Saint Petersburg? Let AI Filter the Good Deals for You
+title: Laraue Apartments - Let AI Filter the Good Saint Petersburg Apartment Deals for You
 type: project
 projectType: application
 githubLink: https://github.com/win7user10/Laraue.Apps.RealEstate

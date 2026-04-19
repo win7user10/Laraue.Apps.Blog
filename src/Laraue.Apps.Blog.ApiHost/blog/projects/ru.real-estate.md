@@ -1,5 +1,5 @@
 ﻿---
-title: Ищете квартиру в Санкт-Петербурге? ИИ отфильтрует лучшие предложения за вас
+title: Laraue Apartments - Найдите лучшие предложения недвижимости в Санкт-Петербурге с нашим ИИ
 type: project
 projectType: application
 githubLink: https://github.com/win7user10/Laraue.Apps.RealEstate

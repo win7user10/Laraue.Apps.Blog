@@ -1,5 +1,5 @@
 ﻿---
-title: Learn Languages for Free with a Telegram Bot
+title: Laraue Language Bot - Learn Languages for Free with a Telegram Bot
 description: Practice vocabulary and build language skills with an interactive quiz bot inside Telegram. Free, no sign-up, works on any device. Supports 7 language pairs.
 tags: [language learning, vocabulary, Telegram bot, learn English, language quiz, CEFR, free language app]
 type: project
