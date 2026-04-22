@@ -1,5 +1,5 @@
 ---
-title: Spaces — grouping boards
+title: Spaces — grouping boards by project or team
 description: Spaces in Laraue Boards let you group related boards together under one label. Use spaces to separate client work, products, or departments without creating separate accounts.
 keywords: [project grouping kanban, workspace telegram boards, organize boards by project, multi-project task tracker]
 type: documentation

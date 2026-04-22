@@ -1,5 +1,5 @@
 ---
-title: Organizations — collaborate with team
+title: Organizations — collaborate with your team
 description: Laraue Boards organizations let multiple users share boards and spaces. Learn how to create an organization, invite members, and switch between personal and team workspaces.
 keywords: [team project management telegram, shared kanban telegram, invite team telegram board, small team task tracker, organization workspace kanban]
 type: documentation
