@@ -19,6 +19,7 @@ var cmsBackend = new CmsBackendBuilder(
     .AddContentType<Project>()
     .AddContentType<Article>()
     .AddContentType<Documentation>()
+    .AddContentType<RootSectionDefinition>()
     .AddContentType<SectionDefinition>()
     .AddContentFolder("blog")
     .Build();

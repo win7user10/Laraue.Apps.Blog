@@ -1,7 +1,7 @@
 ---
 title: Язык PdfQL
 icon: 📄
-type: sectionDefinition
+type: rootSectionDefinition
 createdAt: 2025-03-03
 updatedAt: 2025-03-03
 ---

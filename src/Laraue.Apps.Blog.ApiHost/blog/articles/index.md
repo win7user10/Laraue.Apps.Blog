@@ -1,7 +1,7 @@
 ---
 title: Articles
 icon: 📝
-type: sectionDefinition
+type: rootSectionDefinition
 createdAt: 2025-08-01
 updatedAt: 2025-08-01
 ---

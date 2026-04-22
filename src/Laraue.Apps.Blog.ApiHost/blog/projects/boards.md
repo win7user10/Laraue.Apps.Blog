@@ -73,16 +73,16 @@ Need to work from a desktop browser? The full web app is available at [laraue.co
 
 ## Honest Comparison: Laraue Boards vs Jira
 
-| | Laraue Boards | Jira             |
-|---|---|------------------|
-| Setup time | Minutes | Days             |
-| Learning curve | Near zero | Steep            |
-| Telegram integration | Native | None             |
-| Task creation | From existing messages | Manual entry     |
-| Pricing | Free to start | Per seat, adds up fast |
-| Mobile experience | First-class (it's a Mini App) | Usable but heavy |
-| Customization | Boards, columns, attributes | Extremely deep (often too deep) |
-| Best for | Teams under ~50 people | Enterprise with dedicated PM staff |
+|                      | Laraue Boards                 | Jira                               |
+|----------------------|-------------------------------|------------------------------------|
+| Setup time           | Minutes                       | Days                               |
+| Learning curve       | Near zero                     | Steep                              |
+| Telegram integration | Native                        | None                               |
+| Task creation        | From existing messages        | Manual entry                       |
+| Pricing              | Free to start                 | Per seat, adds up fast             |
+| Mobile experience    | First-class (it's a Mini App) | Usable but heavy                   |
+| Customization        | Boards, columns, attributes   | Extremely deep (often too deep)    |
+| Best for             | Teams under ~50 people        | Enterprise with dedicated PM staff |
 
 Jira is the right tool when you have a dedicated project manager, a complex organization with strict audit requirements, and the budget to maintain it. For everyone else it's usually overkill.
 
@@ -98,4 +98,5 @@ This isn't a new idea. It's what sticky notes on a whiteboard were. It's what a 
 
 ## Try It
 
+Visit the [documentation](https://laraue.com/blog/documentation/laraue-boards) page to get answers how to use Laraue Boards.  
 Visit the [product](https://laraue.com/msgboard) page to get the actual information.

@@ -107,10 +107,10 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
             });
 
         var result = new List<DocsMenuSection>();
-        foreach (var row in rows)
+        foreach (var row in ApplyOrdering(rows))
         {
             var childrenResult = new List<DocsMenuItem>();
-            foreach (var child in row.Children)
+            foreach (var child in ApplyOrdering(row.Children))
             {
                 childrenResult.Add(new DocsMenuItem
                 {
@@ -128,6 +128,16 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         }
         
         return result.ToArray();
+    }
+
+    private IOrderedEnumerable<SectionItem> ApplyOrdering(IEnumerable<SectionItem> sections)
+    {
+        return sections.OrderBy(x =>
+        {
+            if (x.MdFile is null)
+                return 0;
+            return x.MdFile.TryGetValue("order", out var value) ? value : 0;
+        });
     }
     
     [HttpPost("details")]
@@ -151,6 +161,22 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "previous",
                     "contentType",
                     "description"
+                ]
+            });
+    }
+    
+    [HttpPost("meta")]
+    public CardMeta GetDocMeta([FromBody] GetCardRequest request)
+    {
+        return cmsBackend
+            .GetEntity<CardMeta>(new GetEntityRequest
+            {
+                Path = request.Path,
+                LanguageCode = request.LanguageCode,
+                Properties = [
+                    "title",
+                    "description",
+                    "icon",
                 ]
             });
     }
@@ -251,6 +277,13 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required MarkdownInnerLink[] InnerLinks { get; init; }
         public NeighborCard? Previous { get; set; }
         public NeighborCard? Next { get; set; }
+    }
+    
+    public class CardMeta
+    {
+        public required string? Title { get; init; }
+        public required string? Description { get; init; }
+        public required string? Icon { get; init; }
     }
 
     public class NeighborCard
