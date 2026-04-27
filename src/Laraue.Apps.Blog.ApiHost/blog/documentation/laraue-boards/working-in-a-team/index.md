@@ -5,11 +5,8 @@ keywords: [team project management telegram, collaborate kanban telegram, share 
 type: sectionDefinition
 order: 4
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-04-27
 ---
-
-# Working in a team — collaboration guide
-
 When you're ready to bring in teammates, Laraue Boards organizations give everyone a shared workspace. This section covers the full setup from creating an org to fine-tuning who can see and edit what.
 
 ## In this section
