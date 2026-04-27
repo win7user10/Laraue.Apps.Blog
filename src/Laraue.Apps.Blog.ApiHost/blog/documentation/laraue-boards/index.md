@@ -4,7 +4,7 @@ description: Laraue Boards turns your Telegram messages into structured tasks on
 type: rootSectionDefinition
 icon: 📋
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-04-27
 ---
 
 Your team already works in Telegram. Decisions happen there, tasks get assigned there, files get shared there. Laraue Boards connects directly to that workflow — turning the messages you already send into structured tasks on a kanban board, without asking you to change how you communicate.
@@ -14,7 +14,7 @@ Your team already works in Telegram. Decisions happen there, tasks get assigned 
 Laraue Boards is a project management tool built around a single observation: **the task already exists the moment someone sends a message**. You just need a way to organize it.
 
 - Open it as a **Telegram Mini App** — no separate login, no new account
-- Or use the full **web app** at [laraue.com/msgboard](https://laraue.com/msgboard)
+- Or use the full **web app** at [msgboard.laraue.com](https://msgboard.laraue.com)
 - Capture Telegram messages — text, photos, videos — as issues with one tap
 - Organize issues into **Epics** (boards) with custom status columns
 - Group boards into **Spaces** for different projects or clients

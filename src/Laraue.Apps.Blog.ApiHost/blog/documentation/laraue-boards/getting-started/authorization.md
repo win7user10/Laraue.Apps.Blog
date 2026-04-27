@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 1
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-04-27
 ---
 
 Laraue Boards uses your existing Telegram account as your identity. There is no separate registration, no password to remember, and no email to verify.
@@ -21,7 +21,7 @@ This is the recommended way to use Laraue Boards on mobile.
 
 ### In the browser
 
-Open [laraue.com/msgboard](https://laraue.com/msgboard) in any browser. You will see the login screen with a **Log in with Telegram** button. Clicking it opens a Telegram authorization popup — approve it and you are redirected back to the app.
+Open [msgboard.laraue.com](https://msgboard.laraue.com) in any browser. You will see the login screen with a **Log in with Telegram** button. Clicking it opens a Telegram authorization popup — approve it and you are redirected back to the app.
 
 The browser version requires that your Telegram account is accessible on the same device, or via the Telegram web client.
 

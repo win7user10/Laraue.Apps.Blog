@@ -5,7 +5,7 @@ keywords: [laraue boards getting started, how to use laraue boards, telegram kan
 type: sectionDefinition
 order: 1
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-04-27
 ---
 This section covers everything you need to go from zero to a working board with your first task on it.
 
@@ -19,4 +19,4 @@ This section covers everything you need to go from zero to a working board with 
 
 You need a Telegram account. That's it. There is no separate sign-up, no email to verify, and no credit card required.
 
-Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram to get started, or visit [laraue.com/msgboard](https://laraue.com/msgboard) in your browser.
+Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram to get started, or visit [msgboard.laraue.com](https://msgboard.laraue.com) in your browser.
