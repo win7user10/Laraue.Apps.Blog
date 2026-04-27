@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-04-27
 ---
 Laraue Boards is built as a **Telegram Mini App** — a web application that runs inside the Telegram client. This means you can use it without leaving Telegram, without a separate account, and without switching between apps.
 
@@ -44,7 +44,7 @@ Inside Telegram, if you are reading a message and want to turn it into a task, f
 
 ## Using Laraue Boards without Telegram
 
-The web app at [laraue.com/msgboard](https://laraue.com/msgboard) works independently of the Telegram client. You log in once via the Telegram widget and then use it like any other web app. This is useful when:
+The web app at [msgboard.laraue.com](https://msgboard.laraue.com) works independently of the Telegram client. You log in once via the Telegram widget and then use it like any other web app. This is useful when:
 
 - You are working from a computer where Telegram is not installed
 - Your team has some members who prefer a browser-based workflow

@@ -1,7 +1,7 @@
 ---
-title: Logging in with Telegram
-description: How to log into Laraue Boards using your Telegram account, both inside the Telegram Mini App and via the web browser login widget.
-keywords: [telegram login, telegram widget login, telegram mini app authentication, login without password telegram]
+title: Вход через Telegram — без регистрации
+description: Как войти в Laraue Boards с помощью аккаунта Telegram — через Mini App внутри мессенджера или через виджет входа в браузере.
+keywords: [вход через telegram, telegram виджет авторизация, telegram mini app вход, вход без пароля telegram]
 type: documentation
 project: boards
 order: 1
