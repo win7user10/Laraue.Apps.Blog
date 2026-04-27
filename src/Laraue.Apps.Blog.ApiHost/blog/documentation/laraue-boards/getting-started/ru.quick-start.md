@@ -1,5 +1,5 @@
 ---
-title: Создание первую доски
+title: Создание первой доски
 description: Пошаговое руководство по созданию первой доски в Laraue Boards, захвату задачи из Telegram и продвижению её по статусам.
 keywords: [как использовать laraue boards, создать канбан доску telegram, первая задача telegram доска, начало работы управление проектами telegram]
 type: documentation
