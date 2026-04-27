@@ -1,10 +1,10 @@
 ﻿---
-title: Laraue Boards - The Telegram-Native Project Management Tool That Doesn't Get in Your Way 
+title: Laraue Boards - The Telegram-Native Project Management Tool
 type: project
 tags: [project management, telegram, jira alternative, task tracking, kanban]
 description: Laraue Boards turns your Telegram messages into structured tasks on a kanban board — no migration, no new habits, no bloated UI.
 createdAt: 2026-04-16
-updatedAt: 2026-04-16
+updatedAt: 2026-04-27
 ---
 
 Your team already lives in Telegram. Decisions happen there. Tasks get assigned there. Files get shared there. Then someone opens Jira to log the same information a second time — and that's where productivity goes to die.
@@ -55,7 +55,7 @@ Permissions are simple: owners, admins, members. No 47-page permission matrix.
 
 Open Laraue Boards inside Telegram and you're already logged in. No separate account, no OAuth dance, no password to forget. Your Telegram identity is your identity in the app.
 
-Need to work from a desktop browser? The full web app is available at [laraue.com](https://msgboard.laraue.com), with the same login via Telegram widget. As your team grows and some members prefer the web — that works too. Both interfaces share the same data.
+Need to work from a desktop browser? The full web app is available at [msgboard.laraue.com](https://msgboard.laraue.com), with the same login via Telegram widget. As your team grows and some members prefer the web — that works too. Both interfaces share the same data.
 
 ---
 
