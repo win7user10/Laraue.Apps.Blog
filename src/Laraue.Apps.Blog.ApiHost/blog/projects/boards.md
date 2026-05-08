@@ -98,5 +98,5 @@ This isn't a new idea. It's what sticky notes on a whiteboard were. It's what a 
 
 ## Try It
 
-Visit the [documentation](https://laraue.com/blog/documentation/laraue-boards) page to get answers how to use Laraue Boards.  
-Visit the [product](https://laraue.com/msgboard) page to get the actual information.
+Visit the [documentation](/blog/documentation/laraue-boards) page to get answers how to use Laraue Boards.
+Visit the [product](/boards) page to get the actual information.
