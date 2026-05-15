@@ -6,10 +6,11 @@ type: documentation
 project: boards
 order: 4
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-05-15
 ---
 
-An organization is a shared workspace in Laraue Boards. When you work inside an organization, boards and spaces are visible to all members of that organization according to their permission level.
+An organization is a shared workspace in Laraue Boards. When you work inside an organization, boards and spaces are
+visible to members of that organization according to their permission level.
 
 Personal boards remain completely separate — creating an organization does not share your personal work.
 
@@ -25,31 +26,35 @@ You are automatically assigned as the **Owner** of the new organization.
 
 ## Inviting members
 
-Open the organization management panel from the user avatar menu (top right) and select **My organization**.
+Open the organization management panel from the user avatar menu (top right) and select **Manage organization**.
 
-On the **Members** tab, an **Invite link** is shown. Copy the link and send it to your teammate in Telegram. When they open the link and accept, they join the organization as a **Member**.
+On the **Members** tab, an **Invite link** is shown. Copy the link and send it to your teammate in Telegram.
+When they open the link and accept, they join the organization as a **Member**.
 
 The invite link can be regenerated at any time to revoke all pending invitations without removing existing members.
 
-## Member roles
+## Permissions
+When the user become an organization member, he doesn't have any permission as default. Click **Edit Permissions** on the 
+Member row to set up access.  
+The **Edit Permissions** window has three tabs that allow to make flexible organization access:
 
-| Role | What they can do |
-|------|-----------------|
-| **Owner** | Everything — delete org, manage all members and permissions |
-| **Admin** | Create/edit/delete boards, manage members but not owner settings |
-| **Member** | View and edit issues according to their permission settings |
+| Tab                | What it do                                                                      |
+|--------------------|---------------------------------------------------------------------------------|
+| **Organization**   | Allow to make global permissions setup. E.g. allow view of all issues           |
+| **Direct**         | Create/edit/delete specific spaces/boards. E.g. allow reading backlog epic only |
+| **Administrative** | Setup permissions to manage organization                                        |
 
-Roles can be changed by the Owner or an Admin from the Members tab.
 
 ## Revoking access
 
-On the Members tab, tap the revoke button next to a member's name. Their access is removed immediately. The Owner cannot be removed — ownership must be transferred first.
+On the Members tab, tap the revoke button next to a member's name. Their access is removed immediately.
+The Owner cannot be removed — ownership must be transferred first.
 
 ## Switching between workspaces
 
 Tap the organization name in the breadcrumb at the top of the screen. A switcher appears showing:
 
-- **Personal** — your private workspace
+- **No organization** — your private workspace
 - Each organization you belong to
 - **Manage organizations** — returns to the workspace selection screen
 

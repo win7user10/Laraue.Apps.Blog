@@ -14,15 +14,15 @@ The live app runs at [apartments.laraue.com](https://apartments.laraue.com).
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Language | C# |
-| Framework | .NET 9 |
-| API | ASP.NET Core |
-| Database | PostgreSQL |
-| Crawler | Laraue.Crawler (in-house library) |
-| Vision AI | Ollama — qwen2.5 vision model |
-| License | MIT |
+| Layer     | Technology                        |
+|-----------|-----------------------------------|
+| Language  | C#                                |
+| Framework | .NET 9                            |
+| API       | ASP.NET Core                      |
+| Database  | PostgreSQL                        |
+| Crawler   | Laraue.Crawler (in-house library) |
+| Vision AI | Ollama — qwen2.5 vision model     |
+| License   | MIT                               |
 
 The system is split into three separate hosts, each with a focused responsibility.
 

@@ -12,12 +12,12 @@ Laraue Boards uses a hierarchical permission model. Permissions can be granted a
 
 ## Permission types
 
-| Permission | What it allows |
-|------------|----------------|
-| **Read** | View issues, boards, and spaces |
-| **Create** | Create new issues and boards |
-| **Update** | Edit existing issues and board settings |
-| **Delete** | Delete issues and boards |
+| Permission | What it allows                                         |
+|------------|--------------------------------------------------------|
+| **Read**   | View issues, boards, and spaces                        |
+| **Create** | Create new issues and boards                           |
+| **Update** | Edit existing issues and board settings                |
+| **Delete** | Delete issues and boards                               |
 | **Manage** | All of the above plus managing members and permissions |
 
 ## How hierarchy works
