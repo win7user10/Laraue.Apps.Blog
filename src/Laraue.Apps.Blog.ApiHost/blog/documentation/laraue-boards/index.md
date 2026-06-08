@@ -1,10 +1,10 @@
 ---
-title: Laraue Boards
+title: Laraue Boards - Overview
 description: Laraue Boards turns your Telegram messages into structured tasks on a kanban board. No migration, no new habits, works as a Telegram Mini App and in the browser.
 type: rootSectionDefinition
 icon: 📋
 createdAt: 2026-04-22
-updatedAt: 2026-04-27
+updatedAt: 2026-06-08
 ---
 
 Your team already works in Telegram. Decisions happen there, tasks get assigned there, files get shared there. Laraue Boards connects directly to that workflow — turning the messages you already send into structured tasks on a kanban board, without asking you to change how you communicate.
@@ -22,13 +22,13 @@ Laraue Boards is a project management tool built around a single observation: **
 
 ## Core concepts
 
-| Concept | What it is |
-|---------|-----------|
-| **Issue** | A single task, captured from a Telegram message or created manually |
-| **Epic** | A board with status columns — your kanban board |
-| **Space** | A group of related boards, like a project or client |
-| **Organization** | A shared workspace for your team |
-| **Backlog** | All unassigned issues waiting to be placed on a board |
+| Concept          | What it is                                                          |
+|------------------|---------------------------------------------------------------------|
+| **Issue**        | A single task, captured from a Telegram message or created manually |
+| **Epic**         | A board with status columns — your kanban board                     |
+| **Space**        | A group of related boards, like a project or client                 |
+| **Organization** | A shared workspace for your team                                    |
+| **Backlog**      | All unassigned issues waiting to be placed on a board               |
 
 ## Who it's for
 
