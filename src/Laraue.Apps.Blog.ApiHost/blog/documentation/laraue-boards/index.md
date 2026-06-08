@@ -1,5 +1,5 @@
 ---
-title: Laraue Boards - Overview
+title: Laraue Boards - Task Management system
 description: Laraue Boards turns your Telegram messages into structured tasks on a kanban board. No migration, no new habits, works as a Telegram Mini App and in the browser.
 type: rootSectionDefinition
 icon: 📋

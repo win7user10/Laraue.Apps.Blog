@@ -1,5 +1,5 @@
 ---
-title: Laraue Boards - Обзор
+title: Laraue Boards - Система управления задачами
 description: Laraue Boards превращает ваши сообщения в Telegram в структурированные задачи на канбан-доске. Без миграции данных, без новых привычек. Работает как Telegram Mini App и в браузере.
 type: rootSectionDefinition
 icon: 📋
