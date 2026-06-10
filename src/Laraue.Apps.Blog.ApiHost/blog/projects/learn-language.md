@@ -6,7 +6,7 @@ type: project
 createdAt: 2025-11-01
 updatedAt: 2025-06-10
 ---
-Want a **free Telegram language learning bot** that actually works — with no app to install, no account to create, and no credit card? **Vocabulary Bot** (`@learn_lang_bot`) lets you build real English vocabulary in minutes a day, directly inside Telegram. It covers 7 language pairs, CEFR levels A1 through C1, and is completely free to use, forever. [Link: other free language tools → /resources]
+Want a **free Telegram language learning bot** that actually works — with no app to install, no account to create, and no credit card? **Vocabulary Bot** (`@learn_lang_bot`) lets you build real English vocabulary in minutes a day, directly inside Telegram. It covers 7 language pairs, CEFR levels A1 through C1, and is completely free to use, forever.
 
 ---
 
@@ -14,7 +14,7 @@ Want a **free Telegram language learning bot** that actually works — with no a
 
 Most people assume learning a language means years of grammar rules and expensive courses. Research tells a different story: **everyday conversation relies on just 300–500 core words**. Master those first, and you can navigate airports, restaurants, shops, and real conversations before your next trip.
 
-The challenge isn't volume — it's knowing *which* words to learn first, and actually retaining them. That's the exact problem Vocabulary Bot solves. [Link: language learning tips → /blog/language-learning-tips]
+The challenge isn't volume — it's knowing *which* words to learn first, and actually retaining them. That's the exact problem Vocabulary Bot solves.
 
 ### How Many Words Do You Need to Hold a Conversation?
 
@@ -44,7 +44,7 @@ The core learning mode: see a word, choose the correct translation from four opt
 
 ### CEFR Level Structure (A1 to C1)
 
-Words are organized by the internationally recognized **CEFR framework** — from A1 (absolute beginner) to C1 (advanced). [Link: what is CEFR → /blog/cefr-guide] Start at your current level and move forward naturally, without guessing about difficulty.
+Words are organized by the internationally recognized **CEFR framework** — from A1 (absolute beginner) to C1 (advanced). Start at your current level and move forward naturally, without guessing about difficulty.
 
 ![Telegram bot interface showing CEFR language level selection from A1 beginner to C1 advanced](https://laraue.com/static/images/select-cefr-level.jpg)
 
@@ -102,7 +102,7 @@ Duolingo focuses on gamified, sentence-based learning across many skill areas. V
 
 ## Free Forever and Open Source
 
-Vocabulary Bot is **100% free** — no premium tiers, no word limits, no advertising. The project is open source under the MIT license and actively maintained. [Link: open source language tools → /blog/open-source-tools]
+Vocabulary Bot is **100% free** — no premium tiers, no word limits, no advertising. The project is open source under the MIT license and actively maintained.
 
 You can contribute new words, fix translations, or add a language pair directly via [GitHub](https://github.com/win7user10/Laraue.Apps.LearnLanguage).
 
