@@ -1,6 +1,6 @@
 ﻿---
-title: Free Telegram Bot to Learn English Vocabulary Daily
-description: Build real English vocabulary with a free Telegram quiz bot. No install, no signup. CEFR levels A1–C1, 7 language pairs, XP streaks. Start in 30 seconds.
+title: Learn English Vocabulary Free With a Telegram Quiz Bot
+description: Build real English vocabulary with a free Telegram quiz bot. No install, no signup. CEFR levels A1–C1, 7 language pairs, daily streaks. Start in 30 seconds.
 tags: [language learning, vocabulary bot, Telegram bot learn English, free language app, CEFR vocabulary, learn English free, vocabulary quiz]
 type: project
 createdAt: 2025-11-01
@@ -28,7 +28,7 @@ Getting started with this **Telegram bot to learn English** takes under a minute
 
 1. **Open the bot** — Search `@learn_lang_bot` in Telegram and tap Start. No registration, no email address needed.
 2. **Pick your language pair** — Choose from 7 supported pairs and select your CEFR level (A1 through C1). Both can be changed anytime in settings.
-3. **Start the quiz** — Answer multiple-choice questions, earn XP, build a daily streak.
+3. **Start the quiz** — Answer multiple-choice questions and build a daily streak.
 
 No configuration, no paywalls, no onboarding screens.
 
@@ -38,11 +38,15 @@ No configuration, no paywalls, no onboarding screens.
 
 ### Interactive Multiple-Choice Quizzes
 
-The core learning mode: see a word, choose the correct translation from four options. **Wrong answers automatically cycle back** until you get them right — reinforcing weak spots rather than letting them slip. Every session awards XP and tracks your streak.
+The core learning mode: see a word, choose the correct translation from four options. **Wrong answers automatically cycle back** until you get them right — reinforcing weak spots rather than letting them slip. Every correct answer keeps your daily streak going.
+
+![Vocabulary Bot quiz ready to start, showing language pair and level selection before beginning a session](https://laraue.com/static/images/quiz-ready-to-start.jpg)
 
 ### CEFR Level Structure (A1 to C1)
 
 Words are organized by the internationally recognized **CEFR framework** — from A1 (absolute beginner) to C1 (advanced). [Link: what is CEFR → /blog/cefr-guide] Start at your current level and move forward naturally, without guessing about difficulty.
+
+![Telegram bot interface showing CEFR language level selection from A1 beginner to C1 advanced](https://laraue.com/static/images/select-cefr-level.jpg)
 
 ### Browse Vocabulary by Topic
 
@@ -51,6 +55,8 @@ Not in quiz mode? Browse words grouped by topic — ideal for reviewing vocabula
 ### Progress Tracking and Streaks
 
 The bot tracks your learning streak, quiz scores, and word mastery over time. It remembers what you know and what needs more practice, so every session is efficient.
+
+![Vocabulary Bot quiz result screen showing correct answer feedback and updated learning streak](https://laraue.com/static/images/quiz-result.jpg)
 
 ### Works on Any Device via Telegram
 
