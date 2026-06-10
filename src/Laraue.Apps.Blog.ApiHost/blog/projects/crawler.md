@@ -11,7 +11,9 @@ staring at a tangle of string selectors with no types, no tests, and no clear pl
 **Laraue.Crawling** is a strongly typed .NET web scraping library that lets you define crawling schemas
 as clean, testable C# code — for static HTML, JavaScript-rendered pages, and XML alike.
 
-[![NuGet](https://img.shields.io/nuget/v/Laraue.Crawling.Common)](https://www.nuget.org/packages/Laraue.Crawling.Common) [![Downloads](https://img.shields.io/nuget/dt/Laraue.Crawling.Common)](https://www.nuget.org/packages/Laraue.Crawling.Common) [![MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/win7user10/Laraue.Crawling)
+[![NuGet](https://img.shields.io/nuget/v/Laraue.Crawling.Common)](https://www.nuget.org/packages/Laraue.Crawling.Common)
+[![Downloads](https://img.shields.io/nuget/dt/Laraue.Crawling.Common)](https://www.nuget.org/packages/Laraue.Crawling.Common)
+[![MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/win7user10/Laraue.Crawling)
 
 ---
 

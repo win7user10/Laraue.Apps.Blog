@@ -29,13 +29,13 @@ I asked my friend to help me build a pretty frontend for this application, and s
 crawling schema and runs it:
 
 #### Step 1: Build the Schema
-![Crawling Schema](/images/blog/crawling/crawler-schema-build.jpg "Step 1: Build the Schema")
+![Crawling Schema](https://laraue.com/static/images/blog/crawling/crawler-schema-build.jpg "Step 1: Build the Schema")
 
 #### Step 2: Choose the Pages
-![Crawling Schema pages](/images/blog/crawling/crawler-schema-pages.jpg "Step 2: Choose the Pages")
+![Crawling Schema pages](https://laraue.com/static/images/blog/crawling/crawler-schema-pages.jpg "Step 2: Choose the Pages")
 
 #### Step 3: Run and Get Result
-![Crawling Schema result](/images/blog/crawling/crawler-schema-result.jpg "Step 3: Run and Get Result")
+![Crawling Schema result](https://laraue.com/static/images/blog/crawling/crawler-schema-result.jpg "Step 3: Run and Get Result")
 
 The main problems we encountered were:
 1. Some pages required JavaScript to be rendered. Allowing JavaScript could break the window where the page was opened. After several iterations, I created web and desktop versions of the application. The web version allowed creating schemas for simple parsers, while the desktop version allowed enabling JavaScript and marking data.

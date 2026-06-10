@@ -37,13 +37,13 @@ updatedAt: 2025-03-03
 которое строит схему обхода и запускает её:
 
 #### Шаг 1: Построение схемы
-![Схема обхода](/images/blog/crawling/crawler-schema-build.jpg "Шаг 1: Построение схемы")
+![Схема обхода](https://laraue.com/static/images/blog/crawling/crawler-schema-build.jpg "Шаг 1: Построение схемы")
 
 #### Шаг 2: Выбор страниц
-![Страницы схемы обхода](/images/blog/crawling/crawler-schema-pages.jpg "Шаг 2: Выбор страниц")
+![Страницы схемы обхода](https://laraue.com/static/images/blog/crawling/crawler-schema-pages.jpg "Шаг 2: Выбор страниц")
 
 #### Шаг 3: Запуск и получение результата
-![Результат схемы обхода](/images/blog/crawling/crawler-schema-result.jpg "Шаг 3: Запуск и получение результата")
+![Результат схемы обхода](https://laraue.com/static/images/blog/crawling/crawler-schema-result.jpg "Шаг 3: Запуск и получение результата")
 
 Основные проблемы, с которыми мы столкнулись:
 1. Некоторые страницы требовали рендеринга JavaScript. Включение JavaScript могло нарушить работу окна,
