@@ -4,158 +4,291 @@ type: article
 projects: [real-estate]
 description: A technical deep-dive into an open-source real estate aggregator for Saint Petersburg — covering the C# / .NET 9 architecture, Ollama vision model integration, custom crawler design, and the ideality scoring formula.
 createdAt: 2026-04-16
-updatedAt: 2026-04-16
+updatedAt: 2026-06-12
 ---
-**[Laraue.Apps.RealEstate](https://github.com/win7user10/Laraue.Apps.RealEstate)** is an open-source proof-of-concept that crawls Saint Petersburg apartment listings, analyzes every listing photo with a local Ollama vision model, and ranks results by a composite ideality score. This article covers the architecture, each service's design, the ranking formula, and the evolution from self-trained TensorFlow models to open-source LLMs.
+**Scraping JavaScript-rendered real estate listings in C#, scoring every photo with a local vision model, and ranking results by renovation quality** sounds like a weekend project until you hit the real problems: anti-bot redirects, GPU-bound inference blocking your crawler, and TensorFlow models that plateau at useless accuracy. This article walks through how [Laraue.Apps.RealEstate](https://github.com/win7user10/Laraue.Apps.RealEstate) solves each of these — with real code from the repo.
 
-The live app runs at [apartments.laraue.com](https://apartments.laraue.com).
-
----
-
-## Tech Stack
-
-| Layer     | Technology                        |
-|-----------|-----------------------------------|
-| Language  | C#                                |
-| Framework | .NET 9                            |
-| API       | ASP.NET Core                      |
-| Database  | PostgreSQL                        |
-| Crawler   | Laraue.Crawler (in-house library) |
-| Vision AI | Ollama — qwen2.5 vision model     |
-| License   | MIT                               |
-
-The system is split into three separate hosts, each with a focused responsibility.
+The live app is at [apartments.laraue.com](https://apartments.laraue.com). If you want to understand what it does from a user perspective rather than how it was built, see the [product overview](../projects/real-estate).
 
 ---
 
-## Architecture Overview
+## Architecture: Three Hosts, One Purpose
 
 ```
-WorkerHost          → crawls listings + runs ranking calculations
-GpuWorkerHost       → runs Ollama image prediction jobs
-ApiHost             → serves frontend requests
+WorkerHost       → crawls listings + computes ranking scores
+GpuWorkerHost    → runs Ollama image inference jobs  
+ApiHost          → serves frontend and Telegram bot requests
 ```
 
-Separating `GpuWorkerHost` from `WorkerHost` is the key architectural decision here. Image inference is GPU-bound and slow. Isolating it in its own host means the crawler and ranking jobs aren't blocked by prediction throughput, and the GPU host can be scaled or moved to a dedicated machine independently.
+The split between `WorkerHost` and `GpuWorkerHost` is the most important architectural decision. Image inference is GPU-bound and slow — on consumer hardware, scoring a single listing's photos can take several seconds. Running inference in the same process as the crawler would mean the crawler stalls waiting for predictions. Separating them means each can run at its own pace: the crawler collects listings every 4 hours, the predictor continuously drains the unscored queue at one listing per minute.
+
+The `ApiHost` is standard ASP.NET Core with no interesting architecture — the complexity lives in the other two hosts.
 
 ---
 
-## Service 1: Advertisement Collector (WorkerHost)
+## The Crawler: PuppeteerSharp + Schema-Based Extraction
 
-The crawler runs every **4 hours** as a scheduled job inside `WorkerHost`. It's built on the in-house **[Laraue.Crawler](https://github.com/win7user10/Laraue.Crawling)** library — a .NET crawler with support for both static HTML (via AngleSharp) and JavaScript-rendered pages (via PuppeteerSharp).
+Cian (the primary Russian real estate aggregator) renders its listing pages with JavaScript. AngleSharp, which works well for static HTML, can't see the rendered DOM. The crawler uses **PuppeteerSharp** — a headless Chromium wrapper — to navigate pages and extract data after JavaScript execution.
 
-Each source site is implemented as a `CrawlerJob` with a corresponding `CrawlingSchema`. For Cian (the primary Russian real estate aggregator), the relevant files are:
+### BaseCrawlingSchemaParser: Retry, Randomization, Anti-Bot
 
-- [`CianCrawlerJob`](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Crawling.Impl/Cian/CianCrawlerJob.cs) — the job that triggers the crawl
-- [`CianCrawlingSchema`](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Crawling.Impl/Cian/CianCrawlingSchema.cs) — the extraction schema mapping DOM elements to the data model
-
-### Early Termination Logic
-
-The crawler requests listings sorted by newest first. On each run, it inserts new records until it encounters one that already exists in the database — at which point it stops. This is a simple but effective deduplication and termination strategy: no need to crawl the full result set, just the delta since the last run.
-
-Adding a new source site is a matter of implementing a new `CrawlerJob` + `CrawlingSchema` pair. The system supports as many sources as needed simultaneously.
-
----
-
-## Service 2: Image Predictor (GpuWorkerHost)
-
-The predictor runs every **minute** as a job inside `GpuWorkerHost`. It pulls the next batch of unanalyzed images and sends them one by one to Ollama.
-
-### Prediction Model
-
-The core class is [`OllamaRealEstatePredictor`](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Prediction.Impl/OllamaRealEstatePredictor.cs), which calls a locally-hosted **qwen2.5** vision model. The image bytes are passed directly to Ollama along with a structured prompt that specifies what constitutes a good and a bad apartment photo.
-
-### Prediction Result
-
-Each photo produces an `OllamaPredictionResult`:
+`BaseCrawlingSchemaParser` ([source](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Crawling.AppServices/BaseCrawlingSchemaParser.cs)) handles the browser lifecycle and page navigation:
 
 ```csharp
-public record OllamaPredictionResult
+public Task<CrawlingResult> ParseLinkAsync(string link, CancellationToken cancellationToken = default)
 {
-    public double RenovationRating { get; init; } // 0.0 to 1.0
-    public string[] Tags { get; init; } = [];     // e.g. ["clean", "new_windows", "dark"]
-    public string Description { get; init; } = string.Empty; // model's reasoning
+    return Policy.Handle<PageOpenException>()
+        .WaitAndRetryAsync(
+            10,
+            i => TimeSpan.FromSeconds(i * 100),
+            (ex, timeSpan) => _logger.LogError(ex, "The page scheduled to be opened again in {Time}", timeSpan))
+        .ExecuteAsync(ct => ParseLinkInternalAsync(link, ct), cancellationToken);
 }
 ```
 
-Only `RenovationRating` feeds into the final ranking. `Tags` and `Description` are retained for prompt tuning and debugging — they let you see what the model is reacting to in each photo without having to re-run inference.
+Three things worth noting:
 
-### Why Ollama Instead of a Cloud API
+**Polly retry with exponential backoff.** If a page fails to open — network error, bot detection, rate limit — the parser waits `i * 100` seconds and tries again, up to 10 times. This handles transient failures without human intervention.
 
-All inference runs locally. No images leave the machine, no per-call costs, and the model can be swapped by changing one config value. The `qwen2.5` vision model performs well enough for this task at reasonable speeds on consumer GPU hardware.
+**Randomized delay between pages.** Before extracting each page, the parser sleeps for a random interval between `MinTimeoutBeforeSwitchToNextPage` and `MaxTimeoutBeforeSwitchToNextPage` (configured per source). This mimics human browsing patterns and reduces the fingerprint that bot-detection systems target.
+
+**Redirect detection as termination signal.** Cian redirects to a different URL when there are no more results to show. The parser detects this and throws `SessionInterruptedException` — the job catches it and stops crawling cleanly:
+
+```csharp
+if (result?.Url != link)
+{
+    throw new SessionInterruptedException($"Redirect to {result?.Url} received. All pages have been parsed.");
+}
+```
+
+### CianCrawlingSchema: Declarative DOM Extraction
+
+`CianCrawlingSchema` ([source](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Crawling.AppServices/Cian/CianCrawlingSchema.cs)) defines the extraction logic declaratively using the `PuppeterSharpSchemaBuilder` fluent API from the [Laraue.Crawling](https://github.com/win7user10/Laraue.Crawling) library:
+
+```csharp
+return new PuppeterSharpSchemaBuilder<CrawlingResult>()
+    .HasArrayProperty(x => x.Advertisements, "article", pageBuilder =>
+    {
+        // Simple CSS selector → property binding
+        pageBuilder.HasProperty(
+            x => x.ShortDescription,
+            "div[data-name=Description]");
+
+        // Selector + transform: extract digits from price string
+        pageBuilder.HasProperty(
+            x => x.TotalPrice,
+            builder => builder
+                .UseSelector("span[data-mark=MainPrice]")
+                .Map(s => long.Parse(s.GetOnlyDigits())));
+
+        // Manual binding: resolve href, extract listing ID from URL path
+        pageBuilder.BindManually(async (e, b) =>
+        {
+            var linkElement = await e.QuerySelectorAsync("div[data-name=LinkArea] a");
+            var href = await linkElement.GetAttributeValueAsync("href");
+            if (href is null || !Uri.TryCreate(href, UriKind.Absolute, out var url))
+                return;
+
+            b.BindProperty(x => x.Id, url.AbsolutePath.GetIntOrDefault().ToString());
+            b.BindProperty(x => x.Link, new Uri(href).LocalPath);
+        });
+
+        // Array property: all gallery image src attributes
+        pageBuilder.HasArrayProperty(
+            x => x.ImageLinks,
+            "div[data-name=Gallery] img",
+            el => el!.GetAttributeValueAsync("src"));
+    })
+    .Build()
+    .BindingExpression;
+```
+
+The schema handles three levels of complexity:
+
+**Simple bindings** — a CSS selector maps directly to a typed property. The library handles null safety and type coercion.
+
+**Mapped bindings** — a selector plus a `.Map()` transform. The price field uses `GetOnlyDigits()` to strip the currency symbol before parsing to `long`.
+
+**Manual bindings** — `BindManually` gives raw access to the `IElementHandle` for cases that don't fit a selector pattern. The metro station block, for example, requires reading two sibling elements and combining them into a `TransportStop` record:
+
+```csharp
+pageBuilder.BindManually(async (element, modelBinder) =>
+{
+    var name = await element
+        .QuerySelectorAsync("div[data-name=SpecialGeo] a")
+        .AwaitAndModify(x => x.GetInnerTextAsync());
+
+    // "7 минут пешком" or "5 минут на транспорте"
+    var title = await subElement.GetInnerTextAsync();
+    var titleParts = title?.Split(' ') ?? Array.Empty<string>();
+
+    var minutesToMetro = titleParts[0].GetIntOrDefault();
+    var distanceType = titleParts.Last() == "пешком"
+        ? DistanceType.Foot
+        : DistanceType.Car;
+
+    modelBinder.BindProperty(x => x.TransportStops, new[]
+    {
+        transportStop with { Minutes = minutesToMetro, DistanceType = distanceType }
+    });
+});
+```
+
+Date parsing is also handled in the schema, converting Cian's Russian-language relative dates ("сегодня", "вчера", "24 сен") into UTC `DateTime` values.
+
+### Early Termination: Delta Crawling
+
+The crawler requests listings sorted by newest first. On each run, `BaseRealEstateCrawlerJob` inserts new records until it encounters a listing ID that already exists in the database — at which point it stops. No need to crawl the full result set: each run processes only the delta since the last run. Combined with the 4-hour schedule, this keeps the database current without excessive requests.
 
 ---
 
-## Service 3: Ranking System (WorkerHost)
+## Image Inference: Ollama + qwen2.5 Vision
 
-Once all photos for a listing have been predicted, the ranking job picks it up and computes the final **ideality score** via [`AdvertisementComputedFieldsCalculator`](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Crawling.Impl/AdvertisementComputedFieldsCalculator.cs).
+### EstimateImagesRenovationJob
 
-### Ideality Formula
+`EstimateImagesRenovationJob` ([source](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.GpuWorkerHost/Jobs/EstimateImagesRenovationJob.cs)) runs in `GpuWorkerHost` on a 1-minute schedule. The job design follows a pattern worth highlighting: the **inner `IRepository` interface** co-locates the data access contract with the job that owns it:
 
-The score starts at a maximum and accumulates **fines** for negative signals:
+```csharp
+public class EstimateImagesRenovationJob(...) : BaseJob
+{
+    public interface IRepository
+    {
+        Task<AdvertisementPredictionData?> GetNextUnpredictedAdvertisement(CancellationToken ct);
+        Task UpdatePrediction(long id, PredictionResult prediction, CancellationToken ct);
+    }
 
-| Signal | Penalty |
+    public class Repository(AdvertisementsDbContext dbContext, ...) : IRepository
+    {
+        public Task<AdvertisementPredictionData?> GetNextUnpredictedAdvertisement(CancellationToken ct)
+        {
+            return dbContext.Advertisements
+                .Where(x => x.PredictedAt == null)
+                .Select(x => new AdvertisementPredictionData
+                {
+                    Id = x.Id,
+                    ImageUrls = x.LinkedImages.Select(y => y.Image.Url).ToArray()
+                })
+                .FirstOrDefaultAsyncEF(ct);
+        }
+
+        public async Task UpdatePrediction(long id, PredictionResult prediction, CancellationToken ct)
+        {
+            await dbContext.Advertisements
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(upd => upd
+                    .SetProperty(x => x.PredictedAt, dateTimeProvider.UtcNow)
+                    .SetProperty(x => x.RenovationRating, prediction.RenovationRating)
+                    .SetProperty(x => x.Advantages, prediction.Advantages)
+                    .SetProperty(x => x.Problems, prediction.Problems), ct);
+        }
+    }
+}
+```
+
+The `IRepository` interface is nested inside the job class. This is intentional: the interface is only meaningful in the context of this job, and nesting it makes that dependency relationship explicit in code rather than just by convention. The `Repository` implementation is also nested, so all three — job, interface, and implementation — live in the same file. Testing the job means mocking one focused interface rather than a broad shared repository.
+
+The execution loop is simple: pull the next unscored listing, run inference, write back the result, repeat until the queue is empty, then sleep for 1 minute:
+
+```csharp
+while (!stoppingToken.IsCancellationRequested)
+{
+    var dataToPredict = await repository.GetNextUnpredictedAdvertisement(stoppingToken);
+    if (dataToPredict is null)
+        return WaitUntilNextFire; // queue empty, sleep
+
+    var prediction = await imagesPredictor.PredictAsync(dataToPredict.ImageUrls, stoppingToken);
+    await repository.UpdatePrediction(dataToPredict.Id, prediction, stoppingToken);
+}
+```
+
+### OllamaRealEstatePredictor
+
+`OllamaRealEstatePredictor` sends image bytes directly to a locally-hosted **qwen2.5** vision model via Ollama's HTTP API. The prompt specifies the evaluation criteria — renovation quality, cleanliness, natural light, signs of damage — and asks for a structured JSON response.
+
+Each photo produces a `PredictionResult`:
+
+```csharp
+public record PredictionResult
+{
+    public double RenovationRating { get; init; } // 0.0 to 1.0
+    public string[] Advantages { get; init; } = [];  // ["new_windows", "clean", "bright"]
+    public string[] Problems { get; init; } = [];    // ["dark", "old_wallpaper", "damage"]
+}
+```
+
+`Advantages` and `Problems` don't feed into the ranking formula — they're stored for prompt tuning and debugging. When a listing gets a surprisingly low or high score, the stored arrays let you see exactly what the model reacted to without re-running inference.
+
+### Why Not a Cloud API
+
+All inference runs on the local machine. No images leave the server, no per-call API costs, and the model can be swapped by changing one configuration value. The `qwen2.5` vision model runs at acceptable throughput on consumer GPU hardware for this use case.
+
+### Why Not a Custom-Trained TensorFlow Model
+
+The original implementation (October 2023) used three custom-trained TensorFlow models with ~22M parameters total. It was fast but produced poor results. The fundamental problem wasn't model architecture — it was **data**. Collecting a large, consistently annotated dataset of apartment photos is genuinely hard:
+
+- What counts as "good renovation" is subjective and varies by price bracket
+- Photos of the same apartment taken differently score differently
+- Labelling hundreds of thousands of photos accurately is impractical without a team
+
+The models plateaued early and never reached accuracy useful for ranking. Switching to Ollama eliminated the dataset problem entirely: the pre-trained vision model already understands what "clean", "bright", "damaged" look like from its training data. The tradeoff is slower inference — offset by isolating it in the dedicated `GpuWorkerHost`.
+
+---
+
+## Ranking: Penalty-Based Ideality Score
+
+Once all photos for a listing are scored, `AdvertisementComputedFieldsCalculator` computes the final **ideality score** using a penalty model. The score starts at a maximum and accumulates fines for negative signals:
+
+| Signal | Effect |
 |---|---|
-| No nearby metro station | Fine applied |
-| Metro station too far to walk | Fine applied |
-| Far from city centre | Fine applied |
-| Low renovation rating | Fine applied |
+| No nearby metro station | Penalty applied |
+| Metro station too far to walk | Penalty applied |
+| Distance from city centre too large | Penalty applied |
+| Low average renovation rating | Penalty applied |
 
-The more fines, the lower the ideality. This is intentionally a penalty-based system rather than a weighted sum — it's easier to reason about and tune, because each penalty has an isolated, interpretable effect.
+A penalty model is easier to reason about and tune than a weighted sum. Each penalty has an isolated, interpretable effect: if you want metro distance to matter less, reduce that penalty. You don't have to rebalance all other weights simultaneously.
 
-### Renovation Rating
-
-The renovation score for a listing is the **average `RenovationRating`** across all its photos. Listings with too few photos are excluded from the renovation ranking, since a single unrepresentative photo can skew the average significantly.
-
-Once ideality and renovation rating are computed, the listing is promoted to the result set returned by the API.
+The **renovation rating** for a listing is the average `RenovationRating` across all its photos. Listings with fewer than a minimum photo count are excluded from renovation ranking — a single unrepresentative image can skew a small average significantly.
 
 ---
 
-## Service 4: API Host
+## Telegram Integration
 
-Standard ASP.NET Core API. Supports filtering by rooms, price, district, and sorting by AI score or ideality. Nothing architecturally interesting here — the complexity lives in the other three services.
+The system sends ranked apartment listings to Telegram via `AdvertisementsTelegramSender` ([source](https://github.com/win7user10/Laraue.Apps.RealEstate/blob/main/src/Laraue.Apps.RealEstate.Telegram.AppServices/AdvertisementsTelegramSender.cs)). There are two delivery modes:
 
----
+**Personal selections.** Users configure a `Selection` with custom criteria — price range, number of rooms, district, minimum AI score, notification interval. The sender queries the database using those criteria and pushes results on the configured schedule. Pagination is handled via inline keyboard buttons with stateful callback routes, so users can navigate through results inside the same Telegram message thread.
 
-## Evolution: From TensorFlow to Ollama
+**Public channel.** A scheduled job posts to a public channel with hardcoded filters: listings scored ≥ 7 renovation rating, price 5–9M rubles, updated in the last delivery interval. The message includes a prompt to use the personal bot for custom filtering:
 
-The approach to image scoring changed significantly over the project's lifetime:
+```csharp
+messageBuilder.AppendRow($"<i>Индивидуальная настройка подборки объявлений в боте {botUsername}</i>");
+```
 
-| Date | Approach |
-|---|---|
-| Feb 2023 | Dataset collection attempts; training with TensorFlow |
-| Oct 2023 | First live version using **three custom trained models** (~22M parameters total). Fast inference, but poor accuracy — hard to collect enough correctly labelled training data |
-| Sep 2025 | Self-trained models replaced with **Ollama + qwen2.5** |
-
-The self-trained models were a dead end: collecting a large, correctly annotated dataset of apartment photos is genuinely difficult, and the models plateaued at accuracy levels that weren't useful for ranking. Switching to a pre-trained vision model via Ollama eliminated the dataset problem entirely and substantially improved prediction quality, at the cost of slower inference (offset by the dedicated `GpuWorkerHost`).
+The sender uses edit-vs-send logic: if a `messageId` is provided, it edits the existing message (for paginated navigation within a session); otherwise it sends a new message (for initial delivery and scheduled notifications).
 
 ---
 
-## Known Limitations
+## Source Code
 
-The project is a proof of concept and used informally. Key limitations worth knowing:
-
-- **Prediction errors are common** — photo scoring works well on average but individual predictions can be wrong, especially for ambiguous or unusual photos
-- **Averaging mitigates errors** — the per-listing aggregation smooths out individual photo mispredictions reasonably well in practice
-- **Saint Petersburg data only** — the crawler schema is written for Cian's SPB listings; other cities would need separate schema implementations
-- **Local GPU required** — running the `GpuWorkerHost` at useful throughput requires a local machine with a capable GPU
-
----
-
-## Planned Articles
-
-The README notes that several topics deserve dedicated writeups:
-
-- How to select the right vision model for a photo-scoring task
-- How to design and tune a penalty-based ranking formula
-- How to integration-test a multi-service pipeline like this
-
----
-
-## Contributing & Running Locally
-
-The project is MIT-licensed. The most useful contributions would be new crawler schemas for additional real estate sites, or improvements to the Ollama prompt for better renovation scoring.
-
-- **Repo:** [github.com/win7user10/Laraue.Apps.RealEstate](https://github.com/win7user10/Laraue.Apps.RealEstate)
+- **Main repo:** [github.com/win7user10/Laraue.Apps.RealEstate](https://github.com/win7user10/Laraue.Apps.RealEstate)
 - **Crawler library:** [github.com/win7user10/Laraue.Crawling](https://github.com/win7user10/Laraue.Crawling)
 - **Live app:** [apartments.laraue.com](https://apartments.laraue.com)
+
+---
+
+## Frequently Asked Questions
+
+**How does PuppeteerSharp differ from AngleSharp for web scraping in C#?**
+
+AngleSharp parses static HTML — it works on the raw response bytes and is fast and lightweight. PuppeteerSharp controls a real Chromium browser, executing JavaScript before extracting the DOM. Use AngleSharp when the page content is in the initial HTML response; use PuppeteerSharp when content is rendered by JavaScript after page load. Most modern real estate aggregators fall into the second category.
+
+**How do you integrate Ollama with C# for image analysis?**
+
+Ollama exposes a local HTTP API. Pass image bytes as base64 in the request body along with a prompt, and the model returns a text response. For structured output, prompt the model to respond in JSON and parse the response. The `OllamaRealEstatePredictor` in this project follows this pattern with the `qwen2.5` vision model.
+
+**Why separate the GPU inference into its own host process?**
+
+Image inference is slow and GPU-bound. If it ran in the same process as the crawler, the crawler would stall waiting for predictions to complete before moving to the next listing. Separating them means the crawler runs on its own schedule, the predictor drains the queue independently, and the GPU host can be moved to a dedicated machine without changing the crawling code.
+
+**Why does a penalty-based ranking formula work better than a weighted sum here?**
+
+In a weighted sum, changing one weight shifts the relative contribution of all other factors simultaneously, making tuning non-intuitive. In a penalty model, each negative signal contributes independently and additively. Adding a new factor or adjusting an existing one has a predictable, isolated effect.

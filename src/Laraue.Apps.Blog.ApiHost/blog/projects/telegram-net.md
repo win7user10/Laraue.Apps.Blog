@@ -1,10 +1,10 @@
 ﻿---
 title: Laraue.Telegram.NET — Write Telegram Bots Like ASP.NET Controllers in C#
 type: project
-tags: [Telegram,.NET,C#]
+tags: [Telegram, .NET, C#, Telegram Bot, ASP.NET, MVC, Middleware, Authentication, Localization, Bot Development, Webhook, Long Polling]
 description: Stop writing if-else chains for Telegram bot routing. Laraue.Telegram.NET brings ASP.NET-style controllers, middleware, authentication, and localization to .NET 9 Telegram bot development.
 createdAt: 2025-11-01
-updatedAt: 2026-06-10
+updatedAt: 2026-06-13
 ---
 If you've built ASP.NET Core APIs before, writing a Telegram bot shouldn't feel like starting over. **Laraue.Telegram.NET** brings the controller/middleware pattern you already know to Telegram bot development — routing, dependency injection, authentication, roles, and localization, all wired together cleanly.
 
