@@ -1,32 +1,41 @@
 ---
 title: Custom attributes — filter and label your issues
-description: Add custom fields to your Laraue Boards issues. Use text, select, or date attributes to label priority, team, due dates, and anything else your workflow needs.
-keywords: [custom fields kanban, issue attributes project management, priority field task tracker, custom labels kanban board, filter by attribute kanban]
+description: Add custom fields to your Laraue Boards issues. Use text or select attributes to label priority, team, sprint, and anything else your workflow needs — then filter the board by those values.
+keywords: [custom fields kanban, issue attributes project management, priority field task tracker, custom labels kanban board, filter by attribute kanban, kanban board custom fields, task metadata project management]
 type: documentation
 project: boards
 order: 1
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-06-15
 ---
-Attributes are custom fields attached to every issue on a board. They let you add structured metadata — priority, team, due date, client name, or anything your workflow requires — and filter the board by those values.
+
+Attributes are custom fields attached to every issue on a board. They let you add structured metadata — priority, team, client name, sprint, or anything your workflow requires — and filter the board by those values.
+
+Attributes are defined at the **organization level**, so the same attribute library is available across all boards in your organization.
 
 ## Attribute types
 
-| Type | Use for |
-|------|---------|
-| **Select** | Fixed list of options — Priority (Low/Medium/High/Critical), Team, Status label |
-| **Text** | Free-form text — notes, URLs, reference numbers |
-| **Date** | Calendar date — due date, review date, target release |
+| Type       | Use for                                                                         | Status       |
+|------------|---------------------------------------------------------------------------------|--------------|
+| **Select** | Fixed list of options — Priority (Low/Medium/High/Critical), Team, Status label | Available    |
+| **Text**   | Free-form text — notes, URLs, reference numbers                                 | Available    |
+| **Date**   | Calendar date — due date, review date, target release                           | Coming soon  |
 
-## Adding attributes to a board
+> **Note:** Date attributes are not yet implemented. Select and Text attributes are fully supported.
 
-Open the board and tap **Attributes** in the FAB menu (bottom right). Tap **+ Add attribute**, choose a type, give it a name, and (for Select) add the options.
+## Who can manage attributes
+
+The **Manage Attributes** tab is visible in the board navigation to users with the **Manage Attributes** permission. By default, this permission is granted to the organization administrator. Other members see and use attributes but cannot create, edit, or delete them.
+
+## Adding attributes
+
+Attributes are created at the organization level and are then available on every board. Open any board and tap **Manage Attributes** in the navigation tabs. On the Manage Attributes page, tap **+ Add attribute**, choose a type (Select or Text), give it a name, and — for Select — add the available options.
 
 Each attribute has a color used for the filter chips and attribute tags on cards.
 
 ## Setting attribute values on an issue
 
-Open the issue detail and tap the edit icon. Attribute fields appear below the text content. For Select attributes, a dropdown shows the available options. For Text, a free-form input. For Date, a date picker.
+Open the issue detail and tap the edit icon. Attribute fields appear below the text content. For Select attributes, a dropdown shows the available options. For Text, a free-form input.
 
 Values are shown as colored tags in the card footer on the board.
 
@@ -46,22 +55,22 @@ The global search also respects attribute values. When searching across boards y
 
 **Team:** Select — Frontend, Backend, Design, QA
 
-**Due date:** Date
-
 **Sprint:** Select — Sprint 1, Sprint 2, Sprint 3
 
 **Environment:** Select — Dev, Staging, Production
 
+**Notes:** Text — free-form context or links
+
 ## Attributes vs statuses
 
-Statuses (columns) represent where in the workflow an issue is. Attributes represent additional facts about the issue that don't change its position in the workflow. An issue can be "In Progress" (status) and "High priority, Backend team, Due Jan 15" (attributes) at the same time.
+Statuses (columns) represent where in the workflow an issue is. Attributes represent additional facts about the issue that don't change its position in the workflow. An issue can be "In Progress" (status) and "High priority, Backend team" (attributes) at the same time.
 
 ## Deleting an attribute
 
-In the Attributes management modal, tap the delete icon next to an attribute. The attribute and all its values are removed from all issues on the board. This cannot be undone.
+On the Manage Attributes page, tap the delete icon next to an attribute. The attribute and all its values are removed from all issues on the board. This cannot be undone.
 
 ## Related pages
 
-- [Epics — boards and columns](/blog/documentation/laraue-boards/concepts/epics)
-- [Search](/blog/documentation/laraue-boards/features/search)
-- [Issues](/blog/documentation/laraue-boards/concepts/issues)
+- [Epics — boards and columns](../concepts/epics)
+- [Search](../features/search)
+- [Issues](../concepts/issues)
