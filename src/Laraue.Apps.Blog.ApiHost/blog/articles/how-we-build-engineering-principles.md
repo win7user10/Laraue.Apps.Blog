@@ -39,6 +39,16 @@ At the model stage, you are guessing which columns will be filtered, sorted, or 
 
 An index that does not match a real query is dead weight — it slows down writes and occupies space without speeding up any read. Adding indexes alongside the logic they support keeps every index tied to a concrete access pattern.
 
+## Optimise database queries before optimising code
+
+When a request is slow, the cause is almost always the database, not the code around it. A single badly-shaped query — a missing index, an N+1 pattern, a join that pulls far more than it needs — can add orders of magnitude to total request time. The surrounding application code, however inefficient it looks, usually contributes a rounding error by comparison.
+
+So when we look at performance, we look at queries first. How many round-trips does this request make to the database? Is each query hitting an index? Is it fetching only what it needs? Fixing one query often does more than any amount of work on the code that processes the result.
+
+This does not mean the application code gets a free pass to be O(n²). Algorithmic complexity still matters, and a genuinely quadratic loop over a large collection is a real problem. But micro-optimisations are a different thing entirely. Replacing `x / 2` with a bit-shift `x >> 1`, or similar tricks, makes the code harder to read and saves something on the order of 0.0001 ms — time that is invisible next to a single database round-trip. The compiler already performs most of these transformations anyway.
+
+Readability is almost always worth more than a micro-optimisation. Code that executes a fraction of a microsecond faster but takes longer to understand is a bad trade. We optimise where the time actually goes — the database — and leave the application code clear.
+
 ## Keep dependencies minimal
 
 Every third-party library is a liability as much as an asset. Libraries go abandoned. They change their licences. They receive breaking changes on their own schedule, not ours. Any of these can force unplanned work at the worst possible time.
