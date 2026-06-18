@@ -7,7 +7,7 @@ updatedAt: 2026-06-18
 tags: [product, validation, indie-hacking, market-research, crowded-market, ai-workflow]
 ---
 
-This article is about the part of building software that happens before any code exists: how to decide whether and what to build, consciously, and how to validate a product idea before writing code. It is one half of how we work at Laraue. The other half — how we engineer a product once that decision is made — is covered in [How we build — engineering principles](/blog/articles/how-we-build-engineering-principles).
+This article is about the part of building software that happens before any code exists: how to decide whether and what to build, consciously, and how to validate a product idea before writing code. It is one half of how we work at Laraue. The other half — how we engineer a product once that decision is made — is covered in [How we build — engineering principles](how-we-build-engineering-principles).
 
 We link here from individual project series rather than repeating ourselves in each one.
 

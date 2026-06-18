@@ -7,7 +7,7 @@ updatedAt: 2026-06-18
 tags: [engineering, architecture, testing, ai-workflow, database, development]
 ---
 
-This article is about how we engineer a product once the decision to build it has been made. It is one half of how we work at Laraue. The other half — how we decide what to build in the first place — is covered in [How we decide what to build](../articles/how-we-decide-what-to-build).
+This article is about how we engineer a product once the decision to build it has been made. It is one half of how we work at Laraue. The other half — how we decide what to build in the first place — is covered in [How we decide what to build](how-we-decide-what-to-build).
 
 We link here from individual project series rather than repeating ourselves in each one.
 
@@ -99,4 +99,4 @@ The developer remains accountable for every line that ships. A tool cannot hold 
 
 ---
 
-These principles are not fixed. They have changed as our projects have grown and as we have made mistakes that taught us something. The specific mistakes are documented in the project series where they happened. And before any of this engineering begins, there is the question of what to build at all — covered in [How we decide what to build](/blog/articles/how-we-decide-what-to-build).
+These principles are not fixed. They have changed as our projects have grown and as we have made mistakes that taught us something. The specific mistakes are documented in the project series where they happened. And before any of this engineering begins, there is the question of what to build at all — covered in [How we decide what to build](how-we-decide-what-to-build).
