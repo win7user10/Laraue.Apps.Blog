@@ -2,10 +2,11 @@
 title: Building a Jira alternative solo — why we built it, and the repositories
 description: Part 1 of a series on building a Telegram-native task tracker solo and AI-assisted. The problem we set out to solve, why another task tracker makes sense, what is live today, and the two repositories the series is built on.
 type: article
-createdAt: 2026-06-19
-updatedAt: 2026-06-19
+createdAt: 2026-06-19 13:00:00
+updatedAt: 2026-06-19 13:00:00
 projects: [boards]
 tags: [dotnet, nuxt, telegram, task-tracker, devlog, architecture]
+nextLink: prototyping-ui-with-ai-before-code
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 1.

@@ -1,5 +1,6 @@
 ﻿using Laraue.CmsBackend;
 using Laraue.CmsBackend.Contracts;
+using Laraue.CmsBackend.Utils;
 using Laraue.Core.DataAccess.Contracts;
 using Laraue.Interpreter.Markdown;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,11 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
             LanguageCode = request.LanguageCode,
             Properties = ["fileName", "title", "description", "contentType", "path", "length(content)", "tags", "projects"],
             Pagination = request.Pagination,
-            Filters = filters.ToArray()
+            Filters = filters.ToArray(),
+            Sorting =
+            [
+                new () { Property = "createdAt", SortOrder = SortOrder.Descending }
+            ]
         });
     }
     
@@ -143,8 +148,8 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
     [HttpPost("details")]
     public CardDetail GetDoc([FromBody] GetCardRequest request)
     {
-        return cmsBackend
-            .GetEntity<CardDetail>(new GetEntityRequest
+        var entity = cmsBackend
+            .GetEntity(new GetEntityRequest
             {
                 Path = request.Path,
                 LanguageCode = request.LanguageCode,
@@ -157,12 +162,38 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "innerLinks",
                     "tags",
                     "projects",
-                    "next",
-                    "previous",
+                    "nextLink",
+                    "previousLink",
                     "contentType",
                     "description"
                 ]
             });
+        
+        TryAddLink(entity, "nextLink", request);
+        TryAddLink(entity, "previousLink", request);
+
+        return ObjectCreator.Initialize<CardDetail>(entity);
+    }
+
+    private void TryAddLink(Dictionary<string, object> entity, string linkProperty, GetCardRequest request)
+    {
+        if (!entity.TryGetValue(linkProperty, out var nextLink) || nextLink is not string stringLink)
+            return;
+
+        var relatedPath = request.Path.Take(request.Path.Length - 1).Append(stringLink).ToArray();
+
+        var relatedEntity = cmsBackend.GetEntity<NeighborCard>(
+            new GetEntityRequest
+            {
+                Path = relatedPath,
+                LanguageCode = request.LanguageCode,
+                Properties = [
+                    "title",
+                    "path"
+                ]
+            });
+
+        entity[linkProperty] = relatedEntity;
     }
     
     [HttpPost("meta")]
@@ -275,8 +306,8 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required string?[] Tags { get; init; }
         public required string?[] Projects { get; init; }
         public required MarkdownInnerLink[] InnerLinks { get; init; }
-        public NeighborCard? Previous { get; set; }
-        public NeighborCard? Next { get; set; }
+        public NeighborCard? PreviousLink { get; set; }
+        public NeighborCard? NextLink { get; set; }
     }
     
     public class CardMeta
