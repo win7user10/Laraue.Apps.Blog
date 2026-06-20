@@ -3,10 +3,11 @@ title: Прототипируем интерфейс с ИИ до написан
 description: Часть 2 цикла о разработке Telegram-таск-трекера в одиночку. Почему интерфейс идёт раньше стека и схемы, как HTML-прототипы от ИИ заменили Figma и что показал первый прототип Laraue Boards.
 type: article
 createdAt: 2026-06-19 17:00:00
-updatedAt: 2026-06-19 17:00:00
+updatedAt: 2026-06-20
 projects: [boards]
 tags: [dotnet, nuxt, telegram, прототипирование, ai-workflow, devlog]
-nextLink: building-jira-alternative-solo-why-and-repositories
+previousLink: building-jira-alternative-solo-why-and-repositories
+nextLink: telegram-saved-messages-to-task-tracker
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 2.

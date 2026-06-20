@@ -3,10 +3,11 @@ title: Prototyping the interface with AI before writing any code
 description: Part 2 of building a Telegram task tracker solo. Why the interface comes before the stack and the schema, how AI HTML prototypes replaced Figma, and what the first Laraue Boards prototype revealed about the product.
 type: article
 createdAt: 2026-06-19 17:00:00
-updatedAt: 2026-06-19 17:00:00
+updatedAt: 2026-06-20
 projects: [boards]
 tags: [dotnet, nuxt, telegram, prototyping, ai-workflow, devlog]
 previousLink: building-jira-alternative-solo-why-and-repositories
+nextLink: telegram-saved-messages-to-task-tracker
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 2.
