@@ -2,11 +2,12 @@
 title: От «Избранного» в Telegram к настоящему таск-трекеру — определяем путь пользователя
 description: Часть 3 цикла о разработке Telegram-таск-трекера в одиночку. Почему «Избранное» не годится как список дел, с какого минимального однопользовательского сценария начинались Laraue Boards и почему путь пользователя определяется до начала разработки.
 type: article
-createdAt: 2026-06-20
-updatedAt: 2026-06-20
+createdAt: 2026-06-20 16:20
+updatedAt: 2026-06-20 16:20
 projects: [boards]
 tags: [dotnet, telegram, saved-messages, продукт, user-path, devlog]
 previousLink: prototyping-ui-with-ai-before-code
+nextLink: choosing-stack-for-solo-project
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 3.

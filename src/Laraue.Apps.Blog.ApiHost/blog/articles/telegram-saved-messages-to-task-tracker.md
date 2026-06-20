@@ -7,6 +7,7 @@ updatedAt: 2026-06-20
 projects: [boards]
 tags: [dotnet, telegram, saved-messages, product, user-path, devlog]
 previousLink: prototyping-ui-with-ai-before-code
+nextLink: choosing-stack-for-solo-project
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 3.
