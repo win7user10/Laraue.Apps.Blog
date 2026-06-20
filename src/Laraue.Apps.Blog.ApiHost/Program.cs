@@ -1,5 +1,6 @@
 using Laraue.Apps.Blog.ApiHost;
 using Laraue.Apps.Blog.ApiHost.docTypes;
+using Laraue.Apps.Blog.ApiHost.Services;
 using Laraue.CmsBackend;
 using Laraue.CmsBackend.Extensions;
 using Laraue.Core.Exceptions;
@@ -27,6 +28,7 @@ var cmsBackend = new CmsBackendBuilder(
 builder.Services.AddHealthChecks();
 builder.Services.AddSingleton(cmsBackend);
 builder.Services.AddSingleton<ISitemapGenerator, SitemapGenerator>();
+builder.Services.AddSingleton<IRssFeedGenerator, RssFeedGenerator>();
 
 builder.Services.AddOptions<SiteOptions>();
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("SiteOptions"));

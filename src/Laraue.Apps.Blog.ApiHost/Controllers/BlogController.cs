@@ -309,17 +309,17 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public NeighborCard? PreviousLink { get; set; }
         public NeighborCard? NextLink { get; set; }
     }
+
+    public class NeighborCard
+    {
+        public required string Title { get; init; }
+        public required string[] Path { get; init; }
+    }
     
     public class CardMeta
     {
         public required string? Title { get; init; }
         public required string? Description { get; init; }
         public required string? Icon { get; init; }
-    }
-
-    public class NeighborCard
-    {
-        public required string Title { get; init; }
-        public required string[] Path { get; init; }
     }
 }
