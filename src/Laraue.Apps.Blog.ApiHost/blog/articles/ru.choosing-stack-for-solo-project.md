@@ -7,6 +7,7 @@ updatedAt: 2026-06-20 22:35
 projects: [boards]
 tags: [dotnet, nuxt, vue, postgres, mongodb, базы-данных, devlog, архитектура]
 previousLink: telegram-saved-messages-to-task-tracker
+nextLink: clean-dotnet-telegram-bot-architecture
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 4.
