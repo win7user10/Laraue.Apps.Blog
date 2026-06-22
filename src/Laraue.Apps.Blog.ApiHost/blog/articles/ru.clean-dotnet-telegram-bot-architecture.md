@@ -7,6 +7,7 @@ updatedAt: 2026-06-21
 projects: [boards]
 tags: [dotnet, telegram, postgres, ef-core, linq2db, clean-architecture, devlog]
 previousLink: choosing-stack-for-solo-project
+nextLink: deploying-dotnet-postgres-vps-docker-compose
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 5.
