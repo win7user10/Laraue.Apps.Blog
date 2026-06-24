@@ -7,6 +7,7 @@ updatedAt: 2026-06-22 17:00
 projects: [boards]
 tags: [nginx, nuxt, telegram-mini-app, https, lets-encrypt, certbot, ngrok, self-hosting, devlog]
 previousLink: deploying-dotnet-postgres-vps-docker-compose
+nextLink: telegram-mini-app-authentication-dotnet
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 7.
