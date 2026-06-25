@@ -7,6 +7,7 @@ updatedAt: 2026-06-24 08:00
 projects: [boards]
 tags: [dotnet, aspnet-core, nuxt, telegram-mini-app, authentication, initdata, jwt, cors, devlog]
 previousLink: deploy-nuxt-telegram-mini-app-https-nginx
+nextLink: issue-board-telegram-mini-app
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 8.
