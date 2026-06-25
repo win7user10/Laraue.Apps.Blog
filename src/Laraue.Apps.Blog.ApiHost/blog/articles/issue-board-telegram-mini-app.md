@@ -7,6 +7,7 @@ updatedAt: 2026-06-25 09:00
 projects: [boards]
 tags: [database-design, dotnet, aspnet-core, postgres, vue, devlog]
 previousLink: telegram-mini-app-authentication-dotnet
+nextLink: telegram-saved-messages-bot-lesson
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 9.
@@ -246,8 +247,10 @@ The web app now does something real. It shows a user's issues, arranged on a boa
 
 This article deliberately did not walk through the line-by-line CRUD implementation — the method bodies, the request DTOs, the exact LINQ. That code is all in the repositories ([backend](https://github.com/win7user10/Laraue.Apps.Boards), [frontend](https://github.com/win7user10/laraue-boards)) for anyone who wants to read it; reproducing it here would have buried the parts that actually carry a lesson under a lot of routine plumbing. The structure and the decisions are the transferable part; the CRUD is just CRUD.
 
+With a real, usable feature finally in place, it was also time to do something we had been putting off: show the app to people and get honest reactions. A product that only its author has ever touched tells you nothing. So we started putting it in front of others — posting about it in our Telegram channels, writing up a short product presentation on Threads aimed at people who had never heard of it, and sending direct messages to friends asking them to actually try it. The point was not applause; it was to watch real people use the thing and find out where it held up and where it did not. That feedback turned out to matter more than any feature we could have built next — which is the subject of the article that follows.
+
 The piece most worth carrying out of this article is not the feature, though — it is the modelling decision at its centre: when a column starts to *mean* something by being `null`, that meaning usually wants to be a real default row instead. The backlog as a default epic, not a nullable foreign key, is one instance of a choice that turns up constantly, and getting it right removes a whole category of special-case code before it can accumulate.
 
 ## What comes next
 
-The next article moves up a level in the domain model, to epics — how issues group into larger units of work, and what the board looks like once it is organised into more than a single backlog. It is also where I will tell a story I have skirted around: the product mistake that is the real reason management lives in the web app and not the bot. Building this feature was the *result* of that lesson; the next article is where the lesson itself gets told.
+That feedback is where the next article goes. Putting the app in front of real people surfaced a product mistake — one we had built deliberately and were quietly proud of — and watching users route around it taught us the real reason management belongs in the web app and not the bot. Building this feature was, in a sense, the *result* of that lesson; the next article is where the lesson itself gets told.
