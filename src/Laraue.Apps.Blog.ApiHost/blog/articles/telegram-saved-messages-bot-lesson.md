@@ -7,6 +7,7 @@ updatedAt: 2026-06-25 13:00
 projects: [boards]
 tags: [product, ux, telegram-bot, saved-messages, devlog]
 previousLink: issue-board-telegram-mini-app
+nextLink: telegram-bot-file-storage-stream
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 10.
