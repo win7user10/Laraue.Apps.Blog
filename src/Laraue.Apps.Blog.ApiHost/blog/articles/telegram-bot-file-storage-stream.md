@@ -3,7 +3,7 @@ title: Saving media from a Telegram bot — store the preview, stream the origin
 description: Part 11 of building a Telegram task tracker solo. Teaching the capture bot to handle photos and video, and the storage decision behind it — keep small previews on disk, stream full files straight from Telegram on demand without buffering them in memory, using nginx range-request passthrough, instead of re-hosting everything.
 type: article
 createdAt: 2026-06-26 09:00
-updatedAt: 2026-06-26 09:00
+updatedAt: 2026-06-28
 projects: [boards]
 tags: [dotnet, aspnet-core, telegram-bot, file-storage, nginx, streaming, devlog]
 previousLink: telegram-saved-messages-bot-lesson
@@ -11,17 +11,17 @@ nextLink: telegram-media-group-album-bot
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 11.
-> The [previous article](telegram-saved-messages-bot-lesson) ended with a real user breaking the bot by sending it an image. This article fixes exactly that — and the fix forces a storage decision worth thinking about.
+> The [previous article](telegram-saved-messages-bot-lesson) ended with a real user breaking the bot by sending it an image instead of a normal message. This article fixes that — we implement saving images, and decide how to store the files sent to the bot.
 
-The previous article closed on a `500` in the logs: someone tried to save an image instead of a text message, and the bot, which only understood text, fell over. That crash is the agenda for this one. The moment real people touched the app they tried to save the things real people save — photos, screenshots, the occasional video — and the bot had to learn to handle them. Parsing a photo message turns out to be the easy part. The decision worth the article is what to *do* with the file once you have it, because the obvious answer — keep a copy — is more expensive than it looks.
+The previous article ended on a `500` in the logs: someone tried to save an image instead of a text message, and the bot, which until then only worked with text, could not process the request. That crash gave us the idea for the app's first real feature — saving not just text but photos and videos too. Handling and saving the photo object Telegram sends turned out to be not much harder than handling a text message. The decision that took real thinking was how to store the files without filling up the whole server.
 
-## The constraint from last time still holds
+## The save process has to stay as simple as possible
 
-The rule the previous article left behind applies here without exception: saving a photo has to be as frictionless as saving a line of text. Forward an image, the bot saves it, reacts with a 👍, done — no "which board," no caption prompt, no questions. All of the complexity below lives on the storage side, invisible to the person sending the photo. The capture experience for media is identical to text on purpose.
+Saving an image has to work the same way as saving a text message did in the previous article: send a picture to the chat, and the bot saves it and reacts with a 👍. From the user's point of view, saving media and saving text are identical.
 
-## The mapping middleware: Telegram's types into ours
+## Mapping Telegram messages into service DTOs
 
-Handling media starts where all bot input starts — the message-handling middleware first introduced back in the [first backend iteration](clean-dotnet-telegram-bot-architecture). It has grown up since then. Its job now is to take the many shapes a Telegram update can arrive in and map each one into a small set of requests the app understands ([`HandleAllMessagesMiddleware`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramHost/HandleAllMessagesMiddleware.cs)):
+Handling media starts where the processing of all the bot's other messages starts — in [`HandleAllMessagesMiddleware`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramHost/HandleAllMessagesMiddleware.cs), introduced back in the [first backend iteration](clean-dotnet-telegram-bot-architecture). It now gains a new job — converting any Telegram update, including audio and video, into the set of change-requests the app accepts:
 
 ```csharp
 SaveMessageTelegramRequest? request = message.Type switch
@@ -48,27 +48,27 @@ else
 }
 ```
 
-Two things here matter beyond the plumbing.
+This is where the crash described at the start gets fixed. We do it not by handling every possible Telegram update type, but by telling the user about the *unsupported* operation. If an incoming update has no mapping (`_ => null`), the bot no longer logs a `500`; it replies that this message type is not supported. Robust input handling is not always about supporting every possible case — it is about handling the cases you did not anticipate. Image handling is supported now, but a clear message about an unsupported format is maybe the more important change.
 
-The first is that this is where the original crash is actually fixed — and not by handling every possible type, but by handling the *unhandled* case gracefully. If a message type has no mapping (`_ => null`), the bot no longer throws a `500` into the logs; it replies with a friendly "this message type isn't supported yet." Robust input handling is not "support everything"; it is "never fall over on the thing you did not anticipate." The image that broke the bot is now a supported type, but the safety net underneath it is the more important change.
+There is an architectural decision here: **the app defines its own set of media types and maps Telegram updates into them, rather than trying to mirror Telegram's contracts.** Telegram has separate update types for video and *animation* (GIF) — different messages with different fields. For the app that distinction is redundant: we treat animation the same as video. So both `GetAnimationRequest` and `GetVideoRequest` map into the same `SaveVideoMessageTelegramRequest`. The mapping layer is where Telegram's many message types get mapped into the ones the app defines. Because of it, at the service level we think about a GIF and an MP4 not as separate types but as one common thing — a video file. Defining your own contracts, instead of letting an external API's contracts spread through the whole system, is an important habit of an experienced developer. It draws a clear line between integration and service contracts, and keeps the number of changes to a minimum when those external contracts change.
 
-The second is a small but deliberate design decision: **the app defines its own media vocabulary and translates Telegram into it, rather than mirroring Telegram's.** Telegram distinguishes a video from an *animation* (a GIF) — they are different message types with different fields. The app does not care about that distinction: an animation, to us, is just a video. So `GetAnimationRequest` builds the very same `SaveVideoMessageTelegramRequest` that `GetVideoRequest` does. The mapping layer is where Telegram's taxonomy gets collapsed into the app's simpler one, so that nothing downstream has to know or care that a GIF and an MP4 arrived as different Telegram types. Owning your own model at the boundary — instead of letting an external API's categories leak through your whole system — is a habit worth keeping; it means a change in how Telegram classifies things stops at this one file.
+The middleware passes the mapped request to `HandleSaveMessage` of the [Telegram request handling service](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramMessageService.cs). That service saves the received object through a `Save` call to a separate [Telegram request saving service](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs), and signals the result by setting a 👍 reaction on the received message. That reaction is the confirmation of saving — no text replies, no long dialogs, no buttons. Splitting handling from saving separates the data layer from the Telegram integration (the data layer saves and returns the result), while the Telegram-facing layer informs the user of the result.
 
-The middleware hands the mapped request to `HandleSaveMessage`, and it is worth a word on why that is a different method from the `Save` that does the database work — they live in two different classes on purpose. [`Save`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs) (in the save service) is the data operation; [`HandleSaveMessage`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramMessageService.cs) (in a thin `TelegramMessageService` that wraps it) is the orchestration around it, and its job after saving is to give the user the only feedback they ever see: a reaction on their own message. A freshly captured message gets a 👍, and that reaction *is* the entire confirmation — no "saved!" reply, no menu, nothing to dismiss — which is exactly the frictionless capture the previous article argued for. The split keeps the data layer ignorant of Telegram (it just saves and reports what happened) while the Telegram-aware layer translates that result into the feedback the user sees. (It also reacts differently when a save turns out to be an *edit* of something already captured — but that path, and everything about handling edited messages, is its own article; here every capture is a new one.)
+## The architectural decision: store a copy of the file, or a reference to it?
 
-## The decision: keep a copy, or keep a reference?
+Now the architectural decision at the heart of this article. When the bot receives a photo or video object, there are two options for how to store it.
 
-Now the choice the whole article is built around. When the bot receives a photo or a video, it has two broad options for what to store.
+**Store a copy.** Download the whole file from Telegram and save it to storage. This is simple to implement, but it can turn out expensive in financial terms: every file eats VPS disk space, the data volume keeps growing, and a video can weigh hundreds of megabytes. Storing that on a budget server, where it sits untouched most of the time, looks hard to justify.
 
-**Keep a copy.** Download the full file from Telegram and store the bytes on our own server. This is the straightforward "own your data" approach, and it is expensive in exactly the ways that hurt a small, cheap deployment: every file consumes disk on the VPS, storage grows without bound as people save more, and a video can be hundreds of megabytes — re-hosting that on a budget server, to sit untouched most of the time, is hard to justify.
+**Store a reference to the object.** Files sent to the bot are stored in Telegram. That means we can load the object from Telegram at the exact moment it is requested. Telegram does have limits, though, that will not let us pull files endlessly.
 
-**Keep a reference, and fetch on demand.** Telegram already stores the file — it has to, in order to deliver it. So instead of duplicating it, store only what is needed to *find* it again, and pull the actual bytes from Telegram at the moment they are requested.
+In the save service we even found a developer's comment that became the thesis of this article:
 
-Neither extreme is right on its own, and the real answer is a split between them. It is stated most plainly in a comment in the save service, which is essentially the thesis of this article written as a code comment:
+> We can't make constant requests to Telegram — opening a board with a lot of media will hit the limits. And we can't always store files — they take up too much space.
 
-> We can't request always from Telegram — static content will make too many calls. And we can't store content always — it takes too much space.
+So our architecture ended up somewhere between the two approaches: **download small previews, store references to the originals.** Here is how it works: when an image is saved, Telegram provides links to several files in different resolutions. We save two [`TelegramFile`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.DataAccess/Models/TelegramFile.cs) rows — a reference to the full-size file and one to the thumbnail. When saving the thumbnail reference, the file is downloaded into local storage. For video the situation is similar: Telegram sends links to its thumbnail and to the object itself, which we save by the same logic as for a photo.
 
-So the rule became: **store the small previews, keep references to the big originals.** Concretely, for an image the bot stores the *thumbnail* locally but not the full-resolution original; for a video it stores the poster thumbnail locally but not the video file. The `GetOrCreateMessageFileId` method takes a single flag that encodes exactly this decision:
+The save implementation is in the `GetOrCreateMessageFileId` method:
 
 ```csharp
 /// <param name="saveFileToStorage">
@@ -119,9 +119,7 @@ private async Task<Guid> GetOrCreateMessageFileId(
 }
 ```
 
-The callers pass `saveFileToStorage: true` for thumbnails and `false` for originals — that one boolean is the whole policy. When it is `true`, the file is downloaded from Telegram once and written to local storage. When it is `false`, nothing is downloaded; only a reference row is created.
-
-The local writing and reading go through a small [`IFileStorage`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.Services/FileStorage.cs) abstraction, with `FileStorageOptions` carrying the one thing it needs — the directory to write under:
+Writing to and reading from local storage goes through the [`IFileStorage`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.Services/FileStorage.cs) abstraction, whose options — `FileStorageOptions` — have a single property: the root directory to write files into:
 
 ```csharp
 public interface IFileStorage
@@ -141,17 +139,40 @@ public class FileStorageOptions
 }
 ```
 
-The implementation is a thin wrapper over the local disk: every path is combined with `FilesDirectory` to get a physical location, `WriteFile` creates the directory if needed and copies the incoming stream to a file (with `CopyToAsync`, so even the write does not buffer the whole thing), and `ReadFile` opens the file back as a stream. It is deliberately a plain interface, not tied to local disk — `WriteFile` even takes optional metadata it does not use yet — so that if previews ever need to move to object storage like S3, only this one class changes and nothing that calls it does. For now the cheapest possible backing store, the server's own filesystem, is exactly right.
+The implementation is a thin wrapper over the local disk: a file's local path is combined with `FilesDirectory` to get its physical location, `WriteFile` creates the directory if needed and copies the incoming stream to a file (via `CopyToAsync`, to avoid full buffering), and `ReadFile` opens the file as a stream. It is a simple interface, not tied to local disk. If we ever move to object storage like S3, only this class changes. For now the files will be stored in the cheapest storage we have — the filesystem of a rented VPS.
 
-That reference is a [`TelegramFile`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.DataAccess/Models/TelegramFile.cs) — a small row holding everything needed to locate the file in Telegram later (`FileId`), deduplicate it (`FileUniqueId`), and describe it (size, name, MIME type). Every stored file, whether its bytes live on our disk or only in Telegram, gets one of these rows, and the rest of the system refers to files by this row's `Guid` rather than by anything Telegram-specific. The dedup is worth noting: the method first looks up the file by `FileUniqueId` and, if it has seen it before, returns the existing row instead of storing or referencing it twice. Forward the same image to the bot twice and it is only stored once.
+The model used to store references to Telegram files — [`TelegramFile`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.DataAccess/Models/TelegramFile.cs) — is worth a separate look:
 
-## Two ways files come back out
+```csharp
+public class TelegramFile
+{
+    public Guid Id { get; set; }
 
-The split storage model produces two distinct read paths, and the reason for the whole design is that they have very different shapes.
+    [MaxLength(255)]
+    public required string FileId { get; set; }
 
-**Loading a board** means showing potentially many items at once — a column full of captured photos, each needing a preview. If every one of those previews required a round-trip to Telegram, opening a board would fire dozens of Telegram API calls and feel slow, and Telegram would not thank you for it. This is exactly the "can't always request from Telegram" half of the problem. Because the thumbnails were stored locally, the board reads their bytes straight from our own disk — fast, local, no external calls, however many previews are on screen.
+    [MaxLength(64)]
+    public required string FileUniqueId { get; set; }
 
-Each issue returned to the frontend carries its media as a list, not the bytes themselves but references to them:
+    public long? Size { get; set; }
+
+    [MaxLength(255)]
+    public string? Name { get; set; }
+
+    [MaxLength(32)]
+    public required string? MimeType { get; set; }
+}
+```
+
+`FileId` lets us request the file's content from Telegram; `FileUniqueId` is used for deduplication, to store identical content only once on local download. Forwarding the same image to the bot saves its thumbnail to local storage under the name `FileUniqueId` only the first time. The rest of the system refers to files by their `Guid`, not by Telegram-specific identifiers.
+
+## How saved Telegram media is displayed
+
+As mentioned, the different approaches to storing and reading media are needed because of the different ways we work with them.
+
+**Loading a task board** can potentially trigger loading a large number of image and video previews. If loading each one required a request to Telegram, we could hit the API limits, or simply get slow file loading. But because the thumbnails are saved locally, they can be read directly from our storage — fast, and with no extra external calls.
+
+Each issue card on the board returned to the frontend carries a set of references to media objects:
 
 ```csharp
 public record IssueListDto : ICanContainMedia
@@ -174,21 +195,26 @@ public enum MediaType
 }
 ```
 
-Each `MediaInfo` carries two references — a `PreviewFileId` and an `OriginalFileId`, both pointing at `TelegramFile` rows by their `Guid`. That is the two-path model surfaced in the DTO: the frontend uses the preview reference to show the thumbnail on the board (served from local disk) and the original reference only if the user opens the item (streamed from Telegram). The split is visible all the way out to the API contract.
+Each `MediaInfo` object holds two references — `PreviewFileId` and `OriginalFileId`, both pointing at `TelegramFile` rows by their `Guid`. The frontend uses the preview reference to show the thumbnail on the board, with code like `<img :src = BackendHost + '/api/telegram-files/' + PreviewFileId>` (the backend returns a stream of the file from local disk in the [`GetFileById`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.WebApiHost/Controllers/TelegramFilesController.cs) method). If the user clicks a preview, the backend returns a stream of the original file fetched through the Telegram API, and the frontend renders it (or plays it, for video) in the media-viewer component.
 
-One implementation detail is worth calling out, because it is a deliberate choice rather than an accident. The media is not joined onto the issues in the main query. Instead, the issues are fetched first, and then a separate step *enriches* them with their media — roughly `issues = GetIssues(request)` followed by `EnrichMedia(issues)`. Pulling photos, videos, media groups, and their file references into the single board query would have made it a tangle of joins and grouping that is hard to read and hard to keep efficient. Fetching the issues plainly and then loading their media in a focused second pass keeps each query simple and comprehensible. It is the same instinct as the rest of the backend: prefer two clear steps over one clever one, unless a measured problem forces the merge.
+Note that the `Media` list on `IssueListDto` is not requested directly from the database — it is *enriched* with media after the issues themselves are fetched from the DB. This is a deliberate architectural choice. Pseudocode of the enrichment from the [original](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.WebApiServices/IssuesService.cs) file:
 
-**Opening a single item** is the opposite situation: one file, deliberately, right now. The user tapped a photo or a video to see the original. That is when the reference is cashed in — the backend takes the stored `FileId` and fetches the full file from Telegram on demand. This is the "can't always store" half: the original never occupied our disk, and it does not need to, because opening originals is a one-at-a-time action, not a bulk one. A [`TelegramFilesController`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.WebApiHost/Controllers/TelegramFilesController.cs) serves file content by the `TelegramFile`'s system `Guid`, resolving it either to local bytes or to a Telegram fetch depending on what was stored.
+```csharp
+var issues = await GetIssues(request);
+await EnrichMedia(issues);
+```
 
-The Telegram fetch is worth being precise about, because there is a well-known limit lurking nearby. The Bot API's `GetFile`/`DownloadFile` pair — the one used above to *store* thumbnails — can only download files up to 20 MB. That ceiling never bites the stored path, because thumbnails are tiny. For originals, the controller does not use that pair at all: it resolves the file's path through `GetFile` and then serves the content via Telegram's **direct file URL**, `https://api.telegram.org/file/bot{botToken}/{filePath}`. That URL points straight at Telegram's file storage, so the bytes flow from there rather than being pulled through the bot's `DownloadFile` call — which is why, in practice, the 20 MB download ceiling has not been a problem for streaming full videos. (If it ever does become one, the next step up is hosting a local Bot API server, which removes the limit; that has not been necessary yet.)
+This approach cuts down the number of joins in the issues query by loading file information in a separate method. The whole backend runs on the principle "several simple queries are better than one complex one" — because it scales much more easily and cheaply than the database does.
 
-The two pressures from the code comment map cleanly onto these two paths: previews are bulk and frequent, so they are local; originals are large and rare, so they are streamed. The design is just those two sentences turned into structure.
+**Opening the original of an item** happens when a photo or video preview is clicked. As with the thumbnails, the frontend requests the backend's [`GetFileById`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.WebApiHost/Controllers/TelegramFilesController.cs) method, passing `OriginalFileId`, and gets back a stream with the file. For the original file, though, the file is not found on disk and is requested from Telegram.
 
-## Streaming the original without holding it in memory
+Here it is worth mentioning the limits of the Bot API methods `GetFile`/`DownloadFile` used above to *save* thumbnails. `DownloadFile` can download files no larger than 20 MB. To avoid hitting this limit with large files, the controller serves the file content through Telegram's **direct file URL** — `https://api.telegram.org/file/bot{botToken}/{filePath}`. This URL points at an address in Telegram's file storage and has no such limit.
 
-Fetching a large video from Telegram and handing it to the user raises one more problem worth getting right: you do not want the server to load the entire file into memory before sending it on. A handful of users each opening a few-hundred-megabyte video at once would be enough to exhaust a cheap VPS's RAM. The original has to be *streamed* — bytes flowing from Telegram, through the backend, to the client, without ever being fully buffered on the server.
+## Streaming the original file from Telegram without buffering it in memory
 
-Most of the work for this is done in nginx, in the `location` block that handles the file route:
+Potentially returning large videos from Telegram to the user raises one more problem: the server cannot load the whole file into memory before sending the data. If several users open a video weighing a few hundred megabytes at the same time, the VPS runs out of RAM and the server starts throwing `OutOfMemoryException`. Not to mention that video playback would only start after the file has been fully transferred. The right solution in cases like this is *streaming* — the byte stream of the video file is sent from Telegram through the backend to the client, without being buffered on the server as a whole.
+
+To enable file streaming, we need to adjust the nginx server configuration, in the `location` block serving the file route:
 
 ```nginx
 location ^~ /api/notes-board/telegram-files {
@@ -233,40 +259,44 @@ var stream = await telegramResponse.Content.ReadAsStreamAsync(cancellationToken)
 return File(stream, mimeType, enableRangeProcessing: false);
 ```
 
-Two details make this correct. First, when the browser requests a range, Telegram answers with a `206 Partial Content` and a `Content-Range` header describing which slice it sent — and the controller passes both straight through, so the status code and range information the browser receives are the ones Telegram actually produced. Second, and easy to get wrong: `File(stream, mimeType, enableRangeProcessing: false)`. ASP.NET Core's `File` result can do range processing on its own, but it must *not* here — the range was already handled by forwarding it to Telegram, and the stream coming back is already the correct slice. Leaving range processing on would make ASP.NET Core try to slice an already-sliced stream, corrupting the response. Turning it off tells the framework to stream the bytes through verbatim. The controller is a faithful relay, not a second range processor — and because it reads Telegram's response as a stream and returns it directly, the bytes flow through without the file ever being buffered whole in the backend either.
+Two details make this correct. First, when the browser requests a range, Telegram answers with a `206 Partial Content` and a `Content-Range` header describing which slice it sent — and the controller passes both straight through, so the status code and range information the browser receives are exactly the ones Telegram produced. Second, and easy to get wrong: `File(stream, mimeType, enableRangeProcessing: false)`. ASP.NET Core's `File` result can do range processing on its own, but here it must *not* — the range was already handled by forwarding it to Telegram, and the stream coming back is already the correct slice. Leaving range processing on would make ASP.NET Core try to slice an already-sliced stream and corrupt the response. Turning it off tells the framework to stream the bytes as is. The controller is a faithful relay, not a second range processor — and because it reads Telegram's response as a stream and returns it directly, the bytes flow through without the file being buffered whole on the backend either.
 
-The result is that a large original streams through the whole chain — Telegram to backend to nginx to the browser — without any link in it buffering the file whole. The previews made the board cheap to load; this makes the originals cheap to serve, even when they are large.
+The result: a large original streams through the whole chain — Telegram, backend, nginx, browser — without any link buffering the file whole. The previews made the board cheap to load; this makes the originals cheap to serve, even when they are large.
 
-## How the frontend uses the two references
+## How the frontend uses the preview and original references to display media
 
-The payoff of the two-reference `MediaInfo` is visible on the frontend, where the same design drives two different behaviours through one endpoint. Both `previewFileId` and `originalFileId` are just system `Guid`s, and both are turned into URLs by the same helper — `getImageUrl(guid)` — which points at the `TelegramFilesController`. The frontend never knows or cares whether a given file lives on our disk or in Telegram; it asks for the file by its `Guid`, and the backend resolves that to local bytes or a Telegram stream. The split that started as a storage decision is, by this point, completely invisible to the client.
+The frontend works the same way with both `previewFileId` and `originalFileId`. To it they are file identifiers — given them, it can build links for direct access. For that the frontend uses [`getImageUrl(guid)`](https://github.com/win7user10/laraue-boards/blob/master/app/composables/utils.ts), which returns a download link for the file through [`TelegramFilesController`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.WebApiHost/Controllers/TelegramFilesController.cs). The frontend has no idea whether the file is on the server or will be loaded from Telegram; it requests the file by its `Guid`, and the rest is the backend's concern.
 
-On a card, only the previews are used. The [`LnbCard`](https://github.com/win7user10/laraue-boards/blob/master/app/components/LnbCard.vue) component renders each issue's media as small thumbnails, capped at four with a "+N" overflow, and each thumbnail's `src` is `getImageUrl(mediaInfo.previewFileId)` — the locally-stored preview. A video preview gets a play-icon overlay so it reads as playable, but it is still just the thumbnail; no video is loaded yet. A board full of cards therefore loads nothing but small local images, however many items are on it.
+A card on the board uses only previews. The [`LnbCard`](https://github.com/win7user10/laraue-boards/blob/master/app/components/LnbCard.vue) component renders each issue's media as a set of thumbnails, capping the count at 4 and adding "+N" if there are more. Each thumbnail's `src` is rendered as `getImageUrl(mediaInfo.previewFileId)`. If the media type is video, the preview gets a play-icon overlay. As a result, rendering a board full of media cards makes not a single request to Telegram, because all the thumbnails are stored locally.
 
-The original is only fetched when the user actually opens something. Clicking a thumbnail calls into shared state — `openMedia(media, index)` — which records the opened media list and the index, and the [`LnbMediaViewer`](https://github.com/win7user10/laraue-boards/blob/master/app/pages/organizations/%5BorgKey%5D.vue) renders the full item. Now `originalFileId` comes into play: an image element points its `src` at the original, and a video element does the same but adds `controls`, `playsinline`, and crucially a `poster` set to the *preview* — so the thumbnail shows instantly while the original streams in behind it, with `preload="metadata"` so the browser fetches only what it needs to start. That `<video>` element hitting the original's URL is what triggers the whole streaming path from the previous section: the range requests, the no-buffering proxy, the direct fetch from Telegram. The thumbnail you were already looking at on the card becomes the poster of the video you are now streaming — preview and original, the two halves of the model, sitting in the same element.
+Clicking a thumbnail calls into shared state through `openMedia(media, index)`. This method saves the media list and the index of the opened item into the state, and [`LnbMediaViewer`](https://github.com/win7user10/laraue-boards/blob/master/app/pages/organizations/%5BorgKey%5D.vue) renders the opened item. To load the original, `originalFileId` is used: the image and video elements request it through `src`. The video element uses a few extra attributes: `controls`, `playsinline`, `poster` with `previewFileId` — to show the thumbnail while the video loads — and `preload="metadata"`, which makes the browser download only what is needed to start playback. Starting playback of the `<video>` element kicks off the streaming process described earlier.
 
-## Bringing back the storage volume
+## Working with local storage files from the application containers
 
-There is one piece of infrastructure this needs that was deliberately deferred earlier. Back in the [deploy article](deploying-dotnet-postgres-vps-docker-compose), the Docker Compose stack had a storage volume that was removed, with a note that it would return once there was something to store. That moment is now — the locally-stored previews have to live somewhere that survives container restarts.
+For applications in containers to have access to a server folder that lives independently of the containers, you need to configure a volume in the `docker-compose.yaml` file presented in the [deploy article](deploying-dotnet-postgres-vps-docker-compose). The files will be stored in the `/home/laraue/storage` folder of the VPS. Destroying the containers will not affect these files in any way.
 
-So the volume comes back. The web API service gets a bind to a named `storage` volume:
-
-```yaml
-- storage:/home/laraue/storage
-```
-
-and the `FilesDirectory` from the `FileStorageOptions` shown earlier is pointed there through configuration, supplied to the container by an environment variable — the same pattern used for every other setting in the stack:
+In the nginx section of `docker-compose.yaml`, access to the server's `storage` folder is passed in:
 
 ```yaml
-FileStorageOptions__FilesDirectory: "/home/storage/note-board"
+nginx:
+  volumes:
+    - storage:/home/laraue/storage
 ```
 
-That is the whole storage footprint on the server: a single volume holding the previews, an environment variable telling the app where to put them. The originals are not here — they were never downloaded — so the disk this volume consumes grows only with the small thumbnails, not with full-resolution photos and videos. The deferred volume returning is the last piece: previews persist across restarts, originals stay in Telegram, and the cheap deployment stays cheap.
+In the same file, the `FilesDirectory` environment variable from the `FileStorageOptions` shown earlier is set:
 
-## Where this leaves us
+```yaml
+structuredmessageswebapihost:
+  environment:
+    FileStorageOptions__FilesDirectory: "/home/storage/note-board"
+```
 
-The crash that opened this article is gone, and in fixing it the bot learned to capture photos, videos, and GIFs as frictionlessly as text — forward it, 👍, done. Underneath that unchanged-looking capture, the storage model does real work: small previews stored locally so a board full of images loads fast from our own disk, full originals left in Telegram and streamed on demand so the server never fills up with files it rarely serves, range-based streaming so even large videos play without buffering the whole thing anywhere. The two sentences from that code comment — can't always call Telegram, can't always store — turned out to contain the entire design.
+Now any files we decide to save in the app will end up in the physical folder `/home/laraue/storage` on the server.
+
+## Conclusions
+
+The crash described at the start of the article is gone. While fixing it, the bot learned to handle photos, videos, and GIFs as simply as text. Implementing this visually small change took thinking through a lot of details. Small previews are stored locally, so a board full of pictures loads fast from our own disk; full originals stay on Telegram's servers and are streamed on demand, which saves us on storing large files; range-based file streaming is implemented, so files are not buffered in the server's memory.
 
 ## What comes next
 
-There is a thread left dangling in the save logic here: what happens when someone *edits* a message they already sent? The handling code already quietly accounts for it, but the story of updating an existing capture — and the wrinkles Telegram introduces around edited and grouped messages — is its own article. That is where the next one goes.
+There is a gap left in the save logic: what happens when someone *edits* a message they already sent? The handling code actually already accounts for it. But the whole story of updating a previously saved message — and the difficulties Telegram introduces around edited and grouped messages — is worth its own article. That is exactly what we will cover next.
