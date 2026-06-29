@@ -3,22 +3,22 @@ title: One card from a Telegram album — handling media groups and edits in a b
 description: Part 12 of building a Telegram task tracker solo. Telegram delivers an album as a burst of separate messages and an edit as a fresh update — here is how to turn a media group into a single record without the usual timeout accumulator, and how to treat an edit as an update instead of a duplicate.
 type: article
 createdAt: 2026-06-26 15:00
-updatedAt: 2026-06-26 15:00
+updatedAt: 2026-06-29 15:00
 projects: [boards]
 tags: [dotnet, telegram-bot, media-groups, devlog]
 previousLink: telegram-bot-file-storage-stream
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 12.
-> The [previous article](telegram-bot-file-storage-stream) taught the bot to capture media and left one thread dangling: a captured message is not frozen. People edit what they sent, and they send albums. This article handles both.
+> The [previous article](telegram-bot-file-storage-stream) taught the bot to save single messages with media, but left a few threads open. A message can be edited — which should update the record that was already saved — or it can consist of several media at once, which should be saved into one issue. This article handles both cases.
 
-The capture flow so far has quietly assumed something that is not true: that a message arrives once, in one piece, and never changes. Real Telegram usage breaks both halves of that assumption. People edit a message after sending it — fixing a typo, adding a line — and they send several photos at once as an album, which Telegram delivers not as one message but as a burst of separate ones. A capture system that ignores either case does the wrong thing: it creates a duplicate card for an edit, or scatters one album across several cards. This article is about getting both right, and the second one is genuinely awkward — awkward enough that the usual answer reaches for an in-memory timer, which this implementation manages to avoid.
+Until now the save process assumed a message in the chat never changes after the user sends it. Because of that, issues on the board stayed exactly as they were first saved, even after the user edited them in the chat. On top of that, sending a group of images in one message created a separate card for each media element in the group, instead of merging all the media into one issue — a consequence of how Telegram delivers media groups.
 
-## An edit is not a new message
+## Handling the edited-message update
 
-Start with the simpler half. When someone edits a message they already sent to the bot, Telegram delivers an *edited message* update — and the bot has to recognise it as a change to something it already saved, not as a brand-new capture.
+Start with the simpler case. When someone edits a message they already sent to the chat, the app receives an *edited message* update from Telegram and has to handle it as an `upsert` — `update` if the message was saved before, `insert` if not.
 
-The groundwork for this was laid back in the [previous article](telegram-bot-file-storage-stream)'s middleware ([`HandleAllMessagesMiddleware`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramHost/HandleAllMessagesMiddleware.cs)), which allows two update types, not one:
+For that, the middleware from the [previous article](telegram-bot-file-storage-stream) ([`HandleAllMessagesMiddleware`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramHost/HandleAllMessagesMiddleware.cs)) allows reading two update types:
 
 ```csharp
 private static readonly UpdateType[] AllowedUpdates =
@@ -28,17 +28,17 @@ private static readonly UpdateType[] AllowedUpdates =
 ];
 ```
 
-and reads whichever one arrived:
+The `Message` object is the same in both update types, so we read it like this:
 
 ```csharp
 var message = context.Update.Message ?? context.Update.EditedMessage;
 ```
 
-So new messages and edited messages flow through *exactly the same* mapping and save path — an edited photo is still mapped by `GetPhotoRequest`, an edited text by `GetMessageRequest`, and so on. The middleware does not branch on "is this an edit"; it treats both uniformly and lets the save service work out whether what it received is new or a change. That is deliberate: the decision of new-versus-update belongs with the code that can actually look in the database and check, not with the code reading the update type. The update type tells you Telegram *calls* this an edit; only a lookup tells you whether *you* already have it.
+For the app there is no difference whether a message was edited or saved for the first time — its handling logic was built around `upsert` from the start: save if it was not there, update if it was. The reason is fault tolerance. When the system lags, any message can be processed more than once, and without `upsert` logic that would create phantom records. As a result, an edited photo is still mapped by `GetPhotoRequest`, an edited text by `GetMessageRequest`, and so on. The [middleware](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramHost/HandleAllMessagesMiddleware.cs) has no branch like "is this an edit or not"; it does the mapping, and the decision of how to handle the record — as new or existing — is delegated to the [save service](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs).
 
-## Update the card, do not create a new one
+## Implementing upsert for a new or edited message
 
-The single-message case is where the create-or-update logic lives. Before doing anything, the save service looks for an existing record by the message's external identity — the Telegram message id plus the chat it came from:
+Messages from Telegram are processed one at a time, so the create-or-update logic works in terms of a single message. First, the [save service](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs) tries to find an existing record by its external identity — the Telegram message id plus the chat it came from. The pair matters, because a message id can repeat across different chats:
 
 ```csharp
 var savedMessage = await context.TelegramMessages
@@ -52,7 +52,7 @@ var savedMessage = await context.TelegramMessages
     .FirstOrDefaultAsync(cancellationToken);
 ```
 
-From there the logic forks on whether a card already exists for this message. If there is no saved message yet, or it has no issue attached, this is a genuine new capture: the message row is created if needed, and a card is created inside a transaction, returning a `MainMessageCreated` result.
+What happens next depends on whether a card already exists for this message. If there is no saved message yet, or it has no issue attached, this is a new object: the save logic runs and a `MainMessageCreated` result is returned to the caller.
 
 ```csharp
 if (savedMessage?.IssueId is null)
@@ -84,7 +84,7 @@ if (savedMessage?.IssueId is null)
 }
 ```
 
-But if the message is already there and already has a card, the request is an *edit* of something captured before. There is no new card; the existing one's content is updated in place:
+If the message is found and has an issue attached, the request is an *edit* of an existing object — an update runs and a `MainMessageUpdated` result is returned:
 
 ```csharp
 await context.Issues
@@ -100,13 +100,11 @@ return new GetOrCreateMessageResult
 };
 ```
 
-That is the whole edit mechanism for a single message: look it up, and either create a card or update the one that exists. The `ExecuteUpdateAsync` writes the new text straight to the existing card without loading and re-saving the entity. (`GetStatusIdToSaveMessage` resolves the default place a freshly captured message lands in; the details of how that default is chosen belong to a later article and are skipped here.) What matters is the result the method returns — `MainMessageCreated` or `MainMessageUpdated` — because that is what the user actually sees.
+`GetStatusIdToSaveMessage` resolves the status the new message is saved into; the details of how it is chosen belong to a later stage and are skipped here. The result of handling the message — `MainMessageCreated` or `MainMessageUpdated` — is what the user ends up seeing.
 
-It is worth being precise about what `MainMessageUpdated` really means, because it is broader than "an edit." It means *this message attached to a card that already existed*, rather than creating a new one — and that happens in two different situations. One is a genuine edit, as above. The other is the second, third, and later photos of an album: as the next section explains, Telegram sends each image of a multi-photo message as a *separate* message, and merging them into a single card is the backend's job. Those later parts are not edits in any user's sense, but mechanically they take the same path — they find an existing card and attach to it rather than creating one. So `MainMessageUpdated` is really "merged into something that was already there," whether that something was created a moment ago by the first photo of the same album, or yesterday by a message the user just edited. The single create-or-update mechanism handles both, which is part of why it is built around a lookup rather than around the update type.
+## A reaction instead of a status message
 
-## The reaction tells the user which happened
-
-The capture flow gives the user exactly one piece of feedback, and it is silent: a reaction on their own message. The orchestration layer sets it based on the result the save returned:
+The feedback to the user is minimal: a reaction on their own message. [`TelegramMessageService`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramMessageService.cs) sets the reaction based on the save result:
 
 ```csharp
 var result = await saveMessageService.Save(request, cancellationToken);
@@ -117,7 +115,9 @@ else if (result.Result is Result.MainMessageUpdated)
     await SetReaction(request, "❤", cancellationToken);
 ```
 
-A capture that created a new card gets a 👍; one that merged into an existing card gets a ❤ — whether that was an edit or a later part of an album. That difference is the entire user-visible surface of this feature — no "updated" message, no confirmation dialog, nothing to dismiss. The user edits their message and sees the reaction quietly settle on a heart, which is enough to know the system noticed. It keeps the zero-friction promise from the [Saved Messages lesson](telegram-saved-messages-bot-lesson): the bot acknowledges, it does not interrupt. Setting the reaction itself is a single Bot API call:
+If a new object was created during handling, a 👍 is set; if an existing one was updated, a ❤. The reasoning behind interacting with the user this way is in [why users kept choosing Saved Messages](telegram-saved-messages-bot-lesson): the bot only confirms that it handled the message, without cluttering the chat with extra messages or buttons.
+
+Setting the reaction is a single Bot API call:
 
 ```csharp
 private async Task SetReaction(
@@ -135,13 +135,13 @@ private async Task SetReaction(
 }
 ```
 
-There was a tempting idea here that did not survive contact with the API: cycling the reaction on *every* edit, so repeated edits would visibly step through different emoji. Telegram does not offer a way to read a message's current reaction set, so doing this would mean storing the current emoji for each message ourselves, purely to know what to change it to next. That is real state to maintain for a cosmetic touch, so the feature stays at two states — created and updated — which need no stored history because the save result already tells you which one applies. It is a small example of letting an API's limitation talk you out of a feature that was not worth its cost anyway.
+There was one more small idea here: changing the reaction on *every* edit, so repeated edits would change the emoji too. As it stands, it is hard to tell whether a repeat edit was handled — the user always sees a ❤. Telegram currently gives no way to read a message's current reaction set, so doing this would mean storing the current emoji for each message ourselves — and we decided not to overcomplicate the system for such a rare case.
 
-## The difficult case: media groups
+## Handling a Telegram media group
 
-Now the awkward half. When a user sends several photos at once as an album, Telegram does not deliver one message containing several photos. It delivers *several separate messages* that happen to share a **media group id**, arriving in a quick burst with no guaranteed order. Turning that burst back into a single card is the hardest piece of the capture logic, and it is handled in its own method, [`SaveGroupMessageEntity`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs) — the rest of this section describes its shape rather than walking every line, because the line-by-line detail is in the source.
+When a user sends several photos at once, Telegram does not send one message with several photos, as many expect. It sends *several separate updates* with the same **media group id**, arriving with no guaranteed order. Telegram leaves it to the app to assemble that group back into one object. The [`SaveGroupMessageEntity`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs) method is responsible for this.
 
-The core problem is a mismatch in counting. To the user, an album is one thing they sent. To Telegram, it is N messages. To the app, it should be one card with N attachments. So the save service routes group messages differently from single ones:
+To the user, a group of images is one message, and they expect to see one card with N attachments on the board. The [save service](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs) has a branch to handle the group case separately:
 
 ```csharp
 private Task<GetOrCreateMessageResult> SaveMessageEntity(
@@ -154,11 +154,38 @@ private Task<GetOrCreateMessageResult> SaveMessageEntity(
 }
 ```
 
-The common solution to this problem, the one you find in most bot frameworks' forums, is a **timeout accumulator**: when a message with a media group id arrives, buffer it in memory, start (or reset) a short timer, and when the timer finally fires without new parts arriving, assume the album is complete and process the whole buffer at once. It works, but it is fragile in ways that matter. It holds state in memory, so a restart mid-album loses the parts that already arrived. The timer is a guess — too short and you split one album into several, too long and every album feels laggy. And it assumes all parts arrive close together, which is usually but not always true.
+The common solution for saving groups, the one you find on forums, is a **timer-based implementation**: when a message with a media group id arrives, store it in memory and start (or reset) a timer tied to that group. When the timer expires, consider the group complete and save all the messages belonging to it. This approach has nothing to do with fault tolerance. The state is held in memory, and a server restart can lose part of the data for good.
 
-This implementation avoids the timer entirely by leaning on the database instead of memory. There is no "wait for the album to finish" step at all; each part is handled as it arrives, and the persistence layer is what ties them together. That rests on a few ideas. First, the media group gets its own database row, created once and reused, so that all the separate messages of one album can be tied to a single group identity — that is what `GetOrCreateTelegramMediaGroupId` does: look the group up by its Telegram id, create it if it is the first part to arrive, return it otherwise. Second, the rule for which message owns the card: **only the first message of the group carries the content and creates the card.** The later parts of the album do not each make their own card; they find the group's existing card and attach their media to it. Since the parts arrive in no fixed order, "first" is decided by querying the group's stored messages and ordering them, not by trusting arrival order or a timer. Because all of this lives in the database rather than an in-memory buffer, a restart in the middle of an album loses nothing — the parts already processed are saved, and the ones still coming will find them.
+Our implementation avoids the timer by relying on the database rather than RAM. We do not wait for the album to finish; we link the messages as they arrive. It rests on a few ideas.
 
-That leaves the edge cases, which is where it gets genuinely fiddly and where the code carries honest `TODO`s. One real example handled in the code: the first message of a group — the one that was holding the text content — gets deleted, and the user adds the text to a different part instead. Now the part that is supposed to own the card no longer exists, and the content has moved. The code detects this and updates the surviving card's content from the part that now has the text:
+First, the media group gets a local [identifier](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.DataAccess/Models/TelegramMediaGroup.cs) in the database. All the separate messages of one album are tied to that row through [`GetOrCreateTelegramMediaGroupId`](https://github.com/win7user10/Laraue.Apps.Boards/blob/main/src/Laraue.Apps.Boards.TelegramServices/Services/Messages/TelegramSaveMessageService.cs):
+
+```csharp
+private async Task<long> GetOrCreateTelegramMediaGroupId(string groupId)
+{
+    var data = await context.TelegramMediaGroups
+        .Where(x => x.ExternalId == groupId)
+        .Select(x => new { x.Id })
+        .FirstOrDefaultAsync(cancellationToken);
+
+    if (data is not null)
+        return data.Id;
+
+    var group = new TelegramMediaGroup
+    {
+        ExternalId = groupId,
+    };
+
+    context.Add(group);
+    await context.SaveChangesAsync(cancellationToken);
+
+    return group.Id;
+}
+```
+
+**Only the first message of the group creates the card.** The later messages of the group find the existing issue and attach their media to it. Because all of this lives in the database rather than an in-memory buffer, a server restart during group handling causes no problems — the parts already processed are saved, and the rest are added after the restart.
+
+What is left are the non-standard cases — where you have to think carefully about whether to handle them at all, and if so, how. Those spots carry `TODO`s, their implementation deferred until they become real problems. One of the harder cases we did decide to handle: the first message of the group, the one that held the text content, is deleted, and the user adds the text to a different message in the group. The code allows updating the issue's text from any message in the media group, to support cases like this:
 
 ```csharp
 // The case when first message was deleted and text added to the second
@@ -174,28 +201,20 @@ if (request.Text is not null && firstGroupMessageData is not null)
 }
 ```
 
-The `TODO` is honest about the limit: there are deeper consistency questions here ("should we detect and remove previous messages?") that are noted but not solved, because the cases that trigger them are rare and the cost of handling every one is high. The album path handles the common shapes well and marks the exotic ones for a someday that may never need to come.
+## Why we do not handle deletions
 
-## The thing the bot cannot do: deletions
+To start with, Telegram does not deliver an update to the bot when a user deletes a message from their chat. There is simply no event for it, so we cannot know that a message was deleted in the Telegram chat. As a result, we can only delete issues from the web interface, not from the chat.
 
-Edits the bot can see. Deletions it cannot. Telegram does not deliver an update to a bot when a user deletes a message from their chat — there is simply no event for it — so the bot has no way to know that something it captured was removed on the Telegram side. As a result, deleting a captured card is supported only from the web interface, not from the chat.
+*Why* does Telegram not send this event at all? We think it is because of the ambiguity. What should happen when a user deletes their entire chat history with the bot? Should a delete arrive for every single message? It is hard to answer that unambiguously.
 
-It is worth sitting with *why* Telegram does not send that event, because the ambiguity turns out to be real rather than an oversight. Consider what should happen when a user deletes their entire chat history with the bot. Should that fire a delete for every single message, wiping out everything they ever captured? That is almost certainly not what they meant — clearing a chat is a chat-cleanup gesture, not "destroy all my saved tasks." But the opposite default, ignoring it, is also defensible. There is no reading of "the user deleted this message" that is unambiguously correct for a system that captured the message into something more durable, so Telegram declines to guess. Given that, doing deletion in the web app — where "delete this card" means exactly and only that — is the right place for it anyway.
+So we implemented deletion only in the web version of the app — and the chat with the bot serves as a kind of log of the history of interacting with it.
 
-There is a possible future middle ground: an explicit in-chat gesture that is unambiguous *because* the user chose it — for instance, reacting to a captured message with a particular emoji to tell the bot to delete the corresponding card. That keeps deletion available in the chat without inheriting the ambiguity of raw message-deletion, because the user is deliberately signalling intent rather than the bot guessing from an absence. Whether it is actually comfortable to use is an open question — reacting-to-delete is the kind of thing that sounds neat and might feel awkward in practice — so it stays an idea rather than a feature for now.
+There is a small idea for the future: delete when the user puts a particular emoji on their message. Whether that is convenient is a separate question — a reaction would make deletion possible, but two-way communication with the bot through emoji looks awkward and unintuitive, so for now it stays just an idea.
 
-## Why this is fiddly, and what it teaches
+## Conclusions
 
-The reason this article exists is that Telegram's model of a message and the app's model of a captured card do not line up. Telegram says an edit is a new update; the app needs it to be a change to an existing card. Telegram says an album is a burst of separate messages; the app needs it to be one card. Telegram says nothing at all when a message is deleted; the app has to live with that silence. The save service is the seam where that mismatch is reconciled — where the messy, external reality of how Telegram delivers things is translated into the clean, internal reality the rest of the app gets to assume.
-
-That is the same theme as the previous article's mapping middleware, where an animation and a video collapsed into one app concept. Here it is edits and albums collapsing into "create or update a card." In both cases the discipline is the same: do the reconciling *at the boundary*, in one place, so that everything downstream gets to work with a simple model and never has to know how irregular the input was. The cost is that this one place is not simple — the save service is the most intricate code in the bot, precisely because it absorbs all the irregularity so nothing else has to.
-
-And it is shipped pragmatically, not perfectly. The media-group handling has rough edges and marked `TODO`s; the common cases work, the rare ones are flagged. That is the scale-appropriate call again: handle what real users actually do, and do not spend days hardening paths that almost no one will hit, when those days can build something people will.
-
-## Where this leaves us
-
-The bot now handles the full reality of how people actually send things to it: text and media, sent once or edited afterward, one at a time or as an album. None of it changed the experience of *using* the bot — capture is still send-and-forget, the only feedback a quiet reaction that now distinguishes a new save from an edit. All the complexity went where complexity belongs: server-side, at the boundary, invisible to the person sending a photo. With this, the capture half of the product — the bot — is genuinely done. It does one thing, captures whatever you throw at it, and stays out of the way.
+The bot now supports all the cases real users ran into: handling text and media, editing them, and handling message groups. The bot still just saves what it was sent and sets a reaction confirming successful handling, which now differs depending on whether it was a save or an edit. With this, the part of the product responsible for the bot's message handling is finished.
 
 ## What comes next
 
-Which raises a question worth sitting with. The bot is finished, and almost everything interesting from here on lives in the web app — the boards, the organising, the actual managing of what was captured. And working on it surfaced a realisation about the whole architecture: Telegram, for all that this is a "Telegram-native" product, is really only needed for one thing — logging in. Nearly everything else the app does could work without Telegram at all. The next article turns fully to the web app, and to what it means to have built a Telegram product that barely depends on Telegram.
+The bot is done, and all further functionality will be built in the web version — the organising mode, managing issues, their attributes. But before any of that, the web version needs authentication. The reason: users did not always find the Mini App convenient for working with boards, and asked for a web version — and to publish it, auth has to be set up first. The next article turns from the Telegram Mini App to the web app — we keep building a product closely tied to Telegram, but now able to work separately from it.
