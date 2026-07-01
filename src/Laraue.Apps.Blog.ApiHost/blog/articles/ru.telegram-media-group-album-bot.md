@@ -7,6 +7,7 @@ updatedAt: 2026-06-29 15:00
 projects: [boards]
 tags: [dotnet, telegram-bot, media-groups, devlog]
 previousLink: telegram-bot-file-storage-stream
+nextLink: telegram-login-widget-dotnet-auth
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 12.
