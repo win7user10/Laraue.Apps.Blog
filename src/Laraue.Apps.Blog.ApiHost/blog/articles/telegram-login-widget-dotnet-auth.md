@@ -10,7 +10,7 @@ previousLink: telegram-media-group-album-bot
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 13.
-> The [previous article](telegram-media-group-album-bot) finished the last piece of functionality planned for the bot's MVP. Here we move to the web version users asked for — and to ship it, the app first needs authentication that works outside Telegram.
+> The [previous article](telegram-media-group-album-bot) finished the last piece of functionality planned for the bot's MVP. Here we move to the web version users asked for — and to ship it, the app first needs authentication that works outside Telegram Mini App.
 
 Until now the only way to log in was launching the Telegram Mini App, which authenticates the client through data Telegram provides. But feedback came in that the Mini App was not always convenient to work with — users wanted a browser tab with their boards close at hand. A web version opened in a browser, outside Telegram, cannot rely on Telegram's init data for authentication the way the Mini App does. Setting up authentication for the web version through Telegram is the subject of this article. It is also where, working on that authentication, we finally understood that Telegram in our architecture is not core functionality but rather one of the possible integrations.
 
