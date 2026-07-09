@@ -1,9 +1,9 @@
 ﻿---
 title: From Telegram Saved Messages to a real task tracker — defining the user path
-description: Part 3 of building a Telegram task tracker solo. Why Saved Messages fails as a to-do list, the minimal single-user flow Laraue Boards started from, and why the user path is defined before any schema.
+description: Part 3 of building a Telegram task tracker solo. Why Saved Messages is not convenient for managing tasks, which minimal scenario Laraue Boards started from, and why the user path is defined before development begins.
 type: article
-createdAt: 2026-06-20
-updatedAt: 2026-06-20
+createdAt: 2026-06-20 16:20
+updatedAt: 2026-07-09 11:00
 projects: [boards]
 tags: [dotnet, telegram, saved-messages, product, user-path, devlog]
 previousLink: prototyping-ui-with-ai-before-code
@@ -11,51 +11,45 @@ nextLink: choosing-stack-for-solo-project
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 3.
-> The [previous article](prototyping-ui-with-ai-before-code) was about prototyping the interface. Now there is something concrete to point at — and the next question is what the user actually does with it.
+> The [previous article](prototyping-ui-with-ai-before-code) was about prototyping the interface. Now we have to think through how the user will create issues on the boards directly from Telegram.
 
-A prototype shows what the product looks like. It does not tell you what the user does, in what order, or where the flow should start and stop. That is the next thing to pin down, and it has to be pinned down before any schema exists — because the schema is built to serve the path, not the other way around. We wrote about why we [start from the user path](how-we-build-engineering-principles) as a general principle; this article is the specific path Laraue Boards began with.
+The prototype shows clearly how the product will look. But it does not answer how the user's interaction in Telegram with that interface will work. We will try to fix the key points in this article, before the database design stage. We have written about why we always [start development with the user path](how-we-build-engineering-principles) as a general principle; this article is about a concrete example — Laraue Boards.
 
-## Start with the smallest possible scope
+## The minimal set of features for the first version
 
-The first version is single-user. No organizations, no teams, no sharing, no permissions. One person, their own tasks, nothing else.
+We prefer iterative development, where a new version of the app appears at the end of each iteration. If you try to make a fully functional project all at once, there is a risk of never seeing it. So the first version of Boards is single-user. No organizations, no teams, no sharing, no permissions. Just one person and their own tasks.
 
-This is deliberate. Complexity grows fast once multiple users are involved — who can see what, who can edit what, what happens when two people touch the same thing. Starting single-user removes all of that and leaves only the core question: does the basic loop of capturing and organising tasks actually work and feel good? Everything multi-user gets built on top of this foundation later, once the foundation is proven.
+This is a deliberate choice. Complexity grows quickly once sharing appears: who sees what, who can edit what, what happens when two people change the same thing. Starting with a single-user mode gets us to an MVP faster and lets us check the one thing that matters: is what we are building convenient to use.
 
-## The first user path
+## The basic scenario of creating an issue from Telegram
 
-The path the first version supports is small enough to write in two lines:
+We saw the user path here like this:
 
-- The user writes a message to the bot → a card is added to the backlog.
-- The user opens the app → they manage cards on a kanban board.
+- The user writes a message to the bot → a card is added to the backlog → the bot signals success.
+- The user opens the app → sees the backlog and manages the kanban boards.
 
-That is the whole thing. Two actions, two surfaces, one user.
+That is about it — just two actions.
 
-The first half is capture. Instead of writing a task into Telegram's built-in Saved Messages — where it sits in an undifferentiated pile and gets forgotten — the user sends it to the bot. The bot stores it as a card. Capture stays exactly where the user already is, inside Telegram, with no context switch.
+The first action is saving. Instead of creating a note in Telegram's Saved Messages, where it lies in a common pile, the user sends it to the bot, and the bot saves it as a card. Saving stays where it already was — inside Telegram.
 
-The second half is management. When the user wants to actually organise their tasks — move them between columns, set their status, see the whole board — they open the web app. This is the work that does not fit inside a chat, and trying to force it into one is a mistake we made and corrected later in the series.
+The second action is managing. When the user wants to work with the cards — assess progress, move them between statuses — they open the web app, which adds the visual component that the chat lacks.
 
-## Why the bot instead of Telegram Saved Messages
+## Why a user needs a bot instead of Saved Messages
 
-Telegram already has a place to send yourself notes: Saved Messages. Most people use it as an informal to-do list. So why build a bot that does what Saved Messages already does?
+Telegram already has a place for notes — Saved Messages. Many people use it as an informal to-do list. So why a bot that does the same thing? The answer: it is not always convenient.
 
-This was worth checking rather than assuming, so we asked around. All of our friends are Telegram users, and we asked them two things: do you use Telegram's Saved Messages as a notebook that is always within reach, and do you later run into trouble sorting through what you saved? The answer to both was yes, across the board. They are active Saved Messages users precisely because Telegram is always there — on the phone, on the computer, one tap away. It is the most convenient place to dump a thought. But it was never designed for classifying or organising those thoughts afterwards, and that is exactly where it falls down for them.
+We asked around among friends who are Telegram users, like us. We asked two questions: do you use Saved Messages as a notebook that is always at hand, and do you later have trouble finding your way around those notes? Everyone answered "yes." Telegram is always near — on the phone and on the computer. It is a convenient place to quickly jot down a thought. But it is not designed for classifying and organising those thoughts afterwards.
 
-That gap is the opening. Saved Messages has picked up some organisation features — pins, and emoji tags that let you label and filter what you have saved. But tagging a pile is still a pile. There is no status on a message, no board, no columns, no way to move something from "to do" to "in progress" to "done," no notion of a task that can be worked through a process. You can label a note, but you cannot manage it. A message goes in and, tags or not, nothing happens to it unless you go back and act on it manually. Piles do not get managed — they get forgotten.
+Saved Messages has emoji tags you can mark and filter saved items with. Some people try to solve the organisation problem by creating several chats. But that does not solve it fully — the set of tags is limited, and information scattered across chats is hard to search.
 
-The bot looks similar at the moment of capture — you send a message, just like Saved Messages — but what is captured becomes a real entity in a system that can organise it: a card with a status, on a board, that moves through a workflow. The capture is as frictionless as Saved Messages; everything after capture is what Saved Messages, even with tags, was never built to do.
+So a bot can combine the user's familiar way of working with notes with a full system for managing them. On top of that, given Telegram's popularity in small companies in the CIS countries, where they prefer to assign tasks to employees as text in chats, this could evolve into software for small businesses too.
 
-That contrast — same easy capture, but the message becomes something you can actually work with — is the core of the whole product, and the first user path is the smallest version of it that delivers real value.
+## How the user path defines the data model
 
-## How the path informs everything after it
+The path, written out before any code, lets us understand what the data model has to support: the user, the card, the backlog, the board with columns, a status on each card. It says what the bot has to do (accept a message, create a card) and what the web app has to do (read cards, move them, change status).
 
-Writing the path out before any code does real work. It tells you what the data model has to support: a user, a card, a backlog, a board with columns, a status on each card. It tells you what the bot has to do (receive a message, create a card) and what the web app has to do (read cards, move them, change status). Nothing more — and equally important, nothing the path does not call for.
-
-This is why the path comes before the schema. The schema in the next article is not designed from first principles or from what a task tracker "should" have. It is designed to support exactly these two actions, and to stop there.
-
-## A note on what we deferred
-
-There is one decision worth flagging now, because it became a mistake later: we did not think hard enough about the multi-user path at this stage. Single-user-first is the right call, but it is different from single-user-only. Some schema decisions made for one user turned out to need rework once organizations arrived, because the multi-user shape was never sketched even loosely. Starting minimal is correct; pretending the later stages do not exist is not. We will come back to exactly what that cost when organizations enter the series.
+The database schema in the next article will be designed not from an abstract set of entities; we understand clearly what has to be added to implement the user scenario.
 
 ## What comes next
 
-The path defines what the data has to do. The next step is the data model itself — the first, deliberately minimal schema, designed to support this single-user flow and nothing more.
+The next step is designing the data model: it will be a minimal database schema, designed for this specific scenario.
