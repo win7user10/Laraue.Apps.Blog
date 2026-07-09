@@ -1,9 +1,9 @@
 ﻿---
-title: Prototyping the interface with AI before writing any code
-description: Part 2 of building a Telegram task tracker solo. Why the interface comes before the stack and the schema, how AI HTML prototypes replaced Figma, and what the first Laraue Boards prototype revealed about the product.
+title: Prototyping the interface with AI before writing code
+description: Part 2 of building a Telegram task tracker solo. Why we start with the interface, how AI HTML prototypes replaced Figma, and how the first Laraue Boards prototype turned out.
 type: article
-createdAt: 2026-06-19 17:00:00
-updatedAt: 2026-06-20
+createdAt: 2026-06-19 17:00
+updatedAt: 2026-07-09 13:00
 projects: [boards]
 tags: [dotnet, nuxt, telegram, prototyping, ai-workflow, devlog]
 previousLink: building-jira-alternative-solo-why-and-repositories
@@ -11,48 +11,40 @@ nextLink: telegram-saved-messages-to-task-tracker
 ---
 
 > **Architecture First: Building a Jira Alternative Solo, AI-Assisted** — Part 2.
-> The [first article](building-jira-alternative-solo-why-and-repositories) covered why we built [Laraue Boards](../projects/boards) and where the code lives. This one is about the very first thing we actually made — and it was not code.
+> The [first article](building-jira-alternative-solo-why-and-repositories) was about why we are building Laraue Boards and where the code will live. This one is about what we did first. And it was not writing code.
 
-Before choosing a stack, before designing a schema, before writing a single line of backend or frontend, we built a prototype of the interface. Not because it is a nice-to-have, but because every decision that follows depends on it. You cannot pick the right database structure for a screen you have not seen. You cannot define a user path through an interface that does not exist yet. The prototype is what turns a vague product idea into something concrete enough to build against.
+Before choosing the stack, before designing the database schema, and before writing the first line of code, you need to make a prototype of the app. Almost every later decision depends on it: it is hard to design a database structure for a screen you have never seen, and hard to define the user path through an interface that does not exist yet. The prototype turns a vague product idea into a vision you can build on.
 
-## Why a backend engineer prototypes at all
+## How a backend developer can prototype interfaces
 
-The team behind Laraue Boards is backend engineers. Designing interfaces is not our core skill, and for a long time that meant interface design was a bottleneck. Figma requires real design ability — layout, spacing, hierarchy, component thinking — before it produces anything usable. For someone whose strength is data models and services, sitting down in Figma to design a screen is slow and frustrating, and the result is usually mediocre.
+At Laraue there are no engineers with commercial frontend experience — we all specialize in the backend. Designing interfaces was, for a long time, the main problem for our team. Figma requires serious immersion in layout before something worthwhile starts to come out. On top of that, the result still had to be turned into HTML.
 
-AI changed that. We can describe a screen in plain language and get back a working HTML prototype — something we can open in a browser, click through, and react to. It is not a picture of an interface; it is an interface, rough but real. For a backend engineer, that is a far better starting point than a design tool, because the feedback loop is interaction, not visual craft.
+AI changed this. We can describe a screen in sentences and get a working HTML prototype that can be touched in the browser. It is not an image, but a real interactive interface. For a backend engineer, this is the best starting point one could imagine.
 
-We covered the general workflow and where AI does and does not belong in [how we build](how-we-build-engineering-principles). This article is about how it played out for Laraue Boards specifically.
+We mentioned what we use AI for, and where we try to avoid it, in the article [how we build software](how-we-build-engineering-principles). Here — about the real use while creating Laraue Boards.
 
-## The workflow: describe, generate, iterate on mock data
+## Vibe-coding the interface
 
-The loop is simple. We describe the screen and what the user should be able to do on it. The AI produces a single HTML file. We open it, fill it with mock data, and start using it as if it were real — clicking, navigating, trying the actions a user would try.
+We used a model from Claude and asked it to generate the HTML for a task tracker with the functionality we needed implemented on mock data. Then we try real scenarios — creating a task, moving it between columns, and so on. If some functionality is missing, we ask to add it. If something does not work, we ask to fix it. No rocket science, just vibes.
 
-Mock data matters more than it sounds. A prototype with three tidy placeholder items looks fine and teaches you nothing. A prototype filled with realistic data — long titles, empty states, dozens of items, the awkward edge cases — is where the real problems show up. The layout that looked clean with three cards falls apart with thirty. That is exactly what you want to discover now, in a throwaway HTML file, rather than after it is built in Vue and wired to an API.
+Mock data matters a lot here. A prototype with three neat placeholders looks great. But the edge cases — long titles, empty states, a large number of elements — the AI often forgets. So at the prototype stage we try to break the layout however we can, asking it to generate enough mock data. Fixing a mistake caught at this stage costs almost nothing — unlike one that will be fixed in the real app.
 
-We iterate entirely in the chat. Change this, move that, what happens when there are no items, what happens when there are too many. Each round takes seconds, not the minutes or hours the same change would cost in a real component.
+Even better, decide right away whether the app will be mobile-first or desktop-first and reflect that in the prompts. The final interface layout will depend on it.
 
-## What the first prototype revealed
+## The results of prototyping
 
-Here is the first prototype the AI produced for Laraue Boards:
+At the end of the iteration we got this prototype for Laraue Boards:
 
 ![The first Laraue Boards prototype, generated by Claude](https://laraue.com/static/images/blog/articles/laraue-boards/first-prototype-by-claude.jpg)
 
-Seeing it as a clickable interface, rather than a description in our heads, changed what we thought we were building. Decisions that felt settled when they were abstract turned out to need rethinking once they were in front of us as something to actually use. The prototype made the gaps obvious in a way that no amount of planning had.
+Prototyping is great at engaging the imagination — a quick glance at the generated interface leads to ideas. The AI can add something you did not even think of, and it looks like a good feature. Something planned earlier already seems unnecessary. Something looks fine, but there is an understanding that its implementation would be long and complex — that gets excluded from the first iterations.
 
-A prototype also does something a specification never can: it lets your imagination work. You look at the generated interface and start reading things out of it. Something unexpected appears in the layout and you realise it would actually make a good feature. Something else looks excessive and gets cut. A third thing looks fine on screen but you know it would be painful to implement on the backend, so you rethink it now rather than later. Often the prototype sparks ideas that were not in the original plan at all. It works the way you find a picture in an inkblot — you look at the shape in front of you and your mind fills in what it could become. A blank page does not do that; a concrete, slightly-wrong interface does.
+That is the value of a prototype: decisions are made cheaply, changes are added in seconds. By the time we started writing the real code, the interface questions were already resolved.
 
-This is the real value of prototyping first: the layout decisions get made at the prototype stage, cheaply, before any of them are encoded in a schema or a component tree. By the time we started writing real code, the hard interface questions were already answered.
+## The path from prototype to a real app
 
-## From prototype to Vue components
-
-The HTML prototype is never the deliverable. It is a thinking tool, and it gets thrown away.
-
-When the layout and interactions feel right, the work shifts to real implementation: the single HTML file gets split into Vue components, wired to a real API, and given real state. What carries over is the structure and the interaction decisions — the things the prototype was for. What does not carry over is the throwaway HTML itself.
-
-The mechanics of that split — how we actually turn one clean HTML file into a set of Vue components without dragging the prototype's shortcuts into the real codebase — are worth their own walkthrough. We cover that in detail later in the series, in building the issues layer, where it happens for the first time against a real feature.
-
-That distinction matters, because it is tempting to keep polishing the prototype as if it were the product. It is not. Its job is to answer questions, and once it has answered them, it has done its job. We wrote more about that trap — perfecting a prototype instead of moving on — in [how we build](how-we-build-engineering-principles).
+The HTML prototype is not the final result. It is great for early demos, but it is not a product. Between a prototype and a real app there is a huge gap. In the coming articles the generated HTML file will be used as a reference for building the backend and the frontend, until it finally becomes a real product available to users.
 
 ## What comes next
 
-A prototype shows what the product is. The next question is who does what, and in what order — the deliberately minimal, single-user path that everything else gets built on top of, defined before any schema or stack decision is made.
+The prototype shows how the product will look. The next question is how the user will interact with it. We will define the simplest user path before moving on to further design.
