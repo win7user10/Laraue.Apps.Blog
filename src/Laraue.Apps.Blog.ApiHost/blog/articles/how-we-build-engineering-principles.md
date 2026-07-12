@@ -1,112 +1,74 @@
 ﻿---
-title: How we build — engineering principles for shipping real software
-description: The engineering principles behind Laraue projects — starting from user paths, balancing development speed and architecture correctness. When to add database indexes and to write tests. Where AI helps and where it doesn't belong.
+title: How we build — engineering principles for working on real products
+description: The engineering principles Laraue projects follow — start from the user path, do not overcomplicate ahead of time, split logic into layers, isolate third-party integrations, and where AI helps and where it is not allowed near the codebase.
 type: article
 createdAt: 2026-06-18
-updatedAt: 2026-06-18
+updatedAt: 2026-07-12
 tags: [engineering, architecture, testing, ai-workflow, database, development]
+nextLink: reviewing-ai-generated-code-cost
+previousLink: how-we-decide-what-to-build
 ---
 
-This article is about how we engineer a product once the decision to build it has been made. It is one half of how we work at Laraue. The other half — how we decide what to build in the first place — is covered in [How we decide what to build](how-we-decide-what-to-build).
+We will try to list all the rules we follow at Laraue when building software. We link to this document from individual articles so we do not repeat the principles in each one. Some of the points link to the stories the rule came out of.
 
-We link here from individual project series rather than repeating ourselves in each one.
+## We design the database and write code only once the user path is clear
 
----
+Before moving on to the database or the code, we write out the sequence of actions a user takes to achieve some result. The cost of fixing a mistake grows several times over with every subsequent stage of development. Fixing a mistake in a mockup takes 2 minutes; rewriting a feature's code takes 2 days. So first we describe the user path, then we stare at it for a long time, trying to find the inconsistencies. We move on to designing the database and writing code last of all.
 
-## Start from the user path, not the schema
+It follows from this that code is added only in line with the current needs. It is useful for a developer to know which features are planned for the next iterations, so that room for extending the architecture is left in the right places. But adding code or tables that have nothing to do with the current feature to a PR is a direct path to technical debt out of nowhere. How this principle plays out on Laraue Boards is in the article [about the user path](telegram-saved-messages-to-task-tracker).
 
-Before writing a single line of code, we map the sequence of actions a user takes to accomplish something. How many steps does it require? Where does it feel like friction? Can any step be eliminated or combined?
+## Start simple, add complexity only when it is really needed
 
-Only once that sequence feels right do we start designing the data model. The schema serves the user path — not the other way around. An elegant database design that produces a clunky user experience is a failure.
+The ability to do only what is really needed at the current stage is an irreplaceable skill. Without it, infrastructure gets designed for a scale the product may never reach. Developers can optimize SQL queries that produce no load at all, in features nobody uses. There are plenty of examples of wasting time and resources like this in any field.
 
-This also means the schema is allowed to be minimal at first. We build exactly what the current user path requires and nothing more. Features that are not yet in the user path do not get tables.
+While building Laraue Boards, every infrastructure decision followed one rule: pick the simplest and cheapest option that satisfies the current needs, and add complexity only when there is a concrete reason. A cloud database has real advantages — backups, failover, point-in-time recovery — but paying for them makes sense when there is something to protect. When you have three active users, a self-hosted option on the same VPS where the main app runs handles the job just fine.
 
-## Balance speed and correctness — and accept that the balance shifts
+The same logic can be seen in the [deploy article](deploying-dotnet-postgres-vps-docker-compose): media can perfectly well be stored on the VPS file system instead of S3, and the app's migrations can be run at app startup instead of setting up complex pipelines. Every decision is a trade-off. It cannot be right or wrong on its own. What is a standard for big companies is, for small ones, a path to wasted resources or bankruptcy.
 
-Early in a feature's life, the goal is to find out whether the approach is right. We implement quickly, even imperfectly, and ship it. If the implementation does not hold — if it is hard to extend, confusing to work with, or wrong in ways we did not anticipate — we refactor.
+## We use a layered architecture for services — but only where it is needed
 
-Refactoring a working feature is easier than designing it perfectly upfront, because by the time you refactor, you understand the problem. Design documents written before implementation are guesses. Code written after usage is knowledge.
+We move the logic that should not depend on the app's entry point into the Core services project (`Services`), and the host-specific logic into the host services (`HostNameServices`). A **Core service** can perform the operation in the form in which it will be correct regardless of the caller: creating an issue must add a record to the change history whether the request came through the Telegram bot or the web API. A **Host service** contains only the host-specific logic: permission checks, validation, transaction management. After performing such actions the request is usually forwarded to the Core service. The approach is covered in detail in the [backend architecture article](clean-dotnet-telegram-bot-architecture).
 
-There is no universal rule here. Sometimes writing something is better than writing nothing; sometimes the opposite. The judgement is about which situation you are in. When nobody — including you — understands how to approach a task, writing something, even badly, is the fastest way to turn a vague problem into a concrete one you can react to. But when the thinking is still flowing — when you can hold the problem in your head, sketch it on a desk, talk it through — that is cheaper than committing it to code. A wrong idea is far easier to throw away as a sketch than as a branch. So the rule is: think on paper and in conversation while the stream of thought is still running, and reach for code only when thinking alone stops making progress.
+It is important to understand why the rule exists: the split helps reuse code across different hosts, avoiding duplicated logic. If the functionality is limited to one host — for example, the whole project is a host for a Telegram bot — the split may be redundant and will only lead to a more complicated project and time spent maintaining an architecture that does not help with anything.
 
-The balance shifts over time. Early iterations move fast and cut corners deliberately. As a feature stabilises and other things depend on it, correctness takes priority. The goal is to know which stage you are in.
+## We do not let integration models leak into the app's core
 
-## Add indexes when writing the logic, not when designing the model
+When an app depends on an external service, that service's types must not leak inside the domain. Storing a third-party `Telegram.Bot.Types.Message` model in your own database is strongly discouraged.
 
-Indexes are a consequence of how the application queries data, not a property of the data itself. So we add them while working on the services that read and write the data — not at the model design stage.
+The right approach is to define your own models and DTOs for any service operations and map the third-party types into them. For example, the Telegram host watches for new messages in the chat (`Telegram.Bot.Types.Message`), maps them into a local DTO (`DomainName.Services.SaveMessageRequest`), and works with that DTO from then on as if Telegram never existed, calling `coreService.SaveMessage(SaveMessageRequest request)`.
 
-At the model stage, you are guessing which columns will be filtered, sorted, or constrained. Those guesses are usually wrong, because the access patterns are not yet known. Once the service logic exists, the patterns are explicit: this query filters by space and status, that one sorts by creation date, this column must be unique within an organization. The indexes follow directly from that.
+Since the domain does not know the integration exists, adding a new one (saving a message from another chat app, for example) will require adding only a new integration layer, rather than rewriting a core service that is already stable.
 
-An index that does not match a real query is dead weight — it slows down writes and occupies space without speeding up any read. Adding indexes alongside the logic they support keeps every index tied to a concrete access pattern.
+## We balance development speed and architectural correctness — and accept that the balance can shift
 
-## Optimise database queries before optimising code
+When building new functionality, it is impossible to guess for sure whether users will like it. So the goal is a fast, even if not perfect, implementation of the feature, and getting it in front of users. Then we watch the results. If the feature turns out to be unpopular, we can skip spending time on optimizations. If users do like it, we set aside time for refactoring, so that we can start improving it afterwards.
 
-When a request is slow, the cause is almost always the database, not the code around it. A single badly-shaped query — a missing index, an N+1 pattern, a join that pulls far more than it needs — can add orders of magnitude to total request time. The surrounding application code, however inefficient it looks, usually contributes a rounding error by comparison.
+Early iterations are fast and imperfect in terms of code; they exist to check demand. Later stages, on the contrary, are not as sensitive to speed, but demand maximum stability of the functionality.
 
-So when we look at performance, we look at queries first. How many round-trips does this request make to the database? Is each query hitting an index? Is it fetching only what it needs? Fixing one query often does more than any amount of work on the code that processes the result.
+## We add indexes when writing the logic, not when designing the model
 
-This does not mean the application code gets a free pass to be O(n²). Algorithmic complexity still matters, and a genuinely quadratic loop over a large collection is a real problem. But micro-optimisations are a different thing entirely. Replacing `x / 2` with a bit-shift `x >> 1`, or similar tricks, makes the code harder to read and saves something on the order of 0.0001 ms — time that is invisible next to a single database round-trip. The compiler already performs most of these transformations anyway.
+Indexes are a consequence of how the application queries the data, not of the data itself. So we add them while working on the services' functionality, not while designing the database. At the modelling stage you can only guess which columns will be filtered or sorted on. But while writing the service it is already clear that the query filters by status and sorts by creation date. Hence the rule: create indexes for concrete cases, rather than trying to invent them at the database design stage.
 
-Readability is almost always worth more than a micro-optimisation. Code that executes a fraction of a microsecond faster but takes longer to understand is a bad trade. We optimise where the time actually goes — the database — and leave the application code clear.
+## Optimising a query matters orders of magnitude more than optimising code
 
-## Keep dependencies minimal
+In web applications the cause of a slow server response is almost always in the database queries, not in the code. A single badly-shaped query — a missing index, an N+1, a join pulling more than it needs — can increase the total response processing time by orders of magnitude. So when there are problems with response time, the queries are the first suspect.
 
-Every third-party library is a liability as much as an asset. Libraries go abandoned. They change their licences. They receive breaking changes on their own schedule, not ours. Any of these can force unplanned work at the worst possible time.
+This does not mean the application code can be written any old way. A loop with O(n²) over a very large collection can easily make the server think hard. But micro-optimisations — replacing the division `x / 2` with `x >> 1`, for instance — bring no benefit at the scale of a large application and only make the code harder to read.
 
-Where we can implement something ourselves at reasonable cost, we do. Where a dependency saves significant time and we understand it well enough to debug it, we use it. The question we ask before adding a dependency is not "does this solve the problem" but "what does it cost us if this library disappears in two years."
+## We keep dependencies to a minimum and prefer stable technologies
 
-This applies to frameworks as much as libraries. We prefer technologies with long track records and stable APIs. A frontend framework that has been consistent for five years is worth more than one with better benchmarks and a history of major breaking releases.
+Every third-party library is a potential uncertainty for the product. Libraries get abandoned, change their licences, and break compatibility whenever they see fit. So unplanned work can appear at the worst possible moment — for example, vulnerabilities turn up in the version of a library the product was using, while the newer versions already contain breaking changes that would force half the project to be rewritten. So it is always worth weighing the risks and deciding: write the code yourself, or use a ready-made solution.
 
-## Write tests after stability, not before
+This applies not only to libraries, but to frameworks and databases too. Stable technologies have documented limitations, and they often get criticised for something. But they are proven by time, and there is no fear of hearing one day that the maintainer has completely rethought the approach and decided to rewrite everything, breaking compatibility. A concrete example of how we chose the stack for Laraue Boards is in the story [about choosing the stack](choosing-stack-for-solo-project).
 
-Writing tests for a feature that is still changing its shape is wasteful. The tests get rewritten every time the schema changes, which is often in the early stages of any feature. We do not chase coverage numbers.
+## We write tests after the product stabilises, not before
 
-Tests arrive when a feature stabilises — when the data model has not changed in weeks, the API contracts are settled, and other features depend on this one. At that point, tests written now will stay relevant.
+Writing tests for a feature when nobody yet knows what final shape it will take is wasteful. The TDD methodology assumes an ideal world in which the business knows exactly how the functionality being built should work. The fact is that until the product is tried by test or real users, this is not known.
 
-We do not aim for full coverage. We write one or two tests per action. For a list endpoint with many filters, we test that one or two filters work — not every combination. The remaining cases get tests only when a bug actually appears in them.
+We are for tests. But against writing them to satisfy metrics. Our flow looks like this: the developer writes the code and demonstrates it on a test environment. Based on the feedback, the requirements get adjusted. The developer covers the positive and critical scenarios with tests. If problems are found during testing, they are fixed through tests.
 
-The reason is cost. Test support is expensive, and that cost is paid every time the code changes, not once. A test suite that covers every edge case upfront becomes a tax on every future change, most of it spent maintaining tests for cases that never break.
+Supporting tests is very expensive: writing tests that are easy to read and modify is within the reach of very few developers. And given their tendency to be written by copy-paste, and the lack of a close look at them during review, tests turn into an enormous unmaintainable wall of code far more often than the main code does.
 
-This is also why we spend significant time on test architecture when writing the first tests for a project. Tests are often near-copies of each other, one per case. If the structure is hard to read or carries a lot of boilerplate, that cost is multiplied across every test that follows. Getting the test structure right early — readable, minimal boilerplate, easy to copy for the next case — is what keeps the long-term support cost manageable.
+## There are always exceptions to the rules
 
-When a bug surfaces, we add a test that reproduces it before fixing it. This prevents the bug from returning silently and builds a test suite that reflects real problems rather than imagined ones.
-
-## The AI workflow — where it helps and where it does not touch the codebase
-
-We use AI in three specific places during development. Each one addresses a real gap that comes from being a small team of backend engineers building full products.
-
-**User path validation.** Before implementing a feature, we describe the user's goal to Claude and ask it to map out what the user path should look like — how many steps, where the friction is, what could be simplified. A backend engineer can design a correct data model for a feature and still produce a confusing interface. AI fills the product-thinking gap without requiring a dedicated product manager.
-
-**Market research.** Before committing to a direction, we ask Claude to investigate what already exists in the space — what tools cover it, what they miss, and whether the gap we see is real. This is the kind of research that is easy to skip when you are in a hurry to build, and easy to regret later.
-
-**Frontend prototyping.** We ask Claude to produce HTML prototypes of new screens — single files, iteratable in a chat conversation with mock data. We work through the layout and interactions in the prototype until the experience feels right. Only then do we split the HTML into real components and wire them to real API data. The prototype is never the deliverable. It is a fast way to see whether a layout idea works before writing production code.
-
-### Where AI does not touch the codebase: backend data logic
-
-The backend handles data that belongs to real users. A mistake in a service method, a wrong migration, a flawed permission check — any of these can corrupt or expose data across every user in the system. The consequences are not limited to the person running the code.
-
-AI-generated code can be subtly wrong in ways that are not immediately visible. It may produce code that passes a quick review, works in the happy path, and fails quietly in an edge case that only appears under real usage. For frontend components, a rendering bug is visible and recoverable. For backend data logic, a bug may be silent for weeks and expensive to undo.
-
-We review and write all backend code ourselves. AI is used to understand problems, research options, and discuss approaches — not to write the implementation.
-
-### Reviewing AI code can cost more than writing it
-
-There is a common assumption that AI generation is always faster. For backend logic, it often is not. Reading code someone else wrote — and an AI is, effectively, someone else — and verifying it handles every edge case is cognitively harder than writing it yourself, where you hold the full intent in your head as you go.
-
-AI-generated code tends to look correct. It compiles, it passes the obvious case, and it reads cleanly. That surface plausibility is exactly the problem: it invites a shallow review. To actually trust it, you have to reconstruct the reasoning the AI never explained, check the edge cases it may have skipped, and confirm it fits the existing architecture rather than introducing a parallel pattern. By the time that review is thorough enough to trust, the time saved during generation is usually gone.
-
-There is also a difference in where the mistakes hide. When a human writes code, the errors cluster where the problem is hard — the tricky edge case, the concurrency corner, the part the author themselves found confusing. A reviewer can lean on that: read the easy parts quickly, slow down on the hard ones. With AI-generated code, that heuristic breaks. The mistakes are effectively random. A function can handle the genuinely difficult case correctly and then get a trivial comparison backwards, because the model has no sense of which parts are hard and which are obvious. That means you cannot allocate attention by difficulty. Every line needs the same scrutiny, which is slower and more tiring than reviewing a colleague's work.
-
-So for the parts of the system where correctness matters most, we write the code. The speed argument does not hold there once review is counted honestly.
-
-### Using AI without letting your skills erode
-
-A tool that does the thinking for you erodes the ability to think. If every problem is handed to an AI, the muscle that solves problems independently weakens — and that muscle is exactly what you need to catch the moment the AI is confidently wrong. The dependency becomes circular: you need the skill to check the tool, but leaning on the tool erodes the skill.
-
-This is why the boundary matters in both directions. AI handles research, exploration, and prototyping — work that informs our thinking without replacing it. The core engineering, the decisions that require deep understanding of the system, stays with us. We stay sharp by continuing to do the hard parts ourselves, and we use AI to remove the drudgery around them, not the substance.
-
-The developer remains accountable for every line that ships. A tool cannot hold that accountability, so it cannot be allowed to make the decisions that accountability rests on.
-
----
-
-These principles are not fixed. They have changed as our projects have grown and as we have made mistakes that taught us something. The specific mistakes are documented in the project series where they happened. And before any of this engineering begins, there is the question of what to build at all — covered in [How we decide what to build](how-we-decide-what-to-build).
+All the principles above are experience gained while working on projects. The important thing is not to follow them blindly, but to understand the conditions they arose under and whether they apply to the current situation.
