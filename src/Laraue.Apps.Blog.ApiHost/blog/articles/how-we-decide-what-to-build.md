@@ -1,53 +1,51 @@
 ﻿---
 title: How we decide what to build — validating a product idea in a crowded market
-description: How we validate a product idea before writing code — researching a crowded market, testing the idea in public, and using AI to judge whether we can realistically compete.
+description: Validating a product idea before writing code — researching the market, testing the idea in public, and using AI to judge whether it is realistic to compete for the keywords you need.
 type: article
 createdAt: 2026-06-18
-updatedAt: 2026-06-18
+updatedAt: 2026-07-13
 tags: [product, validation, indie-hacking, market-research, crowded-market, ai-workflow]
 nextLink: how-we-build-engineering-principles
 ---
 
-This article is about the part of building software that happens before any code exists: how to decide whether and what to build, consciously, and how to validate a product idea before writing code. It is one half of how we work at Laraue. The other half — how we engineer a product once that decision is made — is covered in [How we build — engineering principles](how-we-build-engineering-principles).
+In this article we will try to list all the steps we take to work out whether an idea is worth implementing, or whether the effort is better spent on something else. What happens if the idea passes the check is covered in the next article, [how we build](how-we-build-engineering-principles).
 
-We link here from individual project series rather than repeating ourselves in each one.
+## Research the market before starting anything
 
----
+One of the common paths for a young product company or a solo developer is months of building something nobody needs. The alternatives may simply be better in every way. Or the market for the product may not exist at all. To avoid that, you have to study the niche before you start building.
 
-## Research the market before building anything
+When we started building Laraue Boards, we understood that the niche was crowded and that our product would never sit at the top of search results for "task tracker." But we also understood that this is a giant market — alternatives to Jira keep appearing, and some of them find their customers. Building a product in a crowded market is a valid choice, but it has to be a conscious one.
 
-The worst outcome in product building is to spend months convinced you are going to change the world, ship, and only then discover the market is full of better alternatives you never looked for. That is avoidable. The fix is to research the space before committing, so that whatever you decide to build, you decide it consciously.
+Before starting, you have to understand what will make you stand out among the competitors. Building just a task tracker is pointless — Jira wins. But building a task tracker for running a zoo is already far more specific, and it can work, provided the market exists and the competitors do not.
 
-Conscious does not mean optimistic. When we started building a task tracker, we understood the niche was crowded and that our product would never sit at the top of search results for "task tracker." That was a deliberate, eyes-open decision — not a discovery made after launch. Building a product in a crowded market is a valid choice; building one without knowing the market is crowded is not. Knowing the constraint upfront changes what you build and how you position it. Discovering it afterward just wastes the months in between.
+## Find the competitors through search queries or AI
 
-So before building, look honestly at who else is in the space, what they do well, and where the real gap is. The goal is not to be discouraged out of building — it is to build with a clear understanding of where you actually stand.
+Once you have an idea of what you plan to build, you can research the products that already exist, using search engines or AI. We search for task trackers for running a zoo, and try to estimate how many people look for something like that per month.
 
-## Test your idea in public to get feedback before building
+If there are no competitors, or we understand that our product can get past them, we can roughly estimate the size of the market for such a product. If every 50th person searching for the product wants to buy it — will that pay back the investment into building it? If yes, we move on to the next part; if not, it is better to look for a different idea.
 
-You do not need a working product to test whether anyone wants it. Build a prototype of the interface, record a short GIF of it, and post it somewhere with a fast, reactive audience — Threads, X, a relevant subreddit, a community in your niche. The reactions tell you something real before you have spent any engineering time.
+## Test the idea in public to get early feedback
 
-A prototype and a GIF cost an afternoon. A built feature costs weeks. Putting the cheap version in front of people first is the highest-leverage validation step available, and most builders skip it because showing an unfinished idea feels uncomfortable.
+To find out whether anyone needs the product, you do not have to build it. It is enough to generate a prototype of the interface, record a short GIF, and publish it where there is an audience that reacts — Threads, X, a relevant subreddit. The comments let you draw conclusions before any time has been spent on development.
 
-The first time is genuinely scary — but not for the reason you expect. The fear is not that people will react badly. It is that nobody will react at all. A post that lands with total silence feels worse than criticism. If that happens, it is not a verdict on the idea; it usually means the post itself did not communicate well. Rewrite it — or ask AI to rewrite it — and try again. Repeat until you get a response.
+Creating a prototype and a GIF with AI takes a few hours. A built product takes far longer. Showing people the conceptual version is the most underrated way of validating it, and most people skip it. Showing something unfinished is psychologically uncomfortable — a professional is used to seeing things through to the end.
 
-Because the response is the entire point. The goal is feedback, good or bad. Bad feedback is still information. And the most valuable reactions are often questions you never thought to ask yourself: someone replies with "but how would this handle X," and you realise X is a problem you have no answer for. Sometimes that single question tells you the build will be far more problematic than you assumed — which is exactly the kind of thing you want to learn now, for the price of a post, rather than three months into development.
+What matters here is getting at least some feedback. For the audience to react, the post has to ask questions, not just describe the product. Getting no reaction at all is a normal situation: the recommendation systems of these networks are often unpredictable, and the same post can either go viral or get no response whatsoever. So it is important to have a clear goal — for example, to collect 30 comments with feedback. We keep publishing modified versions of the post across different networks until the goal is met.
 
-This is not theoretical. When we first posted about the [Laraue Boards](../projects/boards) concept, the first four posts got nothing — no reactions, no comments. The fifth landed and drew around forty comments. The questions in that thread were exactly the ones worth hearing early: why is this better than Telegram's built-in Saved Messages? Someone said they would not want to share their data with an unknown publisher. Someone else asked us to make it open source. None of that was discouraging — it was a map of the objections and expectations we would have to address, delivered before we had over-invested in assumptions. And it only took five attempts at writing the post to get there.
+It does not matter whether the feedback is bad or good; what matters is that it arrived. Users may tell you about the alternatives, asking how this is better than product X. They may confirm or refute that the problem you are solving exists, or say they would use such a product if it had a particular feature.
 
-## Build the landing page early — and use it to check if you can compete
+This is not theory. When we first wrote about the [Laraue Boards](https://msgboard.laraue.com) concept, the first four posts got no response at all. The fifth became popular and collected around forty comments. That feedback made it clear where the product had to go.
 
-Build the landing page right after you decide to build the product — not as a last step before launch. A landing page forces you to articulate what the product is and who it is for, in plain language, before the codebase locks those answers in.
+## Build the landing page as early as possible — and try to attract search traffic
 
-The notes you already wrote while researching and deciding are the raw material. Much of that thinking can be transformed directly into landing-page copy. Then use AI to optimise it: ask it to improve the page for SEO, and to identify the keywords you can realistically compete for given the competition you already mapped.
+The landing page is built right after the decision to build the product, not before the launch. Search engines take a long time to index new websites, so this way there is a chance of being in search results by the time the product ships. A landing page also forces you to formulate, in plain words, what is being built and for whom.
 
-This is also a second honesty checkpoint. Ask AI for a frank assessment of your competitive opportunity for those keywords. Sometimes the answer at this stage is that competing is not realistic — and learning that from a landing-page exercise, before building, can save the entire cost of building. A hard "no" delivered early is one of the most valuable things this process can give you.
+The content for the page already exists: you can use the notes and the users' comments gathered during the research and the decision. Most of that thinking can be turned directly into landing page copy. This is what we did: we throw all the information we have about the project into a prompt for the AI and ask it to give us landing page options that are SEO-optimized for our niche.
 
-## Store every discussion about the product
+At this point you can ask the AI to assess the chances of getting organic traffic, or for ways to increase those chances. The AI may suggest SEO copy aimed at a narrower audience, to raise the chances of getting traffic.
 
-Keep a record of the discussions, decisions, and reasoning behind the product as you go — chat logs, notes, voice memos transcribed, whatever is low-friction enough that you actually do it.
+Publishing a landing page before a finished product exists is an ordinary practice. As a rule, there are no users at first. And if some do turn up, you can add a "subscribe to updates" button to the landing page, to collect the emails of potential customers.
 
-This archive pays off repeatedly. It lets you reconstruct the chronology later: why a decision was made, what alternatives were considered, what constraint forced a particular choice. And it becomes source material. The stored reasoning can be turned into articles, documentation, changelog entries, even the landing page copy. A devlog series is far easier to write when the decisions were recorded as they happened rather than reconstructed from memory months later.
+## Store any textual information about the development process
 
----
-
-Once the decision to build is made consciously, the work becomes engineering. How we approach that — user paths, schema design, testing, and where AI helps and where it doesn't — is covered in [How we build — engineering principles](how-we-build-engineering-principles).
+Chat logs, notes, transcribed voice messages — all of it can come in handy later. Just drop the records into a prompt, and the knowledge base for the AI is ready. It becomes the source material for articles, documentation, changelog entries, and landing page copy. Keeping an archive like this costs almost nothing, but it can bring a lot of benefit.
