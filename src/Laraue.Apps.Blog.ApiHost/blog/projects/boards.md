@@ -1,102 +1,120 @@
 ﻿---
-title: Laraue Boards - The Telegram-Native Project Management Tool
+title: Laraue Boards — an open source task tracker with Telegram integration and a lightweight Jira alternative
 type: project
-tags: [project management, telegram, jira alternative, task tracking, kanban]
-description: Laraue Boards turns your Telegram messages into structured tasks on a kanban board — no migration, no new habits, no bloated UI.
+tags: [project management, telegram, jira alternative, task tracking, kanban, open source, saved messages]
+description: An open source task tracker that turns Telegram messages into cards on a kanban board. Send a message to the bot, get a card you can work with in the web app or the Mini App. Free, and the code is open.
 createdAt: 2026-04-16
-updatedAt: 2026-04-27
+updatedAt: 2026-07-14
 ---
 
-Your team already lives in Telegram. Decisions happen there. Tasks get assigned there. Files get shared there. Then someone opens Jira to log the same information a second time — and that's where productivity goes to die.
+Telegram users often use the messenger as a place to keep thoughts, links, and photos — in Saved Messages or in separate chats. The problem is organising them afterwards. A message can be tagged, which helps with search and filtering in simple cases, but the more chats and messages there are, the harder it gets to tell what is still relevant and to find your way between them.
 
-Laraue Boards is built around a different idea: **the task already exists the moment someone sends a message**. You just need a place to organize it.
+There is also a group of users who use Telegram as the chat for running a small business. This is common in the CIS countries. Why? It is very fast and free. In such cases a company starts with one chat, and later there are more and more of them. The chats become the place both for talking and for assigning tasks and checking they get done. What was convenient at the start becomes harder and harder to keep under control. And if the company does decide to move its tasks into some task tracker, that tracker will not be synchronised with the original chats in any way.
 
----
+Laraue Boards tries to close these gaps, keeping the familiar chats and adding a visualisation of them on kanban boards. The main flow: sending a message to the bot [@msgboard_bot](https://t.me/msgboard_bot) creates a card on a board, which you can reach through the Telegram Mini App or the separate [web app](https://msgboard.laraue.com), using Telegram authentication. The main flow is free, and the code is fully open.
 
-## Why Teams Are Leaving Jira
+## The idea behind it
 
-Jira is powerful. It's also a full-time job to maintain. If you've spent more than a week with it you've probably experienced at least a few of these:
+Most task trackers assume that tasks are created by a project manager and handed to someone. Laraue Boards is based on the idea that tasks appear during a conversation. Marking the right message in a chat is enough to turn it into a card.
 
-- Sprints configured by someone who left two years ago and nobody knows how to change them
-- A backlog with 400 tickets, 350 of which are effectively dead
-- Status meetings where half the time is spent updating Jira instead of actually discussing work
-- New teammates who need a week just to understand the ticket structure
-- Paying per-seat for people who open it once a month to close a ticket
+## How it works
 
-For small teams and growing startups — especially in post-Soviet markets where Telegram is the de facto business communication tool — this overhead is not just annoying, it actively slows work down.
+**Sending a message = a new card.** Forward something to the bot, or write it yourself. The bot saves the message and reacts with a 👍 emoji. We tell the story of [how we arrived at this flow](../articles/telegram-saved-messages-bot-lesson) in a separate article.
 
----
+**Photos, videos, and albums are saved too.** An album of images or videos sent to the bot becomes a single card on the board. We do not store the original files — when you open them, they are requested from Telegram, in the original quality. How the storage works is in the article [about media and file storage](../articles/telegram-bot-file-storage-stream), and how saving an album is implemented is in the article [about handling media groups](../articles/telegram-media-group-album-bot).
 
-## What Laraue Boards Does Differently
+**Editing a message updates the card.** Made a typo in a Telegram message, or attached the wrong photo? Edit the message in the chat and the card on the board changes with it. The bot's reaction changes from 👍 to ❤, which means the edit was handled successfully.
 
-### Your Telegram Is Already Your Backlog
+**The chat with the bot stays a chat.** The bot does not spam it with questions, buttons, and confirmations — which means the built-in search still works over it. To simply find last week's note, you do not have to open the full version of the app.
 
-When a client sends a request in a group chat, when a colleague flags a bug, when someone drops a voice message with three action items — that's your backlog. Laraue Boards connects directly to your Telegram and turns those messages into cards with a single tap.
+**Organise the tasks when you have time for it.** Open the Mini App from the bot or the web version in a browser, and work with a full kanban board: sort out the backlog, drag cards between columns, group them into epics. Every card holds a link to the message in the chat, so you can see the context it was created in.
 
-No copy-pasting. No "please open a ticket for this." The message **is** the ticket.
+## Spaces, issue keys, and permissions
 
-### Kanban Without the Ceremony
+Boards are grouped into **spaces**. A space is a separate project that brings a group of epics together. In practice this means the boards belonging to one project do not get mixed up with the boards of another.
 
-Each board is a set of columns — To Do, In Progress, Done, or whatever fits your workflow. Cards move between columns by drag and drop, same as any kanban tool. What's different is that every card already has context: who sent it, from which chat, at what time, with any media attachments intact.
+**Every issue has a key**, sequential within a single space: an issue is `WRK-42`, and it can be referenced in chats or in documentation.
 
-You're not filling in a form. You're organizing conversations you already had.
+**Organizations** let several people work on the same project. **Permissions** are configured per operation and per access level: creating, updating, and deleting are configured separately for spaces, epics, and issues. Admin rights are granted separately. We tried to combine the functionality while still avoiding a huge configuration matrix.
 
-### Jira-Style Issue Keys, Zero Jira Complexity
+**Custom attributes** are created by an admin at the organization level and are then used on issues by ordinary users. These can be "task type", "due by", or whatever your particular case needs. Text and list attributes are supported today; "date" and "number" will appear in the coming versions.
 
-Every card gets a unique key like `WRK-42` or `MOB-7`. Reference it in Telegram: "see WRK-42" and everyone knows exactly what you mean. No projects-within-projects, no custom fields that require a consultant, no story points unless you want them.
+## Works inside Telegram and outside the messenger
 
-### Spaces and Organizations — Built for Teams
+Laraue Boards can be opened inside Telegram as a Mini App, with no extra authorization needed. For those who want to work with the app in a browser, it is available at [msgboard.laraue.com](https://msgboard.laraue.com), with login through the Telegram Login Widget. Both versions work absolutely identically; more on how that is implemented is in the article [Telegram Login Widget vs Mini App auth](../articles/telegram-login-widget-dotnet-auth).
 
-Boards can be grouped into **Spaces** — one space per client, product line, or department. Multiple people join an organization, share boards, and see each other's work in real time.
+## Open source and public development
 
-Permissions are simple: owners, admins, members. No 47-page permission matrix.
+The backend and frontend repositories are open to study:
 
-### Works as a Telegram Mini App — and as a Web App
+- [Laraue.Apps.Boards](https://github.com/win7user10/Laraue.Apps.Boards) — .NET 10 / C#, PostgreSQL 18
+- [laraue-boards](https://github.com/win7user10/laraue-boards) — Nuxt 4, Vue 3, TypeScript
 
-Open Laraue Boards inside Telegram and you're already logged in. No separate account, no OAuth dance, no password to forget. Your Telegram identity is your identity in the app.
+Users wrote to us that the app interested them, but that they were not ready to trust sensitive information to a product they did not know. That is a fair point, so we decided to keep the code open — you can always check what happens to a message after it is sent.
 
-Need to work from a desktop browser? The full web app is available at [msgboard.laraue.com](https://msgboard.laraue.com), with the same login via Telegram widget. As your team grows and some members prefer the web — that works too. Both interfaces share the same data.
+We also tell the story of how the product is being built, in the [Architecture First](../articles/building-jira-alternative-solo-why-and-repositories) series — we try to be honest and to describe even the things that went wrong. The bot that asked too many questions, for instance, and [the rollback of that feature](../articles/telegram-saved-messages-bot-lesson). Or [the database decision that turned out to be wrong](../articles/issue-board-telegram-mini-app). Every article links to the actual code.
 
----
+People do not usually talk about their mistakes, but we believe that admitting them builds trust more strongly than an ad bought from a well-known blogger.
 
-## Who It's For
+## Who the product suits
 
-**Small product teams** tired of maintaining a Jira instance that costs more in admin time than it saves.
+**People who keep notes in Saved Messages** and have started noticing it is getting harder and harder to find their way around them.
 
-**Agencies** managing multiple client projects in separate Telegram groups, who need a lightweight way to track what's been discussed and what's been done.
+**Small teams living in Telegram** — where the discussion happens in the chats, and a separate task tracker is inconvenient because of the constant context switching.
 
-**Startups** that move fast and need a task tracker that doesn't require a two-day setup before it's useful.
+**Small businesses in the CIS**, where tasks are written as text in chats and they have not grown into a CRM yet.
 
-**Remote teams in CIS countries** where Telegram is the primary business communication platform and every other PM tool is a context switch.
+**Anyone who finds Jira too complex** for the amount of work they currently have.
 
----
+## Laraue Boards vs Jira
 
-## Honest Comparison: Laraue Boards vs Jira
+|                       | Laraue Boards                         | Jira                                          |
+|-----------------------|---------------------------------------|-----------------------------------------------|
+| Setup time            | Minutes                               | Days                                          |
+| Learning curve        | Near zero                             | Steep                                         |
+| Telegram integration  | Native                                | None                                          |
+| Task creation         | From messages already sent / manually | Manual entry                                  |
+| Pricing               | Free                                  | Per seat, once the team reaches 10 people     |
+| Mobile experience     | Full-featured                         | Usable, but heavy                             |
+| Customization         | Boards, columns, attributes           | Extremely deep (often excessive)              |
+| Source code           | Open                                  | Closed                                        |
+| Best for              | Small teams and solo users            | Enterprise with dedicated managers            |
 
-|                      | Laraue Boards                 | Jira                               |
-|----------------------|-------------------------------|------------------------------------|
-| Setup time           | Minutes                       | Days                               |
-| Learning curve       | Near zero                     | Steep                              |
-| Telegram integration | Native                        | None                               |
-| Task creation        | From existing messages        | Manual entry                       |
-| Pricing              | Free to start                 | Per seat, adds up fast             |
-| Mobile experience    | First-class (it's a Mini App) | Usable but heavy                   |
-| Customization        | Boards, columns, attributes   | Extremely deep (often too deep)    |
-| Best for             | Teams under ~50 people        | Enterprise with dedicated PM staff |
+Jira is an excellent tool when there is a dedicated project manager, a complex organization with strict audit requirements, and a budget to support all of it. For everyone else it is often excessive.
 
-Jira is the right tool when you have a dedicated project manager, a complex organization with strict audit requirements, and the budget to maintain it. For everyone else it's usually overkill.
+Laraue Boards is free. Paid plans will appear later, together with the AI features — but everything described above will stay free.
 
----
+## What is coming
 
-## The Underlying Philosophy
+The bot will become a full participant in any chat: mention it in a conversation and it creates an issue from that message, links back to it, and sends the issue link into the chat.
 
-Most project management software assumes that tasks are created by project managers and then handed to developers or agents. Laraue Boards assumes that tasks emerge naturally from team communication — and your job is just to give them structure.
+After that — AI that uses the issues as context. You will be able to select the issues in a space for January to March and ask it to sum up the quarter, produce a report, or find the tasks that have not moved in a long time. This is where the paid plans will come in, but the core functionality will stay free.
 
-This isn't a new idea. It's what sticky notes on a whiteboard were. It's what a Telegram chat already is, informally. Laraue Boards makes it explicit without adding overhead.
+The attribute types will keep expanding. "Date" and "number" are coming soon. In later versions, more exotic ones are not out of the question — geographic coordinates, say, which could then be marked on a map.
 
----
+## Common questions
 
-## Try It
+**Is it free?**
+Yes. Everything described on this page is free. Paid plans will appear later, together with the AI features; the basic functionality will stay free.
 
-Visit the [documentation](/blog/documentation/laraue-boards) page to get answers how to use Laraue Boards.
-Visit the [product](/boards) page to get the actual information.
+**Is the project really open source?**
+Yes — both the [backend](https://github.com/win7user10/Laraue.Apps.Boards) and the [frontend](https://github.com/win7user10/laraue-boards) are open. You can find out what happens to a message after it is sent.
+
+**How is this different from plain Saved Messages?**
+Saved Messages is a great place to save something quickly, but not always a good place to find it later. Telegram offers few ways to organise notes, and Laraue Boards tries to fix that by adding a visual interface for working with your saved messages.
+
+**How is this different from connecting Telegram to Todoist or Trello with an automation?**
+The depth of the integration with the messenger. You keep working through your Telegram account, with no extra registrations. The chat stays the source of truth for the boards.
+
+**Do I have to use it inside Telegram?**
+No. You can work both in the Telegram Mini App and in the ordinary web app at [msgboard.laraue.com](https://msgboard.laraue.com), using the same Telegram account.
+
+**Do I need a password or an account?**
+No, the login is through Telegram. In the Mini App you are authorized based on your messenger account, and the web version has a Telegram login button.
+
+**Can it be used by a team?**
+Yes. Create an organization, share the invite link, and configure permissions for the operations on spaces, epics, and issues.
+
+## How to try it
+
+Open [@msgboard_bot](https://t.me/msgboard_bot) in Telegram, or the web app at [msgboard.laraue.com](https://msgboard.laraue.com). A short overview of the product is on the [Laraue Boards page](../../boards), and the [documentation](../documentation/laraue-boards) describes all the functionality and how to use it.
