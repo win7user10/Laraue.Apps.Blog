@@ -7,6 +7,7 @@ updatedAt: 2026-07-01
 projects: [boards]
 tags: [dotnet, aspnet-core, telegram, authentication, telegram-login-widget, jwt, devlog]
 previousLink: telegram-media-group-album-bot
+nextLink: add-required-foreign-key-existing-data-ef-core
 ---
 
 > **Architecture First: как в одиночку с ИИ сделать альтернативу Jira** — Часть 13.
