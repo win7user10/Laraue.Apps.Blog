@@ -106,7 +106,7 @@ Because `ValidateWidgetData` returns a `MiniAppUser` object, everything from the
 
 ## After login the app does not depend on Telegram
 
-Since the [app](https://msgboard.laraue.com) was already a public web address — just hidden from outside eyes, opening only from the Telegram Mini App — all that was left was to share it with users.
+Since the [app](https://boards.laraue.com) was already a public web address — just hidden from outside eyes, opening only from the Telegram Mini App — all that was left was to share it with users.
 
 As a bonus, we suddenly realised the app can run in a browser without Telegram at all, once past login. The resulting architecture — which separates the internal `user_id` from `telegram_user_id`, and system `issues` from `telegram_messages` — would let us add Google login in the future, or create new issues from a Slack message, or build some other integration, without any large refactoring.
 

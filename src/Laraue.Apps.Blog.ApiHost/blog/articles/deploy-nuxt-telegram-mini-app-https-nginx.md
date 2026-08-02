@@ -116,14 +116,14 @@ We use `nuxt generate`, not `nuxt build`, to get a fully static site of HTML, CS
 
 The app is built and its files are on the server; now it needs to be reachable from the outside. Telegram has a requirement: **a Mini App can only open an HTTPS address with a valid certificate**. So the app has to be bound to a domain (a subdomain in our case) with a working HTTPS certificate, and serving the app's files at that address has to be configured.
 
-The subdomain `msgboard.laraue.com` was created for the app, to keep its addresses separate from the main site's. Down the line, such a subdomain could even be served by a separate VPS.
+The subdomain `boards.laraue.com` was created for the app, to keep its addresses separate from the main site's. Down the line, such a subdomain could even be served by a separate VPS.
 
 A subdomain is usually created in the domain registrar's DNS panel: it is an extra `A` record with the value `msgboard`, pointing at the IP address of the VPS that will handle the requests. A new record may not take effect immediately — the changes apply within anywhere from a few minutes to noticeably longer. This matters, because **the HTTPS certificate cannot be issued until the subdomain starts resolving**. The certificate will be issued through Let's Encrypt, and if the DNS has not updated yet, the check can fail with this error:
 
 ```
-DNS problem: NXDOMAIN looking up A for msgboard.laraue.com
+DNS problem: NXDOMAIN looking up A for boards.laraue.com
   - check that a DNS record exists for this domain;
-DNS problem: NXDOMAIN looking up AAAA for msgboard.laraue.com
+DNS problem: NXDOMAIN looking up AAAA for boards.laraue.com
   - check that a DNS record exists for this domain
 ```
 
@@ -159,7 +159,7 @@ For the subdomain to work, two blocks are added to `nginx.conf`. The first liste
 ```nginx
 server {
     listen 80;
-    server_name msgboard.laraue.com;
+    server_name boards.laraue.com;
     location /.well-known/acme-challenge/ {
         root /.well-known/acme-challenge;
     }
@@ -174,10 +174,10 @@ The second block is the main one: port 443, TLS, and serving the app:
 ```nginx
 server {
     listen 443 ssl;
-    server_name msgboard.laraue.com;
+    server_name boards.laraue.com;
 
-    ssl_certificate     /etc/letsencrypt/live/msgboard.laraue.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/msgboard.laraue.com/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/boards.laraue.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/boards.laraue.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
@@ -234,9 +234,9 @@ certbot:
   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 ```
 
-The first volume, `letsencrypt`, is where certbot saves the issued certificates. `nginx` reads from the same directory — that is why the `ssl_certificate` paths in the server blocks above point to `/etc/letsencrypt/live/msgboard.laraue.com/`.
+The first volume, `letsencrypt`, is where certbot saves the issued certificates. `nginx` reads from the same directory — that is why the `ssl_certificate` paths in the server blocks above point to `/etc/letsencrypt/live/boards.laraue.com/`.
 
-The second volume, `acme-challenge`, is the folder for the temporary files that confirm domain ownership: Let's Encrypt asks to create a temporary file that must be reachable at `http://msgboard.laraue.com/.well-known/acme-challenge/{fileName}`. If the file is reachable, the address is considered confirmed and Let's Encrypt issues the certificate. Port 80 serves that path directly instead of redirecting it to HTTPS — the challenge has to work even before a certificate exists.
+The second volume, `acme-challenge`, is the folder for the temporary files that confirm domain ownership: Let's Encrypt asks to create a temporary file that must be reachable at `http://boards.laraue.com/.well-known/acme-challenge/{fileName}`. If the file is reachable, the address is considered confirmed and Let's Encrypt issues the certificate. Port 80 serves that path directly instead of redirecting it to HTTPS — the challenge has to work even before a certificate exists.
 
 `entrypoint` is a loop that runs `certbot renew` every twelve hours. When a certificate's lifetime is coming to an end, this command will issue a new one automatically.
 
@@ -255,11 +255,11 @@ So the first certificate is obtained with a one-time run of the [`init-letsencry
 
 The script is not needed anymore after that — certbot takes over the certificate renewals.
 
-At this point the app runs over HTTPS and becomes reachable at `msgboard.laraue.com`. Opening the URL in a browser shows the stub app with an error saying it was launched outside Telegram. One step remains before it can become a Mini App in Telegram.
+At this point the app runs over HTTPS and becomes reachable at `boards.laraue.com`. Opening the URL in a browser shows the stub app with an error saying it was launched outside Telegram. One step remains before it can become a Mini App in Telegram.
 
 ## Registering the Mini App in BotFather
 
-Telegram has to be notified that our bot has a Mini App, available at `msgboard.laraue.com`. This is done through [@BotFather](https://t.me/BotFather): pick your bot, and in the **Mini Apps** section bind the app as the **Main App** or to the bot's **menu button** (the button next to the input field). In both cases you will need to enter the app's address: `https://msgboard.laraue.com`. In Laraue Boards the Mini App is bound to the menu button.
+Telegram has to be notified that our bot has a Mini App, available at `boards.laraue.com`. This is done through [@BotFather](https://t.me/BotFather): pick your bot, and in the **Mini Apps** section bind the app as the **Main App** or to the bot's **menu button** (the button next to the input field). In both cases you will need to enter the app's address: `https://boards.laraue.com`. In Laraue Boards the Mini App is bound to the menu button.
 
 After this setting, a launch button appears next to the bot's chat:
 

@@ -19,4 +19,4 @@ This section covers everything you need to go from zero to a working board with 
 
 You need a Telegram account. That's it. There is no separate sign-up, no email to verify, and no credit card required.
 
-Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram to get started, or visit [msgboard.laraue.com](https://msgboard.laraue.com) in your browser.
+Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram to get started, or visit [boards.laraue.com](https://boards.laraue.com) in your browser.

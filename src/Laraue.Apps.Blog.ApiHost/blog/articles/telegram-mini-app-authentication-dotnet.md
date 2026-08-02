@@ -435,15 +435,15 @@ location ^~ /api/notes-board {
 }
 ```
 
-As a result, the frontend calls the `/api/notes-board/user` address on its own origin (`msgboard.laraue.com`), and nginx calls the backend host's `/api/user`.
+As a result, the frontend calls the `/api/notes-board/user` address on its own origin (`boards.laraue.com`), and nginx calls the backend host's `/api/user`.
 
 ## CORS: configuration for local development
 
-CORS — Cross-Origin Resource Sharing — is a browser security mechanism. By default the browser refuses to let a page from one origin read responses from another origin, where an "origin" is the combination of scheme, host, and port (`https://msgboard.laraue.com` is one origin; `https://abc123.ngrok-free.app` is another).
+CORS — Cross-Origin Resource Sharing — is a browser security mechanism. By default the browser refuses to let a page from one origin read responses from another origin, where an "origin" is the combination of scheme, host, and port (`https://boards.laraue.com` is one origin; `https://abc123.ngrok-free.app` is another).
 
 We can define exceptions to these rules. When a server *wants* to allow specific other origins to call it, it declares that by returning headers — `Access-Control-Allow-Origin` and the ones related to it — with the origins it trusts. That is what the `UseCors(...)` block in `Program.cs` does: it reads the list of allowed origins from configuration and tells the browser that requests from those origins are allowed.
 
-In production the frontend and the API share one origin. The app is served from `msgboard.laraue.com`, and its API calls go to `msgboard.laraue.com/api/notes-board/...` — the same origin, so from the browser's point of view it is valid, and no extra CORS configuration is required.
+In production the frontend and the API share one origin. The app is served from `boards.laraue.com`, and its API calls go to `boards.laraue.com/api/notes-board/...` — the same origin, so from the browser's point of view it is valid, and no extra CORS configuration is required.
 
 Local development changes things. As described in the [previous article](deploy-nuxt-telegram-mini-app-https-nginx), we test the Mini App locally through ngrok, and ngrok gives the frontend and the backend *two different* public URLs. Their origins differ, so the browser blocks such requests. When launching the Mini App this looks like a **white screen** where nothing happens. The app loads, sends its first API request, gets nothing back, and never renders. To fix it, add the frontend's current ngrok address to the backend's allowed origins — the `Cors__Hosts` list the web API reads at startup.
 

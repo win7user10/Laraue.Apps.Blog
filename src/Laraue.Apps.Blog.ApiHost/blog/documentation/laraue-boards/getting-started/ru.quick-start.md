@@ -12,7 +12,7 @@ updatedAt: 2026-04-27
 
 ## Шаг 1 — Войдите в систему
 
-Откройте [@laraue_boards_bot](https://t.me/laraue_boards_bot) в Telegram или зайдите на [msgboard.laraue.com](https://msgboard.laraue.com) в браузере и войдите через аккаунт Telegram.
+Откройте [@laraue_boards_bot](https://t.me/laraue_boards_bot) в Telegram или зайдите на [boards.laraue.com](https://boards.laraue.com) в браузере и войдите через аккаунт Telegram.
 
 На экране выбора рабочего пространства нажмите **Личное**, чтобы начать без настройки команды.
 

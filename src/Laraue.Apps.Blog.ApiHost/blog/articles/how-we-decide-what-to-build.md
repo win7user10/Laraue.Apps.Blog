@@ -34,7 +34,7 @@ What matters here is getting at least some feedback. For the audience to react, 
 
 It does not matter whether the feedback is bad or good; what matters is that it arrived. Users may tell you about the alternatives, asking how this is better than product X. They may confirm or refute that the problem you are solving exists, or say they would use such a product if it had a particular feature.
 
-This is not theory. When we first wrote about the [Laraue Boards](https://msgboard.laraue.com) concept, the first four posts got no response at all. The fifth became popular and collected around forty comments. That feedback made it clear where the product had to go.
+This is not theory. When we first wrote about the [Laraue Boards](https://boards.laraue.com) concept, the first four posts got no response at all. The fifth became popular and collected around forty comments. That feedback made it clear where the product had to go.
 
 ## Build the landing page as early as possible — and try to attract search traffic
 

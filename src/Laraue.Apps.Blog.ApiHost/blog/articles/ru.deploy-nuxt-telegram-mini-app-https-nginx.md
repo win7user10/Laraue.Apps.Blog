@@ -116,14 +116,14 @@ jobs:
 
 Приложение успешно собрано и его файлы отправлены на сервер, нужно открыть к нему доступ извне. Telegram имеет требование: **в Mini App может быть открыт только HTTPS адрес с валидным сертификатом**. Поэтому придется привязать к приложению домен (поддомен в нашем случае) с действующим HTTPS-сертификатом и настроить отдачу файлов приложения по его адресу.
 
-Для приложения был заведен поддомен `msgboard.laraue.com`, чтобы не смешивать его адреса с адресами основного сайта. В перспективе такой поддомен может обслуживаться отдельным VPS.
+Для приложения был заведен поддомен `boards.laraue.com`, чтобы не смешивать его адреса с адресами основного сайта. В перспективе такой поддомен может обслуживаться отдельным VPS.
 
 Поддомен создаётся обычно в DNS-панели регистратора домена: это дополнительная `A`-запись со значением `msgboard`, указывающая на IP-адрес VPS, который будет обрабатывать запросы. Новая запись может начать работать не сразу — изменения применяются от нескольких минут до заметно большего времени. Это важно, так как **HTTPS-сертификат не получится выпустить, пока поддомен не начнет резолвиться**. Сертификат будет выпускаться через Let's Encrypt и если DNS ещё не обновился, проверка может падать с ошибкой:
 
 ```
-DNS problem: NXDOMAIN looking up A for msgboard.laraue.com
+DNS problem: NXDOMAIN looking up A for boards.laraue.com
   - check that a DNS record exists for this domain;
-DNS problem: NXDOMAIN looking up AAAA for msgboard.laraue.com
+DNS problem: NXDOMAIN looking up AAAA for boards.laraue.com
   - check that a DNS record exists for this domain
 ```
 
@@ -159,7 +159,7 @@ nginx:
 ```nginx
 server {
     listen 80;
-    server_name msgboard.laraue.com;
+    server_name boards.laraue.com;
     location /.well-known/acme-challenge/ {
         root /.well-known/acme-challenge;
     }
@@ -174,10 +174,10 @@ server {
 ```nginx
 server {
     listen 443 ssl;
-    server_name msgboard.laraue.com;
+    server_name boards.laraue.com;
 
-    ssl_certificate     /etc/letsencrypt/live/msgboard.laraue.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/msgboard.laraue.com/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/boards.laraue.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/boards.laraue.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
     ssl_prefer_server_ciphers off;
@@ -234,9 +234,9 @@ certbot:
   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 ```
 
-Первый volume, `letsencrypt` — место, куда certbot сохраняет выпущенные сертификаты. `nginx` читает из той же директории — поэтому пути `ssl_certificate` в server-блоках выше указывают на `/etc/letsencrypt/live/msgboard.laraue.com/`.
+Первый volume, `letsencrypt` — место, куда certbot сохраняет выпущенные сертификаты. `nginx` читает из той же директории — поэтому пути `ssl_certificate` в server-блоках выше указывают на `/etc/letsencrypt/live/boards.laraue.com/`.
 
-Второй volume, `acme-challenge` — папка для временных файлов для подтверждения владения доменом: Let's Encrypt просит создать временный файл, который будет доступен по адресу `http://msgboard.laraue.com/.well-known/acme-challenge/{fileName}`. Если файл доступен, адрес считается подтвержденным и Let's Encrypt выпускает сертификат. Порт 80 раздаёт этот путь напрямую, а не делает редирект на HTTPS — challenge должен отрабатывать и до того момента, когда появляется сертификат.
+Второй volume, `acme-challenge` — папка для временных файлов для подтверждения владения доменом: Let's Encrypt просит создать временный файл, который будет доступен по адресу `http://boards.laraue.com/.well-known/acme-challenge/{fileName}`. Если файл доступен, адрес считается подтвержденным и Let's Encrypt выпускает сертификат. Порт 80 раздаёт этот путь напрямую, а не делает редирект на HTTPS — challenge должен отрабатывать и до того момента, когда появляется сертификат.
 
 `entrypoint` — цикл, запускающий `certbot renew` каждые двенадцать часов. Когда время жизни сертификата подходит к концу, данная команда выпустит новый сертификат автоматически.
 
@@ -255,11 +255,11 @@ Server-блок порта 443 ссылается на файлы сертифи
 
 Скрипт больше не нужен — обновления сертификата certbot берёт на себя.
 
-На этом этапе приложение запускается по HTTPS и становится доступным по адресу `msgboard.laraue.com`. Открытие URL в браузере показывает болванку-приложение с ошибкой о том, что приложение запущено вне Telegram. Остается один шаг, перед тем как оно сможет стать Mini App в Telegram.
+На этом этапе приложение запускается по HTTPS и становится доступным по адресу `boards.laraue.com`. Открытие URL в браузере показывает болванку-приложение с ошибкой о том, что приложение запущено вне Telegram. Остается один шаг, перед тем как оно сможет стать Mini App в Telegram.
 
 ## Регистрация Mini App в BotFather
 
-Необходимо уведомить Telegram, что наш бот имеет Mini App, доступный по адресу `msgboard.laraue.com`. Это делается с помощью [@BotFather](https://t.me/BotFather): необходимо выбрать бота, и в разделе **Mini Apps** привязать приложение как **Main App** или к **menu button** бота (кнопке рядом с полем ввода). В обоих случаях потребуется ввести адрес приложения: `https://msgboard.laraue.com`. В Laraue Boards Mini App привязан к menu button.
+Необходимо уведомить Telegram, что наш бот имеет Mini App, доступный по адресу `boards.laraue.com`. Это делается с помощью [@BotFather](https://t.me/BotFather): необходимо выбрать бота, и в разделе **Mini Apps** привязать приложение как **Main App** или к **menu button** бота (кнопке рядом с полем ввода). В обоих случаях потребуется ввести адрес приложения: `https://boards.laraue.com`. В Laraue Boards Mini App привязан к menu button.
 
 После этой настройки рядом с чатом бота появится кнопка запуска приложения:
 

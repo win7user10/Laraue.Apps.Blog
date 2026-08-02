@@ -21,7 +21,7 @@ This is the recommended way to use Laraue Boards on mobile.
 
 ### In the browser
 
-Open [msgboard.laraue.com](https://msgboard.laraue.com) in any browser. You will see the login screen with a **Log in with Telegram** button. Clicking it opens a Telegram authorization popup — approve it and you are redirected back to the app.
+Open [boards.laraue.com](https://boards.laraue.com) in any browser. You will see the login screen with a **Log in with Telegram** button. Clicking it opens a Telegram authorization popup — approve it and you are redirected back to the app.
 
 The browser version requires that your Telegram account is accessible on the same device, or via the Telegram web client.
 

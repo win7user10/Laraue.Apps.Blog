@@ -11,7 +11,7 @@ Telegram users often use the messenger as a place to keep thoughts, links, and p
 
 There is also a group of users who use Telegram as the chat for running a small business. This is common in the CIS countries. Why? It is very fast and free. In such cases a company starts with one chat, and later there are more and more of them. The chats become the place both for talking and for assigning tasks and checking they get done. What was convenient at the start becomes harder and harder to keep under control. And if the company does decide to move its tasks into some task tracker, that tracker will not be synchronised with the original chats in any way.
 
-Laraue Boards tries to close these gaps, keeping the familiar chats and adding a visualisation of them on kanban boards. The main flow: sending a message to the bot [@msgboard_bot](https://t.me/msgboard_bot) creates a card on a board, which you can reach through the Telegram Mini App or the separate [web app](https://msgboard.laraue.com), using Telegram authentication. The main flow is free, and the code is fully open.
+Laraue Boards tries to close these gaps, keeping the familiar chats and adding a visualisation of them on kanban boards. The main flow: sending a message to the bot [@msgboard_bot](https://t.me/msgboard_bot) creates a card on a board, which you can reach through the Telegram Mini App or the separate [web app](https://boards.laraue.com), using Telegram authentication. The main flow is free, and the code is fully open.
 
 ## The idea behind it
 
@@ -41,7 +41,7 @@ Boards are grouped into **spaces**. A space is a separate project that brings a 
 
 ## Works inside Telegram and outside the messenger
 
-Laraue Boards can be opened inside Telegram as a Mini App, with no extra authorization needed. For those who want to work with the app in a browser, it is available at [msgboard.laraue.com](https://msgboard.laraue.com), with login through the Telegram Login Widget. Both versions work absolutely identically; more on how that is implemented is in the article [Telegram Login Widget vs Mini App auth](../articles/telegram-login-widget-dotnet-auth).
+Laraue Boards can be opened inside Telegram as a Mini App, with no extra authorization needed. For those who want to work with the app in a browser, it is available at [boards.laraue.com](https://boards.laraue.com), with login through the Telegram Login Widget. Both versions work absolutely identically; more on how that is implemented is in the article [Telegram Login Widget vs Mini App auth](../articles/telegram-login-widget-dotnet-auth).
 
 ## Open source and public development
 
@@ -107,7 +107,7 @@ Saved Messages is a great place to save something quickly, but not always a good
 The depth of the integration with the messenger. You keep working through your Telegram account, with no extra registrations. The chat stays the source of truth for the boards.
 
 **Do I have to use it inside Telegram?**
-No. You can work both in the Telegram Mini App and in the ordinary web app at [msgboard.laraue.com](https://msgboard.laraue.com), using the same Telegram account.
+No. You can work both in the Telegram Mini App and in the ordinary web app at [boards.laraue.com](https://boards.laraue.com), using the same Telegram account.
 
 **Do I need a password or an account?**
 No, the login is through Telegram. In the Mini App you are authorized based on your messenger account, and the web version has a Telegram login button.
@@ -117,4 +117,4 @@ Yes. Create an organization, share the invite link, and configure permissions fo
 
 ## How to try it
 
-Open [@msgboard_bot](https://t.me/msgboard_bot) in Telegram, or the web app at [msgboard.laraue.com](https://msgboard.laraue.com). A short overview of the product is on the [Laraue Boards page](../../boards), and the [documentation](../documentation/laraue-boards) describes all the functionality and how to use it.
+Open [@msgboard_bot](https://t.me/msgboard_bot) in Telegram, or the web app at [boards.laraue.com](https://boards.laraue.com). A short overview of the product is on the [Laraue Boards page](../../boards), and the [documentation](../documentation/laraue-boards) describes all the functionality and how to use it.

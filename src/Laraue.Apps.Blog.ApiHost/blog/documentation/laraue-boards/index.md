@@ -16,7 +16,7 @@ Your team already works in Telegram. Decisions happen there, tasks get assigned 
 Laraue Boards is a project management tool built around a single observation: **the task already exists the moment someone sends a message**. You just need a way to organize it.
 
 - Open it as a **Telegram Mini App** — no separate login, no new account
-- Or use the full **web app** at [msgboard.laraue.com](https://msgboard.laraue.com)
+- Or use the full **web app** at [boards.laraue.com](https://boards.laraue.com)
 - Send a message to the bot — text, photo, video, or an album — and it becomes an issue automatically, no extra steps
 - Edit the message in Telegram, and the issue updates with it
 - Organize issues into **Epics** (boards) with custom status columns

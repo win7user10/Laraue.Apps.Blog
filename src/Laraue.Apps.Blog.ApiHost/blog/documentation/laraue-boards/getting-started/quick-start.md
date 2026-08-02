@@ -12,7 +12,7 @@ This guide walks you through the minimum steps to have a working board with your
 
 ## Step 1 — Log in
 
-Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram or visit [msgboard.laraue.com](https://msgboard.laraue.com) in your browser and log in with your Telegram account.
+Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram or visit [boards.laraue.com](https://boards.laraue.com) in your browser and log in with your Telegram account.
 
 On the workspace screen, tap **Personal** to start without setting up a team.
 

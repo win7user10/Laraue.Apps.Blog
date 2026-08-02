@@ -19,4 +19,4 @@ updatedAt: 2026-04-27
 
 Вам нужен аккаунт Telegram. Это всё. Отдельная регистрация не требуется, email подтверждать не нужно, банковская карта не нужна.
 
-Откройте [@laraue_boards_bot](https://t.me/laraue_boards_bot) в Telegram для начала работы, или перейдите на [msgboard.laraue.com](https://msgboard.laraue.com) в браузере.
+Откройте [@laraue_boards_bot](https://t.me/laraue_boards_bot) в Telegram для начала работы, или перейдите на [boards.laraue.com](https://boards.laraue.com) в браузере.
