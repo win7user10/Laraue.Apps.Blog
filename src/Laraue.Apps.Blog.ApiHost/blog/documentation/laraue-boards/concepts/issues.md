@@ -21,6 +21,8 @@ Every issue has:
 - **Attributes** — any custom fields you have defined for the board
 - **Media** — attached photos, videos, or albums from the original message
 
+![The issue detail view in Laraue Boards, showing content, status, issue key, a custom attribute](https://laraue.com/static/images/blog/docs/laraue-boards/issue-details.jpg)
+
 ## Issue keys
 
 Every issue receives a key based on its space, not its board: three letters from the space name, followed by a number that is sequential within that space — for example `WRK-1`, `WRK-2`, `MOB-14`. Moving an issue to a different board inside the same space does not change its key. Only moving it to a different space would.
