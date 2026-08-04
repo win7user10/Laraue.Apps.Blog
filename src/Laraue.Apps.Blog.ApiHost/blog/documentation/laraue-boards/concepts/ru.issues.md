@@ -63,7 +63,7 @@ https://boards.laraue.com/organizations/{OrgKey}/issues/{IssueKey}
 
 Если отредактировать исходное сообщение в Telegram, issue обновится вместе с ним. Реакция бота сменится на ❤, подтверждая, что правка обработана.
 
-## Похожие страницы
+## Связанные страницы
 
 - [Эпики — организация issues в доски](/blog/documentation/laraue-boards/concepts/epics)
 - [Спейсы](/blog/documentation/laraue-boards/concepts/spaces)
