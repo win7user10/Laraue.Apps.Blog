@@ -4,7 +4,7 @@ type: article
 projects: [real-estate, learn-language]
 description: How to integrate Ollama with C# and .NET — native HTTP API, structured JSON output, vision model image analysis, and a typed NuGet adapter that generates schemas from C# classes automatically. No cloud API required.
 createdAt: 2025-12-26
-updatedAt: 2026-06-13
+updatedAt: 2026-08-05
 ---
 **Integrating Ollama with C# and .NET** lets you run open-source language and vision models locally — no cloud API keys, no per-call costs, no data leaving your server. This article covers the native Ollama HTTP API, structured output with JSON Schema, vision model image analysis, and a typed .NET adapter library that generates request schemas automatically from C# classes.
 
@@ -38,9 +38,9 @@ Send a `POST` to `/api/generate`:
 
 ```json
 {
-    "model": "gemma3:12b",
-    "prompt": "Translate the following text to French: 'The apartment has two rooms and a large balcony.'",
-    "stream": false
+  "model": "gemma3:12b",
+  "prompt": "Translate the following text to French: 'The apartment has two rooms and a large balcony.'",
+  "stream": false
 }
 ```
 
@@ -48,8 +48,8 @@ The response:
 
 ```json
 {
-    "model": "gemma3:12b",
-    "response": "L'appartement a deux pièces et un grand balcon."
+  "model": "gemma3:12b",
+  "response": "L'appartement a deux pièces et un grand balcon."
 }
 ```
 
@@ -57,10 +57,10 @@ To include an image, add the `images` field with a base64-encoded string. Only v
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "prompt": "Describe what you see in this photo.",
-    "stream": false,
-    "images": ["<base64EncodedImageBytes>"]
+  "model": "qwen2.5vl:3b",
+  "prompt": "Describe what you see in this photo.",
+  "stream": false,
+  "images": ["<base64EncodedImageBytes>"]
 }
 ```
 
@@ -68,8 +68,8 @@ The response:
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "response": "The photo shows a bright living room with white walls, laminate flooring, and large windows."
+  "model": "qwen2.5vl:3b",
+  "response": "The photo shows a bright living room with white walls, laminate flooring, and large windows."
 }
 ```
 
@@ -79,25 +79,25 @@ The `format` field enables **structured output** — the model returns a JSON ob
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "prompt": "Analyze this apartment photo and return your assessment.",
-    "stream": false,
-    "images": ["<base64EncodedImageBytes>"],
-    "format": {
-        "type": ["object"],
-        "properties": {
-            "RenovationRating": {
-                "type": ["number"]
-            },
-            "Tags": {
-                "type": ["array"],
-                "items": { "type": ["string"] }
-            },
-            "Description": {
-                "type": ["string"]
-            }
-        }
+  "model": "qwen2.5vl:3b",
+  "prompt": "Analyze this apartment photo and return your assessment.",
+  "stream": false,
+  "images": ["<base64EncodedImageBytes>"],
+  "format": {
+    "type": ["object"],
+    "properties": {
+      "RenovationRating": {
+        "type": ["number"]
+      },
+      "Tags": {
+        "type": ["array"],
+        "items": { "type": ["string"] }
+      },
+      "Description": {
+        "type": ["string"]
+      }
     }
+  }
 }
 ```
 
@@ -105,12 +105,12 @@ The response matches the schema:
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "data": {
-        "RenovationRating": 0.82,
-        "Tags": ["clean", "bright", "new_windows", "modern_kitchen"],
-        "Description": "Well-maintained apartment with recent renovation, good natural light, and updated fixtures."
-    }
+  "model": "qwen2.5vl:3b",
+  "data": {
+    "RenovationRating": 0.82,
+    "Tags": ["clean", "bright", "new_windows", "modern_kitchen"],
+    "Description": "Well-maintained apartment with recent renovation, good natural light, and updated fixtures."
+  }
 }
 ```
 
@@ -124,19 +124,21 @@ The other pain point is boilerplate: every call needs HTTP client setup, JSON se
 
 ---
 
-## Laraue.Core.Ollama: A Typed .NET Adapter
+## Laraue.Ollama.NET: A Typed .NET Adapter
 
-The [`Laraue.Core.Ollama`](https://github.com/win7user10/Laraue.Core?tab=readme-ov-file#larauecoreollama) NuGet package wraps the native API with a typed interface. It generates the JSON Schema automatically from your C# class using reflection — so schema changes are picked up automatically without touching any request code.
+The [`Laraue.Ollama.NET`](https://github.com/win7user10/Laraue.Ollama.NET) NuGet package wraps the native API with a typed interface. It generates the JSON Schema automatically from your C# class using reflection — so schema changes are picked up automatically without touching any request code.
 
-|              |                                                                                                     |
-|--------------|-----------------------------------------------------------------------------------------------------|
-| NuGet        | ![latest version](https://img.shields.io/nuget/v/Laraue.Core.Ollama)                                |
-| Downloads    | ![downloads](https://img.shields.io/nuget/dt/Laraue.Core.Ollama)                                    |
-| GitHub       | [Laraue.Core.Ollama](https://github.com/win7user10/Laraue.Core?tab=readme-ov-file#larauecoreollama) |
+> **Note:** this package was previously published as `Laraue.Core.Ollama`. It was renamed to `Laraue.Ollama.NET`; update your `PackageReference`/`dotnet add package` command and namespace usings if you're upgrading from the old name.
+
+|           |                                                                      |
+|-----------|----------------------------------------------------------------------|
+| NuGet     | ![latest version](https://img.shields.io/nuget/v/Laraue.Ollama.NET)  |
+| Downloads | ![downloads](https://img.shields.io/nuget/dt/Laraue.Ollama.NET)      |
+| GitHub    | [Laraue.Ollama.NET](https://github.com/win7user10/Laraue.Ollama.NET) |
 
 ### The Interface
 
-[`IOllamaPredictor`](https://github.com/win7user10/Laraue.Core/blob/master/src/Laraue.Core.Ollama/IOllamaPredictor.cs) exposes three overloads:
+[`IOllamaPredictor`](https://github.com/win7user10/Laraue.Ollama.NET/blob/main/src/Laraue.Ollama.NET/IOllamaPredictor.cs) (namespace `Laraue.Ollama.NET`) exposes three overloads:
 
 ```csharp
 public interface IOllamaPredictor
@@ -146,6 +148,7 @@ public interface IOllamaPredictor
         string modelName,
         string prompt,
         string base64EncodedImage,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default)
         where TModel : class;
 
@@ -153,6 +156,7 @@ public interface IOllamaPredictor
     Task<TModel> PredictAsync<TModel>(
         string modelName,
         string prompt,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default)
         where TModel : class;
 
@@ -160,16 +164,17 @@ public interface IOllamaPredictor
     Task<string> PredictAsync(
         string modelName,
         string prompt,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default);
 }
 ```
 
-Use the generic overloads when you need structured output parsed into a C# type. Use the raw overload when you want the model's text response directly — useful for freeform generation or when you handle parsing yourself.
+Use the generic overloads when you need structured output parsed into a C# type. Use the raw overload when you want the model's text response directly — useful for freeform generation or when you handle parsing yourself. `additionalParameters` is a new addition: pass through options like `temperature` or `top_p` straight to the underlying Ollama request without dropping to the native HTTP API.
 
 ### Installation
 
 ```
-dotnet add package Laraue.Core.Ollama
+dotnet add package Laraue.Ollama.NET
 ```
 
 ### Setup
@@ -205,7 +210,7 @@ The adapter reflects over `PredictionResult` at call time, builds the `format` J
 var result = await ollamaPredictor.PredictAsync<PredictionResult>(
     model: "gemma3:12b",
     prompt: "Classify the following text and return structured output.",
-    ct);
+    ct: ct);
 
 Console.WriteLine(result.RenovationRating); // 0.74
 Console.WriteLine(string.Join(", ", result.Tags)); // "clean, bright, good_location"
@@ -220,8 +225,8 @@ var base64Image = Convert.ToBase64String(imageBytes);
 var result = await ollamaPredictor.PredictAsync<PredictionResult>(
     model: "qwen2.5vl:3b",
     prompt: "Rate the renovation quality visible in this apartment photo.",
-    base64Image,
-    ct);
+    base64EncodedImage: base64Image,
+    ct: ct);
 ```
 
 ---
@@ -249,7 +254,7 @@ Ollama listens on port `11434` by default. The base URL for all API calls is `ht
 
 **How does Ollama structured output work in C#?**
 
-Ollama's `format` field accepts a JSON Schema object. The model constrains its output to match the schema before returning. The `Laraue.Core.Ollama` adapter generates this schema automatically from your C# class using reflection — you define the response shape as a C# record, and the adapter handles the rest.
+Ollama's `format` field accepts a JSON Schema object. The model constrains its output to match the schema before returning. The `Laraue.Ollama.NET` adapter generates this schema automatically from your C# class using reflection — you define the response shape as a C# record, and the adapter handles the rest.
 
 **Can I use Ollama with vision models in C#?**
 

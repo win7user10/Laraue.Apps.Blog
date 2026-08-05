@@ -4,7 +4,7 @@ type: article
 projects: [real-estate, learn-language]
 description: Как использовать Ollama в C# и .NET — нативный HTTP API, структурированный JSON-вывод через C# классы, анализ изображений vision-моделями и типизированный NuGet-адаптер. Без облачных API, без утечки данных.
 createdAt: 2025-12-26
-updatedAt: 2026-06-13
+updatedAt: 2026-08-05
 ---
 **Интеграция Ollama с C# и .NET** позволяет запускать open-source языковые и vision-модели локально — без облачных API-ключей, без оплаты за каждый вызов, без передачи данных на внешние серверы. В этой статье разбирается нативный HTTP API Ollama, структурированный вывод через JSON Schema, анализ изображений vision-моделями и типизированный .NET-адаптер, который генерирует схемы запросов из C# классов автоматически.
 
@@ -38,9 +38,9 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "gemma3:12b",
-    "prompt": "Переведи следующий текст на французский язык: 'Квартира имеет две комнаты и большой балкон.'",
-    "stream": false
+  "model": "gemma3:12b",
+  "prompt": "Переведи следующий текст на французский язык: 'Квартира имеет две комнаты и большой балкон.'",
+  "stream": false
 }
 ```
 
@@ -48,8 +48,8 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "gemma3:12b",
-    "response": "L'appartement a deux pièces et un grand balcon."
+  "model": "gemma3:12b",
+  "response": "L'appartement a deux pièces et un grand balcon."
 }
 ```
 
@@ -57,10 +57,10 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "prompt": "Опиши, что изображено на фотографии.",
-    "stream": false,
-    "images": ["<base64EncodedImageBytes>"]
+  "model": "qwen2.5vl:3b",
+  "prompt": "Опиши, что изображено на фотографии.",
+  "stream": false,
+  "images": ["<base64EncodedImageBytes>"]
 }
 ```
 
@@ -68,8 +68,8 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "response": "На фотографии изображена светлая гостиная с белыми стенами, ламинатом и большими окнами."
+  "model": "qwen2.5vl:3b",
+  "response": "На фотографии изображена светлая гостиная с белыми стенами, ламинатом и большими окнами."
 }
 ```
 
@@ -79,25 +79,25 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "prompt": "Проанализируй фотографию квартиры и верни оценку.",
-    "stream": false,
-    "images": ["<base64EncodedImageBytes>"],
-    "format": {
-        "type": ["object"],
-        "properties": {
-            "RenovationRating": {
-                "type": ["number"]
-            },
-            "Tags": {
-                "type": ["array"],
-                "items": { "type": ["string"] }
-            },
-            "Description": {
-                "type": ["string"]
-            }
-        }
+  "model": "qwen2.5vl:3b",
+  "prompt": "Проанализируй фотографию квартиры и верни оценку.",
+  "stream": false,
+  "images": ["<base64EncodedImageBytes>"],
+  "format": {
+    "type": ["object"],
+    "properties": {
+      "RenovationRating": {
+        "type": ["number"]
+      },
+      "Tags": {
+        "type": ["array"],
+        "items": { "type": ["string"] }
+      },
+      "Description": {
+        "type": ["string"]
+      }
     }
+  }
 }
 ```
 
@@ -105,12 +105,12 @@ updatedAt: 2026-06-13
 
 ```json
 {
-    "model": "qwen2.5vl:3b",
-    "data": {
-        "RenovationRating": 0.82,
-        "Tags": ["clean", "bright", "new_windows", "modern_kitchen"],
-        "Description": "Ухоженная квартира с недавним ремонтом, хорошим естественным светом и обновлёнными элементами."
-    }
+  "model": "qwen2.5vl:3b",
+  "data": {
+    "RenovationRating": 0.82,
+    "Tags": ["clean", "bright", "new_windows", "modern_kitchen"],
+    "Description": "Ухоженная квартира с недавним ремонтом, хорошим естественным светом и обновлёнными элементами."
+  }
 }
 ```
 
@@ -124,19 +124,21 @@ updatedAt: 2026-06-13
 
 ---
 
-## Laraue.Core.Ollama: типизированный .NET-адаптер
+## Laraue.Ollama.NET: типизированный .NET-адаптер
 
-Пакет [`Laraue.Core.Ollama`](https://github.com/win7user10/Laraue.Core?tab=readme-ov-file#larauecoreollama) оборачивает нативный API типизированным интерфейсом. JSON Schema генерируется автоматически из вашего C# класса через рефлексию — изменения схемы подхватываются автоматически без правки кода запроса.
+Пакет [`Laraue.Ollama.NET`](Laraue.Ollama.NET) оборачивает нативный API типизированным интерфейсом. JSON Schema генерируется автоматически из вашего C# класса через рефлексию — изменения схемы подхватываются автоматически без правки кода запроса.
 
-|              |                                                                                                      |
-|--------------|------------------------------------------------------------------------------------------------------|
-| NuGet        | ![последняя версия](https://img.shields.io/nuget/v/Laraue.Core.Ollama)                              |
-| Загрузки     | ![загрузки](https://img.shields.io/nuget/dt/Laraue.Core.Ollama)                                     |
-| GitHub       | [Laraue.Core.Ollama](https://github.com/win7user10/Laraue.Core?tab=readme-ov-file#larauecoreollama) |
+> **Примечание:** ранее пакет публиковался как `Laraue.Core.Ollama`. Он был переименован в `Laraue.Ollama.NET` — обновите команду `dotnet add package`/`PackageReference` и using-директивы при обновлении со старой версии.
+
+|          |                                                                       |
+|----------|-----------------------------------------------------------------------|
+| NuGet    | ![последняя версия](https://img.shields.io/nuget/v/Laraue.Ollama.NET) |
+| Загрузки | ![загрузки](https://img.shields.io/nuget/dt/Laraue.Ollama.NET)        |
+| GitHub   | [Laraue.Ollama.NET](https://github.com/win7user10/Laraue.Ollama.NET)  |
 
 ### Интерфейс
 
-[`IOllamaPredictor`](https://github.com/win7user10/Laraue.Core/blob/master/src/Laraue.Core.Ollama/IOllamaPredictor.cs) предоставляет три перегрузки:
+[`IOllamaPredictor`](https://github.com/win7user10/Laraue.Ollama.NET/blob/main/src/Laraue.Ollama.NET/IOllamaPredictor.cs) (пространство имён `Laraue.Ollama.NET`) предоставляет три перегрузки:
 
 ```csharp
 public interface IOllamaPredictor
@@ -146,6 +148,7 @@ public interface IOllamaPredictor
         string modelName,
         string prompt,
         string base64EncodedImage,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default)
         where TModel : class;
 
@@ -153,6 +156,7 @@ public interface IOllamaPredictor
     Task<TModel> PredictAsync<TModel>(
         string modelName,
         string prompt,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default)
         where TModel : class;
 
@@ -160,16 +164,17 @@ public interface IOllamaPredictor
     Task<string> PredictAsync(
         string modelName,
         string prompt,
+        Dictionary<string, object>? additionalParameters = null,
         CancellationToken ct = default);
 }
 ```
 
-Используйте generic-перегрузки, когда нужен структурированный вывод, разобранный в C# тип. Используйте сырую перегрузку, когда нужен текстовый ответ напрямую — для свободной генерации или когда парсинг реализован самостоятельно.
+Используйте generic-перегрузки, когда нужен структурированный вывод, разобранный в C# тип. Используйте сырую перегрузку, когда нужен текстовый ответ напрямую — для свободной генерации или когда парсинг реализован самостоятельно. `additionalParameters` — новое дополнение: передавайте параметры вроде `temperature` или `top_p` напрямую в запрос к Ollama, не обращаясь к нативному HTTP API.
 
 ### Установка
 
 ```
-dotnet add package Laraue.Core.Ollama
+dotnet add package Laraue.Ollama.NET
 ```
 
 ### Настройка
@@ -205,7 +210,7 @@ public record PredictionResult
 var result = await ollamaPredictor.PredictAsync<PredictionResult>(
     model: "gemma3:12b",
     prompt: "Классифицируй следующий текст и верни структурированный результат.",
-    ct);
+    ct: ct);
 
 Console.WriteLine(result.RenovationRating); // 0.74
 Console.WriteLine(string.Join(", ", result.Tags)); // "clean, bright, good_location"
@@ -220,8 +225,8 @@ var base64Image = Convert.ToBase64String(imageBytes);
 var result = await ollamaPredictor.PredictAsync<PredictionResult>(
     model: "qwen2.5vl:3b",
     prompt: "Оцени качество ремонта, видимое на фотографии квартиры.",
-    base64Image,
-    ct);
+    base64EncodedImage: base64Image,
+    ct: ct);
 ```
 
 ---
@@ -249,7 +254,7 @@ Ollama слушает порт `11434` по умолчанию. Базовый U
 
 **Как работает структурированный вывод Ollama в C#?**
 
-Поле `format` в запросе Ollama принимает JSON Schema объект. Модель ограничивает свой вывод этой схемой перед возвратом. Адаптер `Laraue.Core.Ollama` генерирует эту схему автоматически из вашего C# класса через рефлексию — вы определяете форму ответа как C# record, адаптер делает остальное.
+Поле `format` в запросе Ollama принимает JSON Schema объект. Модель ограничивает свой вывод этой схемой перед возвратом. Адаптер `Laraue.Ollama.NET` генерирует эту схему автоматически из вашего C# класса через рефлексию — вы определяете форму ответа как C# record, адаптер делает остальное.
 
 **Можно ли использовать Ollama с vision-моделями в C#?**
 
