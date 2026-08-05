@@ -118,7 +118,7 @@ The app is built and its files are on the server; now it needs to be reachable f
 
 The subdomain `boards.laraue.com` was created for the app, to keep its addresses separate from the main site's. Down the line, such a subdomain could even be served by a separate VPS.
 
-A subdomain is usually created in the domain registrar's DNS panel: it is an extra `A` record with the value `msgboard`, pointing at the IP address of the VPS that will handle the requests. A new record may not take effect immediately — the changes apply within anywhere from a few minutes to noticeably longer. This matters, because **the HTTPS certificate cannot be issued until the subdomain starts resolving**. The certificate will be issued through Let's Encrypt, and if the DNS has not updated yet, the check can fail with this error:
+A subdomain is usually created in the domain registrar's DNS panel: it is an extra `A` record with the value `boards`, pointing at the IP address of the VPS that will handle the requests. A new record may not take effect immediately — the changes apply within anywhere from a few minutes to noticeably longer. This matters, because **the HTTPS certificate cannot be issued until the subdomain starts resolving**. The certificate will be issued through Let's Encrypt, and if the DNS has not updated yet, the check can fail with this error:
 
 ```
 DNS problem: NXDOMAIN looking up A for boards.laraue.com

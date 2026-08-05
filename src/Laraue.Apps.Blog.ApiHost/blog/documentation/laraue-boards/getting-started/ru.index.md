@@ -1,22 +1,28 @@
 ---
-title: Начало работы с Laraue Boards
-description: Всё необходимое для быстрого старта с Laraue Boards — вход через Telegram, создание первой доски и первой задачи за несколько минут.
-keywords: [laraue boards начало работы, как использовать laraue boards, настройка telegram канбан, начать telegram трекер задач]
+title: Начало работы
+description: Всё, что нужно, чтобы начать пользоваться Laraue Boards, — вход через Telegram и первые задачи за пару минут.
+keywords: [laraue boards начало работы, как пользоваться laraue boards, настройка telegram kanban, начать telegram таск-менеджер]
 type: sectionDefinition
 order: 1
-createdAt: 2026-04-27
-updatedAt: 2026-04-27
+createdAt: 2026-04-22
+updatedAt: 2026-08-05
 ---
-В этом разделе собрано всё необходимое, чтобы с нуля создать доску с первой задачей.
+Этот раздел покрывает всё, что нужно, чтобы пройти путь от нуля до рабочей доски с первой задачей на ней.
 
 ## В этом разделе
 
-- [Авторизация](/ru/blog/documentation/laraue-boards/getting-started/authorization) — Как войти с помощью аккаунта Telegram как в Mini App, так и в браузере. Без пароля, без регистрации.
+- [Авторизация](/blog/documentation/laraue-boards/getting-started/authorization) — как войти через аккаунт Telegram, внутри Mini App и в браузере. Без пароля и регистрации.
 
-- [Быстрый старт](/ru/blog/documentation/laraue-boards/getting-started/quick-start) — Пятиминутное руководство: создайте доску, захватите сообщение из Telegram, назначьте его и продвиньте по статусам.
+- [Быстрый старт](/blog/documentation/laraue-boards/getting-started/quick-start) — обзор первых нескольких минут в Laraue Boards: отправьте сообщение боту, посмотрите, как оно становится issue и проведите его через статусы.
 
-## Перед началом
+## Прежде чем начать
 
-Вам нужен аккаунт Telegram. Это всё. Отдельная регистрация не требуется, email подтверждать не нужно, банковская карта не нужна.
+Нужен только аккаунт Telegram. Никакой отдельной регистрации, email для подтверждения или банковской карты.
 
-Откройте [@laraue_boards_bot](https://t.me/laraue_boards_bot) в Telegram для начала работы, или перейдите на [boards.laraue.com](https://boards.laraue.com) в браузере.
+В момент входа у вас уже есть личная организация с настроенным спейсом по умолчанию, доской и Бэклогом — настраивать перед началом работы нечего не нужно. Отправьте сообщение боту, и оно сразу станет issue в Бэклоге.
+
+Откройте [@msgboard_bot](https://t.me/msgboard_bot) в Telegram, чтобы начать, или зайдите на [boards.laraue.com](https://boards.laraue.com) в браузере.
+
+## Связанные страницы
+
+- [Организации](/blog/documentation/laraue-boards/concepts/organizations) — работа с командой описана в отдельном разделе, когда разберётесь с основами.
