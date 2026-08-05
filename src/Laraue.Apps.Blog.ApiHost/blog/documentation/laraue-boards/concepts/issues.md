@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 1
 createdAt: 2026-04-22
-updatedAt: 2026-08-04
+updatedAt: 2026-08-05
 ---
 An issue is the core unit of work in Laraue Boards. Every task, request, bug report, or action item is an issue. What makes Laraue Boards different is where issues come from: most of them start as Telegram messages.
 
@@ -18,6 +18,7 @@ Every issue has:
 - **Sender** — who sent the original Telegram message
 - **Status** — which column on the board it currently sits in
 - **Issue key** — a unique identifier like `WRK-42`
+- **Assignee** — who the issue is assigned to
 - **Attributes** — any custom fields you have defined for the board
 - **Media** — attached photos, videos, or albums from the original message
 
@@ -39,17 +40,19 @@ Share the link when you want to take someone straight to the issue, rather than 
 
 ## Creating issues
 
-**From a Telegram message** — forward any message to the Laraue Boards bot. It is saved automatically, with no extra steps, and lands on the default space in your Backlog. The bot reacts with 👍 to confirm.
+**From a Telegram message** — forward any message to the Laraue Boards bot. It is saved automatically, with no extra steps, and lands on the default board in your Backlog. The bot reacts with 👍 to confirm.
 
 Right now, every issue created this way lands in your **personal organization**, regardless of which chat the message came from. Mapping specific group chats to specific organizations — so a message from a client's chat lands directly in that client's organization — is planned for a future version.
 
-**Manually** — tap the **+ Add issue** button in the top right corner of the interface. Enter the content directly.
+**Manually** — tap **+ Add issue** in the top right corner of the board. Enter the content directly.
+
+![Creating an issue manually from a board](https://laraue.com/static/images/blog/docs/laraue-boards/create-issue.jpg)
 
 ## Moving an issue to a different board
 
 New issues from the bot land on the default board so saving stays effortless — you never have to pick a board before sending a message. If you want an issue somewhere else, open the **Backlog**, find the issue in the list, and change its board directly from the issue's detail view.
 
-Moving an issue between boards **within the same space** keeps its issue key. Moving it to a **different space** gives it a new key, since keys are numbered per space.
+Moving an issue between boards **within the same space** keeps its issue key. Moving it to a **different space** gives it a new key, since keys are numbered per space — any link or quoted key already shared for that issue will point at the old one and stop working.
 
 ## Moving an issue between statuses
 
@@ -62,6 +65,18 @@ If the original Telegram message contained photos, videos, or an album, they are
 ## Editing an issue
 
 If you edit the original message in Telegram, the issue updates with it. The bot's reaction changes to ❤ to confirm the edit was picked up.
+
+## Comments
+
+Every issue has its own comments, separate from the original message. Open the issue and use the Comments tab to discuss it with your team.
+
+Comments support image attachments — paste an image directly with **Ctrl+V**, or choose a file to upload.
+
+## Change history
+
+The History tab on an issue shows what changed, when, and who changed it — as a plain, readable log, not raw data. A status change reads as **Status: New → In progress**, a move to a different board as **Board: Sprint 2 (Active) → Sprint 3**, and a new attachment as **Added attachment: image.png**. It covers changes to the issue's content, status, board, comments, and attachments.
+
+![The History tab on an issue, showing a status change, a board move, and an added attachment](https://laraue.com/static/images/blog/docs/laraue-boards/issue-history.jpg)
 
 ## Related pages
 
