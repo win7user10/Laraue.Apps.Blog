@@ -57,6 +57,6 @@ updatedAt: 2026-08-05
 
 ## Связанные страницы
 
-- [Эпики — доски внутри спейса](/blog/documentation/laraue-boards/concepts/epics)
-- [Организации — совместная работа со спейсами в команде](/blog/documentation/laraue-boards/concepts/organizations)
-- [Управление правами доступа](/blog/documentation/laraue-boards/working-in-a-team/permissions)
+- [Эпики — доски внутри спейса](/ru/blog/documentation/laraue-boards/concepts/epics)
+- [Организации — совместная работа со спейсами в команде](/ru/blog/documentation/laraue-boards/concepts/organizations)
+- [Управление правами доступа](/ru/blog/documentation/laraue-boards/working-in-a-team/permissions)

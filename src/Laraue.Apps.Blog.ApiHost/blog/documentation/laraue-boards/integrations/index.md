@@ -5,18 +5,10 @@ keywords: [telegram mini app integration, telegram bot project management, teleg
 type: sectionDefinition
 order: 6
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-08-06
 ---
 Laraue Boards is built around Telegram. This section covers how the integration works and how to get the most out of it.
 
 ## In this section
 
 - [Telegram Mini App](/blog/documentation/laraue-boards/integrations/telegram-mini-app) — Using Laraue Boards natively inside Telegram. Automatic login, message capture from any chat, and mobile-first design.
-
-## Planned integrations
-
-The following integrations are planned for future releases:
-
-- **Webhooks** — trigger external actions when issues are created or moved
-- **Zapier / Make** — connect Laraue Boards to other tools without code
-- **Slack** — alternative chat source for non-Telegram teams

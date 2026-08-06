@@ -70,6 +70,6 @@ updatedAt: 2026-08-04
 
 ## Связанные страницы
 
-- [Issues — превращение сообщений в задачи](/blog/documentation/laraue-boards/concepts/issues)
-- [Спейсы — группировка досок по проектам](/blog/documentation/laraue-boards/concepts/spaces)
-- [Кастомные атрибуты](/blog/documentation/laraue-boards/features/attributes)
+- [Issues — превращение сообщений в задачи](/ru/blog/documentation/laraue-boards/concepts/issues)
+- [Спейсы — группировка досок по проектам](/ru/blog/documentation/laraue-boards/concepts/spaces)
+- [Кастомные атрибуты](/ru/blog/documentation/laraue-boards/features/attributes)

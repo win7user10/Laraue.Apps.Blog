@@ -53,4 +53,4 @@ Laraue Boards не поддерживает одновременную рабо�
 
 ## Связанные страницы
 
-- [Организации](/blog/documentation/laraue-boards/concepts/organizations)
+- [Организации](/ru/blog/documentation/laraue-boards/concepts/organizations)

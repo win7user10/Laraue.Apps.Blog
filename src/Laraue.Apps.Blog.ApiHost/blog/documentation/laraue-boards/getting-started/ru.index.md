@@ -25,4 +25,4 @@ updatedAt: 2026-08-05
 
 ## Связанные страницы
 
-- [Организации](/blog/documentation/laraue-boards/concepts/organizations) — работа с командой описана в отдельном разделе, когда разберётесь с основами.
+- [Организации](/ru/blog/documentation/laraue-boards/concepts/organizations) — работа с командой описана в отдельном разделе, когда разберётесь с основами.

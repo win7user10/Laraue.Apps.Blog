@@ -71,6 +71,6 @@ On the Manage Attributes page, tap the delete icon next to an attribute. The att
 
 ## Related pages
 
-- [Epics — boards and columns](../concepts/epics)
-- [Search](../features/search)
-- [Issues](../concepts/issues)
+- [Epics — boards and columns](/blog/documentation/laraue-boards/concepts/epics)
+- [Search](/blog/documentation/laraue-boards)
+- [Issues](/blog/documentation/laraue-boards/concepts/issues)

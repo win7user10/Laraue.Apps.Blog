@@ -71,6 +71,6 @@ updatedAt: 2026-06-15
 
 ## Связанные страницы
 
-- [Эпики — доски и колонки](../concepts/epics)
-- [Поиск](../features/search)
-- [Задачи](../concepts/issues)
+- [Эпики — доски и колонки](/ru/blog/documentation/laraue-boards/concepts/epics)
+- [Поиск](/ru/blog/documentation/laraue-boards/features/search)
+- [Задачи](/ru/blog/documentation/laraue-boards/concepts/issues)

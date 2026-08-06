@@ -46,7 +46,7 @@ updatedAt: 2026-08-06
 
 ## Что дальше
 
-- Нужно больше одной доски? [Создайте новую](/blog/documentation/laraue-boards/concepts/epics), когда проекту понадобится своё место.
-- Добавьте кастомные атрибуты к issues — [Кастомные атрибуты](/blog/documentation/laraue-boards/features/attributes)
-- Сгруппируйте доски в спейсы — [Спейсы](/blog/documentation/laraue-boards/concepts/spaces)
-- Пригласите коллегу — [Организации](/blog/documentation/laraue-boards/concepts/organizations)
+- Нужно больше одной доски? [Создайте новую](/ru/blog/documentation/laraue-boards/concepts/epics), когда проекту понадобится своё место.
+- Добавьте кастомные атрибуты к issues — [Кастомные атрибуты](/ru/blog/documentation/laraue-boards/features/attributes)
+- Сгруппируйте доски в спейсы — [Спейсы](/ru/blog/documentation/laraue-boards/concepts/spaces)
+- Пригласите коллегу — [Организации](/ru/blog/documentation/laraue-boards/concepts/organizations)

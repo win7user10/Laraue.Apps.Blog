@@ -84,8 +84,8 @@ https://boards.laraue.com/organizations/{OrgKey}/issues/{IssueKey}
 
 ## Связанные страницы
 
-- [Эпики — организация issues в доски](/blog/documentation/laraue-boards/concepts/epics)
-- [Спейсы](/blog/documentation/laraue-boards/concepts/spaces)
-- [Кастомные атрибуты](/blog/documentation/laraue-boards/features/attributes)
-- [Справочник по номерам issue](/blog/documentation/laraue-boards/features/card-keys)
-- [Медиавложения](/blog/documentation/laraue-boards/features/media)
+- [Эпики — организация issues в доски](/ru/blog/documentation/laraue-boards/concepts/epics)
+- [Спейсы](/ru/blog/documentation/laraue-boards/concepts/spaces)
+- [Кастомные атрибуты](/ru/blog/documentation/laraue-boards/features/attributes)
+- [Справочник по номерам issue](/ru/blog/documentation/laraue-boards/features/card-keys)
+- [Медиавложения](/ru/blog/documentation/laraue-boards/features/media)
