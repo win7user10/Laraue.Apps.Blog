@@ -20,6 +20,8 @@ This guide will help you get familiar with Laraue Boards. There's nothing to set
 
 ![The web login screen with the Log in with Telegram button](https://laraue.com/static/images/blog/docs/laraue-boards/web-login.jpg)
 
+For more on what data login uses, and on switching between accounts and organizations, see [Authorization](/blog/documentation/laraue-boards/getting-started/authorization).
+
 ## Step 2 — Add your first issue
 
 There are two ways to do this, and neither requires any setup first.
