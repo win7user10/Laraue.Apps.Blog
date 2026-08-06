@@ -1,45 +1,50 @@
 ---
-title: Create your first board
-description: A step-by-step guide to setting up your first Laraue Boards kanban board, capturing your first issue from Telegram, and moving it through statuses.
+title: Quick start — your first issue in under a minute
+description: A step-by-step guide to your first minutes in Laraue Boards — log in and see your first issue appear on your board, whether you send it from Telegram or add it directly in the app.
 keywords: [how to use laraue boards, create kanban board telegram, first task telegram board, getting started project management telegram]
 type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-04-27
+updatedAt: 2026-08-06
 ---
-This guide walks you through the minimum steps to have a working board with your first issue on it.
+This guide will help you get familiar with Laraue Boards. There's nothing to set up beforehand — your first board is already waiting for you the moment you log in.
 
-## Step 1 — Log in
+## Step 1 — Log in to your account
 
-Open [@laraue_boards_bot](https://t.me/laraue_boards_bot) in Telegram or visit [boards.laraue.com](https://boards.laraue.com) in your browser and log in with your Telegram account.
+**As a Telegram Mini App** — open [@msgboard_bot](https://t.me/msgboard_bot) in Telegram and tap **Start**. Once you have a chat with the bot, a launch button for the Mini App appears right next to it — tap it, and you're inside your boards, already logged in with your Telegram account.
 
-On the workspace screen, tap **Personal** to start without setting up a team.
+![The Mini App launch button next to the bot's chat](https://laraue.com/static/images/blog/docs/laraue-boards/message-board-bot-launch-mini-app-button.jpg)
 
-## Step 2 — Create a board
+**In the browser** — visit [boards.laraue.com](https://boards.laraue.com) and tap **Log in with Telegram**.
 
-On the **Backlog** screen, tap the **+** button (bottom right) and choose **New board**. Give it a name — for example, "Work" or "Client Project". Pick a color. Tap **Create**.
+![The web login screen with the Log in with Telegram button](https://laraue.com/static/images/blog/docs/laraue-boards/web-login.jpg)
 
-Your board is created with three default columns: **To Do**, **In Progress**, and **Done**.
+## Step 2 — Add your first issue
 
-## Step 3 — Add your first issue
+There are two ways to do this, and neither requires any setup first.
 
-There are two ways to add an issue:
+**From Telegram** — go back to your chat with the bot and send it anything: a thought, a link, a task. The bot saves it and reacts with 👍. The issue always lands in the **New** column of your default board.
 
-**From Telegram** — go to any Telegram chat and forward or share a message to the bot. It appears in your Backlog. Tap it, then tap **Assign to board**, pick your board and a status column.
+**In the app** — if you'd rather not send anything to the bot at all, that's fine too. Telegram can be just your login method. Tap **+ Add issue** — it's available from anywhere in the app, not just from inside a board. Open it from a board and the space and board are already filled in for you; open it from the organization level and every field starts empty, so you choose the space, board, and status yourself.
 
-**Manually** — on your board, tap the **+** button at the bottom of any column. Type the content of the issue and confirm.
+![The Add issue form](https://laraue.com/static/images/blog/docs/laraue-boards/create-issue.jpg)
 
-## Step 4 — Move the issue
+## Step 3 — Move it
 
-Drag the issue card from one column to another to update its status. On mobile, press and hold the card briefly before dragging — a slight delay prevents accidental moves while scrolling.
+Drag the issue card from one column to another to change its status. On mobile, press and hold the card briefly before dragging — a slight delay prevents accidental moves while scrolling.
 
-## Step 5 — Find it again
+![Dragging an issue card from one status column to another](https://laraue.com/static/images/blog/docs/laraue-boards/move-issue.jpg)
 
-Every issue gets a unique key like `WRK-1`. You can mention this key in Telegram and anyone with access to the board immediately knows what task you mean. Use the search icon on the board to filter by text.
+If you want to put the issue in a different space or on a different board, open its details — you can do this from the Backlog, the list of all the organization's issues, or right from a board — and change the space or board there.
 
-## What next
+## Step 4 — Find it again
 
+Every issue gets a key, like `WRK-1` — the first three letters come from your space's name. Mention this key in Telegram and anyone with access knows exactly what you mean. There's also a link icon right next to the key on the issue — tap it to copy a direct link, if you'd rather share that than just the key. You can also use the search icon in the board header to filter by text.
+
+## What's next
+
+- Want more than one board? [Create a new one](/blog/documentation/laraue-boards/concepts/epics) whenever a project needs its own space to live in.
 - Add custom attributes to issues — [Custom attributes](/blog/documentation/laraue-boards/features/attributes)
 - Group your boards into spaces — [Spaces](/blog/documentation/laraue-boards/concepts/spaces)
-- Invite a teammate — [Creating an organization](/blog/documentation/laraue-boards/working-in-a-team/creating-organization)
+- Invite a teammate — [Organizations](/blog/documentation/laraue-boards/concepts/organizations)
