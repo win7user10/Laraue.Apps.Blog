@@ -6,9 +6,9 @@ type: documentation
 project: boards
 order: 3
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-08-06
 ---
-The core idea behind Laraue Boards is that work is already happening in Telegram. A client request, a bug report, a photo of something that needs fixing — these are all tasks, they just haven't been structured yet. Laraue Boards captures them directly.
+The core idea behind Laraue Boards is that work is already happening in Telegram. A client request, a bug report, a photo of something that needs fixing — these are all issues, they just haven't been structured yet. Laraue Boards captures them directly.
 
 ## Forwarding a message to the bot
 
@@ -16,32 +16,31 @@ The simplest way to capture a message:
 
 1. Long-press any message in any Telegram chat
 2. Tap **Forward**
-3. Choose **@laraue_boards_bot** as the recipient
-4. The message appears in your Backlog immediately
+3. Choose **@msgboard_bot** as the recipient
+4. The message becomes an issue on your default board immediately
 
-This works for text messages, photos, videos, voice messages, documents, and mixed media.
+![A forwarded message in Telegram with the bot's reaction confirming it was saved](https://laraue.com/static/images/blog/docs/laraue-boards/message-board-bot-processed-message.jpg)
+
+This works for text messages, photos, videos, and albums.
 
 ## What gets captured
 
 When you forward a message, Laraue Boards saves:
 
 - The **text content** of the message (up to 4096 characters)
-- **Photos** — stored and shown as thumbnails on the issue card
-- **Videos** — stored with progressive streaming support, so they play immediately without waiting for a full download
-- **Sender name** and **source chat name** — shown on the card for context
+- **Photos** and **videos** — shown as thumbnails on the issue card, fetched from Telegram in original quality when you open them
+- **Sender name** — shown on the card for context
 - **Timestamp** — when the original message was sent
 
 What is not captured: reactions, replies, forwarded-from attribution chains, and voice message transcriptions.
 
-## Media in issue cards
+## Attachments on the issue
 
-If an issue has attached photos or videos, a horizontal strip of thumbnails appears on the card — up to four visible, with a `+N` overlay if there are more. The strip is horizontally scrollable.
+There are no thumbnails on the board card — media only shows up once you open the issue. The detail page has an **Attachments** section below the content, showing every photo and video as a small thumbnail. Tap one to open the full image.
 
-Tapping any thumbnail opens the **media viewer**: a full-screen view with navigation between all attachments. Videos play with native controls. The viewer shows a `2 / 5` counter when there are multiple files.
+![The Attachments section on an issue's detail page](https://laraue.com/static/images/blog/docs/laraue-boards/issue-attachments.jpg)
 
-## Media in the issue detail
-
-The issue detail view shows a 3-column grid of all media files above the text content. Tapping any item opens the viewer at that position.
+From here you can also add more images yourself — **Choose other images**, or paste one directly with **Ctrl+V** — and remove any attachment with the **×** on its thumbnail.
 
 ## Text-only issues
 
@@ -49,21 +48,9 @@ A message does not need text to become an issue. A photo with no caption becomes
 
 ## Manually created issues
 
-Issues created by tapping **+ Add card** on a board column are not linked to any Telegram message. They have the same fields (content, status, attributes) but no sender, source chat, or media from Telegram.
-
-## Supported media types
-
-| Type                     | Supported                    |
-|--------------------------|------------------------------|
-| Photos (JPEG, PNG, WebP) | ✓                            |
-| Videos (MP4, MOV)        | ✓ with progressive streaming |
-| GIFs                     | ✓ treated as video           |
-| Voice messages           | -                            |
-| Documents / files        | -                            |
-| Stickers                 | -                            |
+Issues created by tapping **+ Add issue** are not linked to any Telegram message. They have the same fields (content, status, attributes) but no sender or media from Telegram.
 
 ## Related pages
 
 - [Issues — what they are](/blog/documentation/laraue-boards/concepts/issues)
-- [Media attachments](/blog/documentation/laraue-boards/features/media)
 - [The Backlog](/blog/documentation/laraue-boards/working-alone/backlog)

@@ -64,7 +64,7 @@ Drag the card from one column to another. The issue key stays the same — movin
 
 ## Media in issues
 
-If the original Telegram message contained photos, videos, or an album, they are preserved in the issue as a single card with all attachments. Files are not stored separately — they are fetched from Telegram when you open them, in their original quality. The card on the board shows a strip of up to four thumbnails. Tapping a thumbnail opens the full-screen media viewer with navigation between all attachments.
+If the original Telegram message contained photos, videos, or an album, they are preserved in the issue. Files are not stored separately — they are fetched from Telegram when you open them, in their original quality. There are no thumbnails on the board card — attachments are visible on the issue's detail page, where tapping one opens the full image.
 
 ## Editing an issue
 
