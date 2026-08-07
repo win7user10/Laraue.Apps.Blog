@@ -1,73 +1,72 @@
 ---
-title: Permissions management — who can see and edit what
-description: How Laraue Boards permissions work across organization, space, and epic levels. Configure read, create, update, delete, and manage access for each team member.
-keywords: [project management permissions, kanban access control, team permissions task tracker, role based access telegram board, granular permissions project management]
+title: Members and permissions — who can see and edit what
+description: How Laraue Boards permissions work — administrative tools, organization-wide access, and per-space access. Configure create, update, and delete separately for each member.
+keywords: [project management permissions, kanban access control, team permissions task tracker, granular permissions project management, manage team members]
 type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-04-22
+updatedAt: 2026-08-07
 ---
-Laraue Boards uses a hierarchical permission model. Permissions can be granted at three levels: the whole organization, a specific space, or a specific epic (board). A higher-level grant automatically covers all levels below it.
+**Settings → Permissions** in the sidebar is where you see everyone who has access to your organization, share the invite link, and configure what each member can do.
 
-## Permission types
+## Viewing members
 
-| Permission | What it allows                                         |
-|------------|--------------------------------------------------------|
-| **Read**   | View issues, boards, and spaces                        |
-| **Create** | Create new issues and boards                           |
-| **Update** | Edit existing issues and board settings                |
-| **Delete** | Delete issues and boards                               |
-| **Manage** | All of the above plus managing members and permissions |
+The Members list shows every current member with a role label — **Owner**, **Admin**, or **Member**. It isn't something you assign directly. **Owner** is fixed to whoever created the organization. **Admin** is shown for any member who holds at least one administrative permission. Everyone else shows as **Member**.
 
-## How hierarchy works
+![The Members list, showing each member with a role label](https://laraue.com/static/images/blog/docs/laraue-boards/organization-members.jpg)
 
-If a user has **Read** permission at the Organization level, they can read everything inside that organization — all spaces and all boards — without needing it granted at each level individually.
+There is exactly one Owner per organization, and they can't be removed. There is no way to transfer ownership yet — if the Owner needs to leave, contact **support@laraue.com**.
 
-If they only have **Read** at the Space level for "Mobile App", they can see all boards within that space but cannot see boards in other spaces.
+Revoking a member's access entirely isn't possible yet; it's planned for a future version. In the meantime, a member with no permissions at all can't see anything in the organization, so removing all their permissions is the closest available option.
 
-If they only have **Read** at the Epic level for "Sprint 1", they can see only that board.
+## Configuring a member's permissions
 
-**Higher levels override lower levels.** If an organization-level permission is granted, the space and epic checkboxes are automatically checked and disabled — they are inherited and cannot be individually removed.
+Tap a member to open their permissions page. It has three sections.
 
-## Configuring permissions for a member
+![A member's permissions page, showing Administration, Organization access, and Direct space access](https://laraue.com/static/images/blog/docs/laraue-boards/user-permissions.jpg)
 
-Open **My organization** from the user avatar menu. On the **Members** tab, tap the permissions icon (bar chart icon) next to a member's name.
+## Administration
 
-The permissions tab shows a table:
+Checkboxes for organization-level management tools:
 
-- Rows: Organization → Spaces (all) → Individual spaces → Epics (all) → Individual epics
-- Columns: Manage, Create, Read, Update, Delete
-- Disabled checkboxes indicate inherited permissions from a parent level
+- Manage members and permissions
+- Edit organization
+- Delete organization
+- Move spaces and boards
+- Manage attributes
 
-Check or uncheck each cell to grant or revoke. Tap **Save** when done.
+Checking any one of these is what makes a member show up with the **Admin** label in the member list.
+
+## Organization access
+
+Applies across every space at once. A **Read organization** toggle controls whether the member can see everything, and below it a table lets you grant **Create / Update / Delete** separately for **Spaces**, **Boards**, and **Issues**.
+
+## Direct space access
+
+Adds permissions for individual spaces, on top of whatever organization access already grants. Expand a space to set a **Read space** toggle and the same **Create / Update / Delete** grid, scoped to just that space.
+
+This is how you give someone access to one client's space without exposing the rest of the organization — grant nothing at the organization level, and configure Direct space access for that one space only.
 
 ## Practical examples
 
-**Contractor who should see only one space:**
-- No organization-level permissions
-- Read permission on the specific space only
+**A contractor who should see only one space:**
+- No organization-level access
+- Direct space access on that one space: Read space, plus Create/Update on Issues if they need to work in it
 
-**Developer who can work on issues but not delete anything:**
-- Organization-level Read
-- Organization-level Create and Update
-- No Delete at any level
+**Someone who can work on issues but never delete anything:**
+- Organization access: Read organization, plus Create and Update on Issues
+- Delete left unchecked everywhere
 
-**Full team member:**
-- Organization-level Read, Create, Update
-- Manage on spaces they own
+**An admin who manages the team but not the boards themselves:**
+- Administration: Manage members and permissions
+- Organization access: Read organization, so they can still see everything
 
-**Admin:**
-- Organization-level Manage (covers everything)
+## New members start with nothing
 
-## Default permissions for new members
-
-New members who join via invite link receive **Read** permission at the organization level by default. They can see all boards but cannot create, edit, or delete anything until you explicitly grant those permissions.
-
-You can change the default before sharing the invite link by configuring a template member, or adjust permissions individually after they join.
+A member who just joined via the invite link has no permissions at all — not even Read. They can't see anything in the organization until you configure their access. This is deliberate: access is opt-in, not something you have to remember to restrict.
 
 ## Related pages
 
 - [Organizations](/blog/documentation/laraue-boards/concepts/organizations)
-- [Member management](/blog/documentation/laraue-boards/working-in-a-team/member-management)
 - [Creating an organization](/blog/documentation/laraue-boards/working-in-a-team/creating-organization)

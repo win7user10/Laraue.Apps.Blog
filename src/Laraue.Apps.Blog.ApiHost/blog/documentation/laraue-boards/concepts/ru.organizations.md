@@ -39,7 +39,7 @@ updatedAt: 2026-08-05
 
 Откройте **Settings → Permissions** в боковой панели. На этой же странице находится и ссылка-приглашение, и список участников.
 
-![Страница Permissions со ссылкой-приглашением и списком участников с их ролями](https://laraue.com/static/images/blog/docs/laraue-boards/organization-permissions.jpg)
+![Страница Permissions со ссылкой-приглашением и списком участников с их ролями](https://laraue.com/static/images/blog/docs/laraue-boards/organization-members.jpg)
 
 **Invite people** — скопируйте ссылку сверху и отправьте её коллеге в Telegram. Когда он откроет её и примет приглашение, он присоединится к организации. **Create a new link** отзывает все неиспользованные приглашения, не затрагивая уже присоединившихся участников.
 

@@ -39,7 +39,7 @@ You are automatically assigned as the **Owner**.
 
 Open **Settings → Permissions** in the sidebar. This one page holds both the invite link and your member list.
 
-![The Permissions settings page, showing the invite link and a list of members with their roles](https://laraue.com/static/images/blog/docs/laraue-boards/organization-permissions.jpg)
+![The Permissions settings page, showing the invite link and a list of members with their roles](https://laraue.com/static/images/blog/docs/laraue-boards/organization-members.jpg)
 
 **Invite people** — copy the link shown at the top and send it to your teammate in Telegram. When they open it and accept, they join the organization. **Create a new link** revokes all pending invitations without removing existing members.
 
