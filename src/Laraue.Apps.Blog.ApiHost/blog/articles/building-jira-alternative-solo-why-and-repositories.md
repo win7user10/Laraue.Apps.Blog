@@ -36,7 +36,7 @@ After the core functionality stabilizes — embedding AI into the workflow. The 
 
 ## Where to see the current version
 
-Laraue Boards is available at [boards.laraue.com](https://boards.laraue.com). The current [documentation](https://laraue.com/documentation/laraue-boards) describes the implemented functionality and how to use it.
+Laraue Boards is available at [boards.laraue.com](https://boards.laraue.com). The current [documentation](https://laraue.com/blog/documentation/laraue-boards) describes the implemented functionality and how to use it.
 
 ### Repositories
 

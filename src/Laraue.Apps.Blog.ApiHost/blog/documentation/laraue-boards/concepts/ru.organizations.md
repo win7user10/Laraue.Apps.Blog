@@ -74,5 +74,4 @@ updatedAt: 2026-08-05
 ## Связанные страницы
 
 - [Управление правами доступа](/ru/blog/documentation/laraue-boards/working-in-a-team/permissions)
-- [Управление участниками](/ru/blog/documentation/laraue-boards/working-in-a-team/member-management)
 - [Спейсы — группировка досок](/ru/blog/documentation/laraue-boards/concepts/spaces)

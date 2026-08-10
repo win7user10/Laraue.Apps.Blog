@@ -23,4 +23,4 @@ updatedAt: 2026-08-07
 
 - [История изменений](/ru/blog/documentation/laraue-boards/features/issue-history) — читаемый лог того, что изменилось в issue, когда и кто это сделал.
 
-- [Перенос данных](/ru/blog/documentation/laraue-boards/features/data-movement) — перенесите целый спейс или отдельную доску в другую организацию.
+- [Перенос данных](/ru/blog/documentation/laraue-boards/features/mass-move) — перенесите целый спейс или отдельную доску в другую организацию.

@@ -36,7 +36,7 @@ nextLink: prototyping-ui-with-ai-before-code
 
 ## Где посмотреть актуальную версию
 
-Laraue Boards доступны по адресу [boards.laraue.com](https://boards.laraue.com). Актуальная [документация](https://laraue.com/documentation/laraue-boards) описывает реализованный функционал и то, как им пользоваться.
+Laraue Boards доступны по адресу [boards.laraue.com](https://boards.laraue.com). Актуальная [документация](https://laraue.com/ru/blog/documentation/laraue-boards) описывает реализованный функционал и то, как им пользоваться.
 
 ### Репозитории
 

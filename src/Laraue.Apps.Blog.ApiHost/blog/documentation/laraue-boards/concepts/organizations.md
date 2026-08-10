@@ -74,5 +74,4 @@ Tap the organization name in the dropdown at the top of the sidebar. It shows th
 ## Related pages
 
 - [Permissions management](/blog/documentation/laraue-boards/working-in-a-team/permissions)
-- [Member management](/blog/documentation/laraue-boards/working-in-a-team/member-management)
 - [Spaces — grouping boards](/blog/documentation/laraue-boards/concepts/spaces)

@@ -51,4 +51,3 @@ updatedAt: 2026-08-07
 
 - [Обзор организаций](/ru/blog/documentation/laraue-boards/concepts/organizations)
 - [Управление правами](/ru/blog/documentation/laraue-boards/working-in-a-team/permissions)
-- [Управление участниками](/ru/blog/documentation/laraue-boards/working-in-a-team/member-management)

@@ -51,4 +51,3 @@ The invite link does not expire. If you need to invalidate it — for example if
 
 - [Organizations overview](/blog/documentation/laraue-boards/concepts/organizations)
 - [Permissions management](/blog/documentation/laraue-boards/working-in-a-team/permissions)
-- [Member management](/blog/documentation/laraue-boards/working-in-a-team/member-management)
