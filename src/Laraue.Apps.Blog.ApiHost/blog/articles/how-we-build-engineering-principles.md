@@ -5,7 +5,7 @@ type: article
 createdAt: 2026-06-18
 updatedAt: 2026-07-12
 tags: [engineering, architecture, testing, ai-workflow, database, development]
-nextLink: reviewing-ai-generated-code-cost
+nextLink: reviewing-ai-generated-cost
 previousLink: how-we-decide-what-to-build
 ---
 

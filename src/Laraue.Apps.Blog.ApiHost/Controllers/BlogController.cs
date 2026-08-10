@@ -2,6 +2,7 @@
 using Laraue.CmsBackend.Contracts;
 using Laraue.CmsBackend.Utils;
 using Laraue.Core.DataAccess.Contracts;
+using Laraue.Core.Exceptions.Web;
 using Laraue.Interpreter.Markdown;
 using Microsoft.AspNetCore.Mvc;
 
@@ -182,18 +183,25 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
 
         var relatedPath = request.Path.Take(request.Path.Length - 1).Append(stringLink).ToArray();
 
-        var relatedEntity = cmsBackend.GetEntity<NeighborCard>(
-            new GetEntityRequest
-            {
-                Path = relatedPath,
-                LanguageCode = request.LanguageCode,
-                Properties = [
-                    "title",
-                    "path"
-                ]
-            });
+        try
+        {
+            var relatedEntity = cmsBackend.GetEntity<NeighborCard>(
+                new GetEntityRequest
+                {
+                    Path = relatedPath,
+                    LanguageCode = request.LanguageCode,
+                    Properties = [
+                        "title",
+                        "path"
+                    ]
+                });
 
-        entity[linkProperty] = relatedEntity;
+            entity[linkProperty] = relatedEntity;
+        }
+        catch (NotFoundException)
+        {
+            entity.Remove(linkProperty);
+        }
     }
     
     [HttpPost("meta")]
