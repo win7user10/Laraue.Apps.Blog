@@ -1,7 +1,7 @@
 ﻿---
 title: Serve Markdown Files as an API in .NET — Laraue.CmsBackend
 type: project
-tags: [.NET CMS, markdown API backend, headless CMS .NET, C# markdown library, static site backend, frontmatter API, NuGet CMS package]
+tags: [dotnet, csharp, cms, markdown, api, headless-cms, static-site, nuget]
 description: A lightweight .NET 10 library that turns Markdown files with frontmatter into a filterable, sortable REST API. Strongly typed content schemas, no database, no CMS overhead. Open source, MIT license.
 createdAt: 2025-11-01
 updatedAt: 2026-06-10

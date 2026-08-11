@@ -2,7 +2,7 @@
 title: Как написать интерпретатор языка запросов на C# — разбор на реальном примере
 type: project
 githubLink: https://github.com/win7user10/Laraue.PdfQL
-tags: [написать интерпретатор C#, язык запросов C#, лексер парсер AST C#, транспилер C#, DSL на .NET, конвейер MongoDB C#, извлечение данных из PDF C#]
+tags: [csharp, dotnet, interpreter, query-language, lexer, parser, ast, transpiler, dsl, mongodb, pdf-extraction]
 description: Разбор архитектуры интерпретатора языка запросов на C# — лексер, парсер, AST и конвейерный исполнитель — на примере открытого проекта PdfQL. Практическое руководство для .NET разработчиков.
 createdAt: 2025-03-04
 updatedAt: 2026-06-12

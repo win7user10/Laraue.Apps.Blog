@@ -4,7 +4,7 @@ type: project
 projectType: application
 githubLink: https://github.com/win7user10/Laraue.Apps.RealEstate
 applicationLink: https://apartments.laraue.com
-tags: [Saint Petersburg apartment search, AI real estate ranking, apartments Saint Petersburg, rent buy apartment SPb, Cian aggregator alternative, renovation quality AI, Telegram apartment notifications]
+tags: [real-estate, apartment-search, saint-petersburg, ai-ranking, cian-alternative, renovation-quality, telegram, notifications]
 description: Stop scrolling bad listings. This free tool crawls Saint Petersburg real estate and ranks every apartment by renovation quality using AI photo analysis. Filter by district, price, rooms, and AI score. Get Telegram notifications for new matches.
 createdAt: 2025-11-01
 updatedAt: 2026-06-12

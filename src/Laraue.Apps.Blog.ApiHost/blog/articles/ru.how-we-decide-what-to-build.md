@@ -4,7 +4,7 @@ description: Проверка продуктовой идеи до написа�
 type: article
 createdAt: 2026-06-18
 updatedAt: 2026-07-13
-tags: [product, validation, indie-hacking, market-research, crowded-market, ai-workflow]
+tags: [продукт, validation, indie-hacking, market-research, crowded-market, ai-workflow]
 nextLink: how-we-build-engineering-principles
 ---
 

@@ -2,7 +2,7 @@
 title: How to Build a Query Language Interpreter in C# — A Worked Example
 type: project
 githubLink: https://github.com/win7user10/Laraue.PdfQL
-tags: [build interpreter C#, query language C#, lexer parser AST C#, transpiler C#, domain specific language .NET, MongoDB pipeline C#, PDF data extraction C#]
+tags: [csharp, dotnet, interpreter, query-language, lexer, parser, ast, transpiler, dsl, mongodb, pdf-extraction]
 description: A step-by-step walkthrough of building a query language interpreter in C# — lexer, parser, AST, and pipeline executor — using PdfQL as a real worked example. Open source.
 createdAt: 2025-11-01
 updatedAt: 2026-06-12

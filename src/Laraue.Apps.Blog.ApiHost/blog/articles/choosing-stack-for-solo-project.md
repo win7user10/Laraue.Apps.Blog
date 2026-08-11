@@ -5,7 +5,7 @@ type: article
 createdAt: 2026-06-20 22:35
 updatedAt: 2026-07-08 14:48
 projects: [boards]
-tags: [dotnet, nuxt, vue, postgres, mongodb, databases, devlog, architecture]
+tags: [dotnet, nuxt, vue, postgres, mongodb, database, devlog, architecture]
 previousLink: telegram-saved-messages-to-task-tracker
 nextLink: clean-dotnet-telegram-bot-architecture
 ---

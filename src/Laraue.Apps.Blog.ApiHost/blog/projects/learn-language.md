@@ -1,7 +1,7 @@
 ﻿---
 title: Learn English Vocabulary Free With a Telegram Quiz Bot
 description: Build real English vocabulary with a free Telegram quiz bot. No install, no signup. CEFR levels A1–C1, 7 language pairs, daily streaks. Start in 30 seconds.
-tags: [language learning, vocabulary bot, Telegram bot learn English, free language app, CEFR vocabulary, learn English free, vocabulary quiz]
+tags: [language-learning, vocabulary, telegram-bot, english, cefr, quiz]
 type: project
 createdAt: 2025-11-01
 updatedAt: 2026-06-10

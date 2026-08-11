@@ -4,7 +4,7 @@ type: project
 projectType: application
 githubLink: https://github.com/win7user10/Laraue.Apps.RealEstate
 applicationLink: https://laraue.com/crawled-apartments
-tags: [квартиры Санкт-Петербург ИИ, поиск квартир СПб, аренда купить квартира Петербург, агрегатор Циан альтернатива, оценка ремонта ИИ, уведомления квартиры Telegram, лучшие квартиры СПб рейтинг]
+tags: [real-estate, apartment-search, saint-petersburg, ai-ranking, cian-alternative, renovation-quality, telegram, notifications]
 description: Бесплатный агрегатор квартир Санкт-Петербурга с ИИ-ранжированием по качеству ремонта. Фильтры по районам СПб, цене, комнатам и ИИ-рейтингу. Уведомления в Telegram о новых подходящих объявлениях.
 createdAt: 2025-11-01
 updatedAt: 2026-06-13

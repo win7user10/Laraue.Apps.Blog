@@ -1,7 +1,7 @@
 ﻿---
 title: Markdown файлы как REST API на .NET — библиотека Laraue.CmsBackend
 type: project
-tags: [.NET CMS, Markdown API бэкенд, headless CMS .NET, C# библиотека Markdown, бэкенд статического сайта, frontmatter API, NuGet CMS пакет]
+tags: [dotnet, csharp, cms, markdown, api, headless-cms, static-site, nuget]
 description: Лёгкая .NET 10 библиотека, которая превращает Markdown файлы с frontmatter в фильтруемый REST API. Строгая типизация, без базы данных, без CMS. Open source, лицензия MIT
 createdAt: 2025-11-01
 updatedAt: 2026-06-10

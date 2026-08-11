@@ -1,7 +1,7 @@
 ﻿---
 title: Библиотека для парсинга сайтов на C# — строго типизированный краулер для .NET
 type: project
-tags: [Crawler,.NET,C#]
+tags: [csharp, dotnet, web-scraping, crawler, anglesharp, puppeteersharp, html-parsing]
 description: Laraue.Crawling — библиотека для веб-скрапинга на C#, поддерживающая статический HTML, JavaScript-рендеринг и XML. Опишите схему парсинга как типизированный C# код — без разбросанных селекторов и сложной поддержки.
 createdAt: 2025-03-04
 updatedAt: 2026-06-10

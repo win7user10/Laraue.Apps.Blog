@@ -5,7 +5,7 @@ type: article
 createdAt: 2026-06-25 13:00
 updatedAt: 2026-07-04 13:00
 projects: [boards]
-tags: [product, ux, telegram-bot, saved-messages, devlog]
+tags: [продукт, ux, telegram-bot, saved-messages, devlog]
 previousLink: issue-board-telegram-mini-app
 nextLink: telegram-bot-file-storage-stream
 ---

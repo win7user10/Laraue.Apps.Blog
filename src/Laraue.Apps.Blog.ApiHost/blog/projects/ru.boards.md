@@ -1,7 +1,7 @@
 ﻿---
 title: Laraue Boards — опенсорсный таск-трекер с Telegram интеграцией и лёгкая альтернатива Jira
 type: project
-tags: [project management, telegram, jira alternative, task tracking, kanban, open source, saved messages]
+tags: [telegram, таск-трекер, kanban, project-management, open-source, saved-messages, jira-alternative]
 description: Опенсорсный таск-трекер, превращающий сообщения из Telegram в карточки на канбан-доске. Отправляете сообщение боту — получаете карточку, с которой можно работать в веб-приложении или Mini App. Бесплатно, код открыт.
 createdAt: 2026-04-16
 updatedAt: 2026-07-14

@@ -2,7 +2,7 @@
 title: EF Core Triggers in C# — How to Write Database Triggers With Fluent Syntax and Expression Trees
 type: project
 githubLink: https://github.com/win7user10/Laraue.EfCoreTriggers
-tags: [EF Core triggers C#, database triggers Entity Framework, expression tree to SQL C#, EF Core extension library, fluent API EF Core, IModelDiffer EF Core, expression visitor C#]
+tags: [ef-core, csharp, database-triggers, expression-trees, fluent-api, sql]
 description: A deep dive into Laraue.EfCoreTriggers — how to define database triggers in C# using fluent syntax, how the library translates expression trees to SQL, and how to extend it for new database providers.
 createdAt: 2025-11-01
 updatedAt: 2026-06-12
