@@ -35,6 +35,11 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                 Value = request.Tag,
             });
         }
+
+        if (!string.IsNullOrEmpty(request.SearchString))
+        {
+            // TODO - search
+        }
         
         return cmsBackend.GetEntities<CardItem>(new GetEntitiesRequest
         {
@@ -232,6 +237,7 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
             });
 
         return values
+            .OrderBy(x => x.Key)
             .Select(x => new Tag { Key = x.Key })
             .ToArray();
     }
@@ -260,6 +266,7 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required PaginationData Pagination { get; init; }
         public required string[] ContentTypes { get; init; }
         public string? Tag { get; init; }
+        public string? SearchString { get; init; }
     }
 
     public class ManuItem
