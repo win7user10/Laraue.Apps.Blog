@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-08-07
+updatedAt: 2026-08-20
 ---
 **Settings → Permissions** in the sidebar is where you see everyone who has access to your organization, share the invite link, and configure what each member can do.
 
@@ -35,6 +35,7 @@ Checkboxes for organization-level management tools:
 - Delete organization
 - Move spaces and boards
 - Manage attributes
+- Link chats
 
 Checking any one of these is what makes a member show up with the **Admin** label in the member list.
 

@@ -53,7 +53,7 @@ Tapping a member opens a dedicated page for their access, with three sections.
 
 ![A member's permissions page, showing Administration, Organization access, and Direct space access](https://laraue.com/static/images/blog/docs/laraue-boards/user-permissions.jpg)
 
-**Administration** controls organization-level management tools — checkboxes for things like managing members and permissions, editing or deleting the organization, moving spaces and boards, and managing attributes. Checking any of these is what makes someone show up as an Admin in the member list.
+**Administration** controls organization-level management tools — checkboxes for things like managing members and permissions, editing or deleting the organization, moving spaces and boards, managing attributes, and linking Telegram chats. Checking any of these is what makes someone show up as an Admin in the member list.
 
 **Organization access** applies across every space at once. A **Read organization** toggle controls whether the member can see everything, and below it a table lets you grant **Create / Update / Delete** separately for **Spaces**, **Boards**, and **Issues**.
 

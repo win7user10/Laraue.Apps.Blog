@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-08-07
+updatedAt: 2026-08-20
 ---
 **Settings → Permissions** в боковой панели — место, где видны все, у кого есть доступ к вашей организации, где находится ссылка-приглашение и где настраивается, что может делать каждый участник.
 
@@ -35,6 +35,7 @@ updatedAt: 2026-08-07
 - Delete organization
 - Move spaces and boards
 - Manage attributes
+- Link chats
 
 Если отмечен хотя бы один из них, участник отображается с меткой **Admin** в списке участников.
 

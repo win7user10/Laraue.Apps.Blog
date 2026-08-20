@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-08-04
+updatedAt: 2026-08-20
 ---
 An Epic is a kanban board — a named collection of status columns that group related issues together. In Laraue Boards the terms "board" and "epic" are used interchangeably. An epic works with an internal id only — it does not have its own key. Issue keys come from the space the epic belongs to, not from the epic itself.
 
@@ -54,11 +54,11 @@ On touch screens, press and hold a card for a moment before dragging to distingu
 
 ## Moving issues between the Backlog and a board
 
-Every space has its own Backlog — the default board new issues from the bot land on. From the Backlog, open an issue and assign it to any other epic in the same space. You can also move an issue back to the Backlog from its detail view at any time.
+Every space has its own Backlog — the default board new issues from the bot land on, unless the chat is [linked](/blog/documentation/laraue-boards/integrations/telegram-linking) to a different epic. From the Backlog, open an issue and assign it to any other epic in the same space. You can also move an issue back to the Backlog from its detail view at any time.
 
 ## The Backlog
 
-Every space's Backlog is just a list of the issues currently on its default board — the same way any other board shows its issues, just without columns. New issues from the bot land here first. When there is nothing in it, the Backlog is simply empty; there is no separate summary view.
+Every space's Backlog is just a list of the issues currently on its default board — the same way any other board shows its issues, just without columns. New issues from the bot land here first, unless the chat is [linked](/blog/documentation/laraue-boards/integrations/telegram-linking) to a specific epic. When there is nothing in it, the Backlog is simply empty; there is no separate summary view.
 
 ![The Backlog showing a list of issues](https://laraue.com/static/images/blog/docs/laraue-boards/backlog-view.jpg)
 

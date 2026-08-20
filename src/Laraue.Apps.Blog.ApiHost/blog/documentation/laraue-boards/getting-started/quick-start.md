@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 2
 createdAt: 2026-04-22
-updatedAt: 2026-08-06
+updatedAt: 2026-08-20
 ---
 This guide will help you get familiar with Laraue Boards. There's nothing to set up beforehand — your first board is already waiting for you the moment you log in.
 
@@ -26,7 +26,7 @@ For more on what data login uses, and on switching between accounts and organiza
 
 There are two ways to do this, and neither requires any setup first.
 
-**From Telegram** — go back to your chat with the bot and send it anything: a thought, a link, a task. The bot saves it and reacts with 👍. The issue always lands in the **New** column of your default board.
+**From Telegram** — go back to your chat with the bot and send it anything: a thought, a link, a task. The bot saves it to the **Backlog** of your default space and reacts with 👍. The destination can be changed — with [chat linking](/blog/documentation/laraue-boards/integrations/telegram-linking).
 
 **In the app** — if you'd rather not send anything to the bot at all, that's fine too. Telegram can be just your login method. Tap **+ Add issue** — it's available from anywhere in the app, not just from inside a board. Open it from a board and the space and board are already filled in for you; open it from the organization level and every field starts empty, so you choose the space, board, and status yourself.
 
