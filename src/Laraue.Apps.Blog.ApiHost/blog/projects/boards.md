@@ -1,10 +1,10 @@
 ﻿---
 title: Laraue Boards — an open source task tracker with Telegram integration and a lightweight Jira alternative
 type: project
-tags: [telegram, task-tracker, kanban, project-management, open-source, saved-messages, jira-alternative]
+tags: [telegram, task-tracker, kanban, project-management, open-source, saved-messages, jira-alternative, trello-alternative, asana-alternative, clickup-alternative, monday-alternative, linear-alternative]
 description: An open source task tracker that turns Telegram messages into cards on a kanban board. Send a message to the bot, get a card you can work with in the web app or the Mini App. Free, and the code is open.
 createdAt: 2026-04-16
-updatedAt: 2026-07-14
+updatedAt: 2026-08-20
 ---
 
 Telegram users often use the messenger as a place to keep thoughts, links, and photos — in Saved Messages or in separate chats. The problem is organising them afterwards. A message can be tagged, which helps with search and filtering in simple cases, but the more chats and messages there are, the harder it gets to tell what is still relevant and to find your way between them.
@@ -28,6 +28,8 @@ Most task trackers assume that tasks are created by a project manager and handed
 **The chat with the bot stays a chat.** The bot does not spam it with questions, buttons, and confirmations — which means the built-in search still works over it. To simply find last week's note, you do not have to open the full version of the app.
 
 **Organise the tasks when you have time for it.** Open the Mini App from the bot or the web version in a browser, and work with a full kanban board: sort out the backlog, drag cards between columns, group them into epics. Every card holds a link to the message in the chat, so you can see the context it was created in.
+
+**The bot is a full participant in any chat.** [Link a chat](../documentation/laraue-boards/integrations/telegram-linking) — private or group — to a specific board with `/link`, choosing whether to [save messages automatically or only on the `/save` command](../documentation/laraue-boards/integrations/telegram-save-modes). In any Telegram chat you can also [find an issue with inline search](../documentation/laraue-boards/integrations/telegram-inline-search) — type `@msgboard_bot` and a query, without opening the app.
 
 ## Spaces, issue keys, and permissions
 
@@ -84,13 +86,49 @@ Jira is an excellent tool when there is a dedicated project manager, a complex o
 
 Laraue Boards is free. Paid plans will appear later, together with the AI features — but everything described above will stay free.
 
+## Alternatives to Laraue Boards: how it compares to other trackers
+
+Beyond Jira and Trello, there are a few widely used task trackers Laraue Boards naturally gets compared to. Here is an honest comparison on the points that matter most for a small team or a solo user.
+
+### Laraue Boards vs Asana
+
+Asana is a mature work management platform with timelines, dependencies, portfolios, and reporting aimed at cross-functional teams and larger organizations.
+
+- **Task source.** In Asana a task is created manually through a form or a template. In Laraue Boards a card appears from a message you already sent in Telegram — there is nothing to re-enter.
+- **Learning curve.** Asana's power comes with a real onboarding cost: projects, custom fields, and rules take time to set up properly. Laraue Boards is ready to use right after the first message to the bot.
+- **Best for.** Asana suits organizations with a dedicated admin who owns the workspace setup. Laraue Boards suits teams and solo users who already talk in Telegram and do not want a separate task-entry process.
+
+### Laraue Boards vs ClickUp
+
+ClickUp bundles tasks, docs, goals, chat, and dashboards into one highly configurable all-in-one workspace.
+
+- **Scope.** ClickUp tries to cover most of a team's tools at once (tasks, docs, chat, time tracking). Laraue Boards focuses on a single scenario — turning Telegram messages into manageable cards.
+- **Task creation.** In ClickUp a task is created manually in the app, same as in most trackers. In Laraue Boards the source can be your Telegram conversation, which removes an extra step for teams that already discuss tasks in chat.
+- **Configuration overhead.** ClickUp's flexibility means there are a lot of settings to get right before the team can use it comfortably. Laraue Boards works out of the box, with customization kept to boards, columns, and attributes.
+
+### Laraue Boards vs Monday.com
+
+Monday.com is a visual work OS built around customizable boards, automations, and dashboards, popular with marketing and ops teams.
+
+- **Automation model.** Monday.com connects to Telegram through third-party integrations (Zapier, Make) that need to be configured. Laraue Boards has native Telegram integration — a card is created the moment a message reaches the bot.
+- **Source of truth.** With Monday.com plus an automation, the conversation and the tasks live in two separate systems. In Laraue Boards the chat stays the source of truth: a card is a link back to the original message.
+- **Pricing.** Monday.com is priced per seat and scales with team size. The core functionality of Laraue Boards is free.
+
+### Laraue Boards vs Linear
+
+Linear is a fast, keyboard-driven issue tracker built for software teams, with a strong focus on cycles, triage, and a clean workflow.
+
+- **Audience.** Linear is purpose-built for engineering teams shipping software with sprints and a structured triage process. Laraue Boards is aimed more broadly — at anyone whose work starts as a message in a chat, engineering or not.
+- **Issue creation.** Linear issues are created manually in its app or through integrations like GitHub. In Laraue Boards forwarding a message to the bot is enough — no separate tool to switch into.
+- **Source code.** Linear is closed source. Laraue Boards is fully open, so you can check exactly what happens to a message after you send it.
+
 ## What is coming
 
-The bot will become a full participant in any chat: mention it in a conversation and it creates an issue from that message, links back to it, and sends the issue link into the chat.
-
-After that — AI that uses the issues as context. You will be able to select the issues in a space for January to March and ask it to sum up the quarter, produce a report, or find the tasks that have not moved in a long time. This is where the paid plans will come in, but the core functionality will stay free.
+Planned — AI that uses the issues as context. You will be able to select the issues in a space for January to March and ask it to sum up the quarter, produce a report, or find the tasks that have not moved in a long time. This is where the paid plans will come in, but the core functionality will stay free.
 
 The attribute types will keep expanding. "Date" and "number" are coming soon. In later versions, more exotic ones are not out of the question — geographic coordinates, say, which could then be marked on a map.
+
+We are also planning to let people sign in with a Google account. This is for teammates who do not have Telegram but still need to be participants in a shared organization or space — they would get access without having to install the messenger.
 
 ## Common questions
 
