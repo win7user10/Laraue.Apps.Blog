@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 1
 createdAt: 2026-04-22
-updatedAt: 2026-08-06
+updatedAt: 2026-08-20
 ---
 An issue is the core unit of work in Laraue Boards. Every task, request, bug report, or action item is an issue. What makes Laraue Boards different is where issues come from: most of them start as Telegram messages.
 
@@ -44,9 +44,9 @@ Share the link when you want to take someone straight to the issue, rather than 
 
 ## Creating issues
 
-**From a Telegram message** — forward any message to the Laraue Boards bot. It is saved automatically, with no extra steps, and lands on the default board in your Backlog. The bot reacts with 👍 to confirm.
+**From a Telegram message** — forward any message to the Laraue Boards bot, or send it directly in a chat you've linked to Boards. Unless the chat is linked to a specific destination, the issue lands on the default board in your **personal organization**'s Backlog, and the bot reacts with 👍 to confirm.
 
-Right now, every issue created this way lands in your **personal organization**, regardless of which chat the message came from. Mapping specific group chats to specific organizations — so a message from a client's chat lands directly in that client's organization — is planned for a future version.
+Linking a chat — a group, a supergroup, or even your own private chat with the bot — points it at a specific organization, space, epic, and status instead, with a choice of saving every message automatically or only the ones you save yourself with `/save`. See [Linking a Telegram chat to Boards](/blog/documentation/laraue-boards/integrations/telegram-linking).
 
 **Manually** — tap **+ Add issue**. It's available from anywhere in the app, not just from inside a board. Open it from a board and the space and board are already filled in for you; open it from the organization level and every field starts empty, so you choose the space, board, and status yourself.
 
@@ -54,7 +54,7 @@ Right now, every issue created this way lands in your **personal organization**,
 
 ## Moving an issue to a different board
 
-New issues from the bot land on the default board so saving stays effortless — you never have to pick a board before sending a message. If you want an issue somewhere else, open the **Backlog**, find the issue in the list, and change its board directly from the issue's detail view.
+New issues from the bot land on the default board so saving stays effortless — you never have to pick a board before sending a message, unless the chat is [linked](/blog/documentation/laraue-boards/integrations/telegram-linking) to a different destination. If you want an issue somewhere else, open the **Backlog**, find the issue in the list, and change its board directly from the issue's detail view.
 
 Moving an issue between boards **within the same space** keeps its issue key. Moving it to a **different space** gives it a new key, since keys are numbered per space — any link or quoted key already shared for that issue will point at the old one and stop working.
 
