@@ -66,7 +66,7 @@ updatedAt: 2026-08-20
 
 Нажатие на результат отправляет эту карточку в чат сообщением от бота с пометкой **via @msgboard_bot**, чтобы всем было видно, что оно появилось из поиска:
 
-![Сообщение, отправленное в чат после выбора результата поиска, с номером issue, организацией, названием и ссылкой Open issue](https://laraue.com/static/images/blog/docs/laraue-boards/telegram-inline-search-result-message.jpg)
+![Сообщение, отправленное в чат после выбора результата поиска, с номером issue, организацией, названием и ссылкой Open issue](https://laraue.com/static/images/blog/docs/laraue-boards/telegram-inline-search-result.jpg)
 
 Нажмите **🔗 Open issue** на результате, чтобы перейти прямо в веб-приложение.
 

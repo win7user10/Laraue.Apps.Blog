@@ -66,7 +66,7 @@ Every search result renders as the same issue preview card used elsewhere in the
 
 Tapping a result sends this card into the chat as a message from the bot, tagged **via @msgboard_bot** so everyone can see it came from a search:
 
-![A message sent into the chat after selecting a search result, showing the issue key, organization, title, and an Open issue link](https://laraue.com/static/images/blog/docs/laraue-boards/telegram-inline-search-result-message.jpg)
+![A message sent into the chat after selecting a search result, showing the issue key, organization, title, and an Open issue link](https://laraue.com/static/images/blog/docs/laraue-boards/telegram-inline-search-result.jpg)
 
 Tap **🔗 Open issue** on a result to deep-link straight into the web app.
 
