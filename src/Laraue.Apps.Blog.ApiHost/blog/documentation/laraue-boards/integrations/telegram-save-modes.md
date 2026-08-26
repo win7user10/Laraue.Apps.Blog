@@ -1,12 +1,12 @@
 ---
 title: Auto vs. manual save mode for linked chats
-description: Once a Telegram chat is linked to Boards, choose whether every message becomes an issue automatically, or only the ones you save yourself with /save. Includes /info for looking up a card without saving.
-keywords: [telegram bot save mode, telegram bot auto save, telegram save command, telegram info command, telegram bot manual save]
+description: Once a Telegram chat is linked to Boards, choose whether every message becomes an issue automatically, or only the ones you save yourself with /save or /aisave. Includes /info for looking up a card without saving.
+keywords: [telegram bot save mode, telegram bot auto save, telegram save command, telegram aisave command, telegram info command, telegram delete command, telegram bot manual save]
 type: documentation
 project: boards
 order: 4
 createdAt: 2026-08-19
-updatedAt: 2026-08-20
+updatedAt: 2026-08-26
 ---
 **Save mode** is the last step of [linking a chat](/blog/documentation/laraue-boards/integrations/telegram-linking), and it decides *when* a message in that chat turns into an issue: automatically, or only when someone asks for it.
 
@@ -38,9 +38,30 @@ Replying to any message in a photo/video **album** saves the whole album as one 
 
 Running `/save` again on a message that's already saved triggers a re-sync and returns the same card's link. In manual mode, this is the correct way to update the card on the board if the message in the chat was updated.
 
+## /aisave — save with an AI-cleaned title and description
+
+`/aisave` saves a message the same way `/save` does — reply to it, with an optional note — but runs the content through AI first, instead of storing it as-is. The result is a structured card with two parts:
+
+- **Title** — a short, focused summary of what the message is about, used as the issue's heading
+- **Description** — the rest rewritten: grammar fixed, repeated points collapsed, and rambling text organized into clear bullet points
+
+```
+/aisave Fix using incorrect endpoint while choosing user in filter in organization history
+```
+
+![An issue created with /aisave, showing an AI-generated title and a bullet-point description below it](https://laraue.com/static/images/blog/docs/laraue-boards/aisave-command.jpg)
+
+Reach for it on messy, stream-of-consciousness messages — a rant in a group chat, a half-formed bug report — where a readable card is more useful than a copy-paste of the original text.
+
+Everything else works the same as `/save`: it handles albums the same way, running it again on an already-saved message re-syncs the card, and the same create-issue permission check applies.
+
 ## /info — look up without saving
 
 `/info` works the same way in both modes: reply to a tracked message to see the same card preview. It's most useful in auto mode, where the save happens silently and you need the link.
+
+## /delete — remove a message and its issue
+
+Reply to a message with `/delete` to remove it. This only does anything if both are true: the message actually has an issue created from it, and you hold the **Delete** permission for that issue. If either isn't the case, nothing happens.
 
 ## Permissions
 
