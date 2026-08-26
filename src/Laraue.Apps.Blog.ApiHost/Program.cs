@@ -5,6 +5,7 @@ using Laraue.CmsBackend;
 using Laraue.CmsBackend.Extensions;
 using Laraue.Core.Exceptions;
 using Laraue.Interpreter.Markdown;
+using OpenTelemetry.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -33,6 +34,14 @@ builder.Services.AddSingleton<IRssFeedGenerator, RssFeedGenerator>();
 builder.Services.AddOptions<SiteOptions>();
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("SiteOptions"));
 
+builder.Services
+    .AddOpenTelemetry()
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddPrometheusExporter());
+
 var app = builder.Build();
 
 var origins = builder
@@ -49,4 +58,5 @@ app.UseCors(corsPolicyBuilder =>
 app.UseMiddleware<ExceptionHandleMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/_health");
+app.MapPrometheusScrapingEndpoint("/_metrics");
 app.Run();
