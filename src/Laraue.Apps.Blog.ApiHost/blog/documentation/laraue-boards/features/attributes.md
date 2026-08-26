@@ -14,12 +14,14 @@ Attributes are custom fields you can attach to issues — priority, type, or any
 
 ## Attribute types
 
-| Type       | Use for                                                                        | Status      |
-|------------|--------------------------------------------------------------------------------|-------------|
-| **List**   | A fixed set of options — priority levels, issue type, anything from a dropdown | Available   |
-| **Text**   | Free-form text — notes, links, reference numbers                               | Available   |
-| **Date**   | A calendar date                                                                | Coming soon |
-| **Number** | A numeric value                                                                | Coming soon |
+| Type              | Use for                                                                        |
+|-------------------|---------------------------------------------------------------------------------|
+| **Text**          | Free-form text — notes, links, reference numbers                               |
+| **List**          | A fixed set of options — priority levels, issue type, anything from a dropdown |
+| **Integer**       | A whole number — story points, a count                                        |
+| **Decimal**       | A number with decimal places — a price, an estimate in hours                  |
+| **Date**          | A calendar date — a due date, a deadline                                      |
+| **Date and time** | A calendar date with a time — a scheduled moment, not just a day              |
 
 ## Managing attributes
 
