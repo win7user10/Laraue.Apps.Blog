@@ -19,9 +19,11 @@ Select the space you want the board in, then tap **Create board** in the top rig
 - **Name** — the display name, e.g. "Sprint 1" or "Bug Fixes"
 - **Color** — used for the dot in the navigation tabs
 
-Every new epic starts with a single column, **New**. You can add and configure the rest afterwards, as described below.
+Every new epic starts with a single column, **New**. You can add and configure the rest afterwards, as described below — or copy the entire status set from one of your existing boards right away, so you don't have to rebuild a familiar workflow column by column.
 
-We're planning to let you set up the columns right at creation time — either from scratch or by reusing the status set from one of your existing boards — instead of always starting from one column and building it up.
+**Copy statuses from another epic** — on the board creation form, pick a source epic and its status columns are copied over as-is, in the same order and with the same colors. You can still edit, add, or remove columns afterwards; copying only sets the starting point.
+
+![Choosing an existing epic to copy its status columns from when creating a new board](https://laraue.com/static/images/blog/docs/laraue-boards/copy-epic-statuses.jpg)
 
 ## Status columns
 
