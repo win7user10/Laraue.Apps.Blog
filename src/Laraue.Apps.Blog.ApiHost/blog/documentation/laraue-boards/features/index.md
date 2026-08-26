@@ -23,4 +23,6 @@ This section is the feature reference — detailed guides for each capability of
 
 - [Change history](/blog/documentation/laraue-boards/features/issue-history) — A readable log of what changed on an issue, when, and who changed it.
 
+- [Organization history](/blog/documentation/laraue-boards/features/organization-history) — A combined activity feed across every board, scoped to the issues you have access to.
+
 - [Data movement](/blog/documentation/laraue-boards/features/mass-move) — Move an entire space or a single board to a different organization.

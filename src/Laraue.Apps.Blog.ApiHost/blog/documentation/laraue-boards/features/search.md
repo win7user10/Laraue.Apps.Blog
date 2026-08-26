@@ -37,3 +37,4 @@ Board search and attribute filters work together — you can search for text whi
 - [Issue keys](/blog/documentation/laraue-boards/features/card-keys)
 - [Custom attributes — filtering](/blog/documentation/laraue-boards/features/attributes)
 - [The Backlog](/blog/documentation/laraue-boards/working-alone/backlog)
+- [Organization history](/blog/documentation/laraue-boards/features/organization-history)

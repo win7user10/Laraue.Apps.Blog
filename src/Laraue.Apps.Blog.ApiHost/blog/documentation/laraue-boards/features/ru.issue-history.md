@@ -34,3 +34,4 @@ updatedAt: 2026-08-07
 
 - [Issues — что это такое](/ru/blog/documentation/laraue-boards/concepts/issues)
 - [Комментарии](/ru/blog/documentation/laraue-boards/features/comments)
+- [История организации — тот же лог, объединённый по всем issues](/ru/blog/documentation/laraue-boards/features/organization-history)

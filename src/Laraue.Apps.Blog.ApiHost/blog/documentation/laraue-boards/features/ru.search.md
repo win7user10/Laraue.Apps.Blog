@@ -37,3 +37,4 @@ updatedAt: 2026-08-07
 - [Номера issue](/ru/blog/documentation/laraue-boards/features/card-keys)
 - [Кастомные атрибуты — фильтрация](/ru/blog/documentation/laraue-boards/features/attributes)
 - [Бэклог](/ru/blog/documentation/laraue-boards/working-alone/backlog)
+- [История организации](/ru/blog/documentation/laraue-boards/features/organization-history)

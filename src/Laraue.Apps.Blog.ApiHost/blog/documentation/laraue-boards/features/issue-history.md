@@ -30,3 +30,4 @@ A single entry can bundle more than one change at once — moving a board and up
 
 - [Issues — what they are](/blog/documentation/laraue-boards/concepts/issues)
 - [Comments](/blog/documentation/laraue-boards/features/comments)
+- [Organization history — the same log, combined across every issue](/blog/documentation/laraue-boards/features/organization-history)
