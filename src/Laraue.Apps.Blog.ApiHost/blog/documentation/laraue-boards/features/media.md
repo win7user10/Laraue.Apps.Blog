@@ -6,7 +6,7 @@ type: documentation
 project: boards
 order: 3
 createdAt: 2026-04-22
-updatedAt: 2026-08-07
+updatedAt: 2026-08-26
 ---
 When you capture a Telegram message that contains photos or videos, those files become part of the issue.
 
@@ -21,6 +21,10 @@ From the same section you can add more images yourself — **Choose other images
 ## How storage works
 
 Original files are not stored on Laraue Boards — they're streamed from Telegram each time you open them, in their original quality. Preview thumbnails are cached on our server, so the small previews load quickly without hitting Telegram every time.
+
+This is also true for images you add yourself through the interface, not just ones forwarded from a chat. When you upload an image directly, our bot actually sends it into a private chat that only the bot can access — that's where it's stored, the same way as any other file from Telegram. This is why attachment storage stays free.
+
+We're planning to add the option to store files directly on our own servers, for people who don't want to depend on Telegram as storage. That option will be paid, since it's a real storage cost on our side rather than Telegram's.
 
 ## Media-only issues
 
