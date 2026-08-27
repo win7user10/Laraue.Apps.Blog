@@ -164,10 +164,13 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
                     "content",
                     "format(createdAt, \"dd MMM yyyy\") as createdAt",
                     "format(updatedAt, \"dd MMM yyyy\") as updatedAt",
+                    "createdAt as createdAtIso",
+                    "updatedAt as updatedAtIso",
                     "length(content)",
                     "innerLinks",
                     "tags",
                     "projects",
+                    "keywords",
                     "nextLink",
                     "previousLink",
                     "contentType",
@@ -316,10 +319,13 @@ public class BlogController(ICmsBackend cmsBackend) : ControllerBase
         public required string Content { get; init; }
         public required string CreatedAt { get; init; }
         public required string UpdatedAt { get; init; }
+        public required DateTime CreatedAtIso { get; init; }
+        public required DateTime UpdatedAtIso { get; init; }
         public required string ContentType { get; init; }
         public required long Length { get; init; }
         public required string?[] Tags { get; init; }
         public required string?[] Projects { get; init; }
+        public string?[]? Keywords { get; init; }
         public required MarkdownInnerLink[] InnerLinks { get; init; }
         public NeighborCard? PreviousLink { get; set; }
         public NeighborCard? NextLink { get; set; }
