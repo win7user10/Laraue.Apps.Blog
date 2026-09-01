@@ -1,12 +1,12 @@
 ---
 title: Auto vs. manual save mode for linked chats
-description: Once a Telegram chat is linked to Boards, choose whether every message becomes an issue automatically, or only the ones you save yourself with /save or /aisave. Includes /info for looking up a card without saving.
-keywords: [telegram bot save mode, telegram bot auto save, telegram save command, telegram aisave command, telegram info command, telegram delete command, telegram bot manual save]
+description: Once a Telegram chat is linked to Boards, choose whether every message becomes an issue automatically, or only the ones you save yourself with /save or /aisave. Includes /info for looking up a card without saving, or resolving issue links pasted into a message.
+keywords: [telegram bot save mode, telegram bot auto save, telegram save command, telegram aisave command, telegram info command, telegram info issue link, telegram delete command, telegram bot manual save]
 type: documentation
 project: boards
 order: 4
 createdAt: 2026-08-19
-updatedAt: 2026-08-26
+updatedAt: 2026-09-01
 ---
 **Save mode** is the last step of [linking a chat](/blog/documentation/laraue-boards/integrations/telegram-linking), and it decides *when* a message in that chat turns into an issue: automatically, or only when someone asks for it.
 
@@ -58,6 +58,22 @@ Everything else works the same as `/save`: it handles albums the same way, runni
 ## /info — look up without saving
 
 `/info` works the same way in both modes: reply to a tracked message to see the same card preview. It's most useful in auto mode, where the save happens silently and you need the link.
+
+`/info` also works read-only and regardless of chat save mode — it doesn't require anything to have been saved by the bot at all.
+
+### Resolving issue links pasted into a message
+
+If the message you reply to contains one or more links to Boards issues, `/info` recognizes them and resolves each one independently, even if that message was never saved as a card. Two link shapes are recognized, both anchored to your organization's Boards URL:
+
+- **Issue page**: `https://boards.laraue.com/organizations/{orgKey}/issues/{KEY}`
+- **Board view**: `https://boards.laraue.com/organizations/{orgKey}/spaces/{spaceKey}/{boardId}?issue={KEY}`
+
+A lookalike link on a different domain is never treated as one of these. For each recognized link, `/info` checks that the issue exists and that you have read access to it:
+
+- If it exists and you can read it, the bot replies with the same card preview shown by `/save` and inline search — key, project, content snippet, and an **Open issue** button.
+- If it doesn't exist, or you lack read access, the bot sends the same generic "not available" notice either way. This is deliberate: a pasted link can't be used to probe whether a given issue key exists in an organization you otherwise can't see.
+
+If the message has no recognized issue link, `/info` falls back to looking up whether the message itself is a tracked card. If it isn't, the reply now also shows a sample of the expected link format.
 
 ## /delete — remove a message and its issue
 
